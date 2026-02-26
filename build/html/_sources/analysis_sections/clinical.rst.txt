@@ -1,0 +1,7 @@
+Clinical & Promoter Prevalence
+===============================
+
+.. toctree::
+   :maxdepth: 1
+
+   ../scripts/3_analysis_scripts/10_survival_curve_isoform

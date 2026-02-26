@@ -1,0 +1,407 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Guide Calling for Dual Guides &mdash; Isoform Specific Perturb-Seq  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../_static/nbsphinx-code-cells.css?v=2aa19091" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../_static/copybutton.js?v=f281be69"></script>
+      <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+      <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+      <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-mml-chtml.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Filtering for Cells with Ideal Combination of Guides" href="2B_guide_calling_cellrangerfilter4_idealguides.html" />
+    <link rel="prev" title="Analysis Scripts &amp; Pipelines" href="../../analysis_scripts.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            Isoform Specific Perturb-Seq
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Analysis Pipeline:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../promoter_identification.html">Promoter Identification</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../guide_design.html">Promoter Specific Guide Design</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../analysis_scripts.html">Analysis Scripts &amp; Pipelines</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../../analysis_scripts.html#preprocessing-guide-calling">Preprocessing &amp; Guide Calling</a><ul class="current">
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Guide Calling for Dual Guides</a></li>
+<li class="toctree-l3"><a class="reference internal" href="2B_guide_calling_cellrangerfilter4_idealguides.html">Filtering for Cells with Ideal Combination of Guides</a></li>
+<li class="toctree-l3"><a class="reference internal" href="12_negativecontrol.html">Understanding Variation in Negative Control Population</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../analysis_scripts.html#transcript-quantification">Transcript Quantification</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../analysis_scripts.html#transcriptional-divergence-e-stats-differential-expression">Transcriptional Divergence (E-Stats &amp; Differential Expression)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../analysis_scripts.html#cell-phase-pathway-modeling">Cell Phase &amp; Pathway Modeling</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../analysis_scripts.html#clinical-promoter-prevalence">Clinical &amp; Promoter Prevalence</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Isoform Specific Perturb-Seq</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../analysis_scripts.html">Analysis Scripts &amp; Pipelines</a></li>
+      <li class="breadcrumb-item active">Guide Calling for Dual Guides</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/scripts/3_analysis_scripts/2A_cellranger_guidecalling.ipynb.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="Guide-Calling-for-Dual-Guides">
+<h1>Guide Calling for Dual Guides<a class="headerlink" href="#Guide-Calling-for-Dual-Guides" title="Link to this heading"></a></h1>
+<ol class="arabic simple">
+<li><p>Run through the 10x Cellranger pipeline and velocyto for single cell RNAseq quatification and using (2) guides quantifiction. all found in the cellranger files folder <strong>bash</strong></p></li>
+<li><p><strong>Guide Calling for dual guide. Use repogle method to take molecule.h5 generated by cellranger and py to run through repogle version of guide calling or use cellranger_guidecalling.ipynb for Direct Capture Perturb-Seq dual guide. Formed guide-specific lists of cells.</strong></p></li>
+<li><p>Pseudobulk analysis. A. Seperation of guide-specific fastq files. <strong>bash</strong> B. Whippet pseudobulk for transcript specific analysis, post UMI deduplication. <strong>bash</strong> C. Transcript quality control. <strong>R</strong> D. Whippet result visualisation.</p></li>
+<li><p>Normalisation of adata object and E-distance of KD</p></li>
+<li><p>Check gene and neighboring gene expression</p></li>
+<li><p>Create individual umaps per gene of interest</p>
+<ol class="upperalpha simple">
+<li><p>UMAPs</p></li>
+<li><p>Rand Index score</p></li>
+</ol>
+</li>
+<li><p>Cell phase assignment model from FUCCI-matched single cell paper (GSE146773_)</p></li>
+<li><p>Differential Expression analysis.</p>
+<ol class="upperalpha simple">
+<li><p>Find the shared P1 and P2 genes.</p></li>
+<li><p>Check the shared P1 and P2 across different protospacers with the same A/B and C/D.</p></li>
+</ol>
+</li>
+<li><p>CNV Score &amp; Numbat to quantify and Velocity quantification with loom file</p></li>
+<li><p>ESR1-specific analysis from proliferation analysis to rt-qpcr</p></li>
+<li><p>Spectra analysis and visualisation for pathway enrichment</p></li>
+</ol>
+<p>This specific stage handles “Guide Calling” and filtering—essentially identifying which CRISPR guides are in which individual cell and ensuring only the “ideal” cells (those with the correct combination of guides) are used for downstream analysis. The process begins by reading the output from Cell Ranger, which is the standard tool for processing 10x Genomics data.</p>
+<p>What is happening: The code loads protospacer_calls_per_cell.csv. This file contains raw data on which “features” (guides) were detected in each cell barcode and how many UMIs (Unique Molecular Identifiers) were associated with each.</p>
+<p>Normalization: Since one cell barcode can have multiple guides, the code “stacks” and “resets” the index to create a clean list where every row is a unique cell_barcode + guide_identity pair.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">seaborn</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sns</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<br/></pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#umis vs coverage</span>
+<span class="c1">#so unique molecular identifiers mean that you have a molecule that is present</span>
+<span class="c1">#coverage is the number of reads from each umi</span>
+
+<span class="n">protospacer_calls</span><span class="o">=</span><span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;../../cellranger_output/crispr_analysis/protospacer_calls_per_cell.csv&quot;</span><span class="p">)</span>
+<span class="n">protospacer_calls</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
+</pre></div>
+</div>
+<div class="output_area rendered_html docutils container">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>cell_barcode</th>
+      <th>num_features</th>
+      <th>feature_call</th>
+      <th>num_umis</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>AAACGGGTCTTAGAGC-1</td>
+      <td>2</td>
+      <td>Non-Targeting|sgNegCtrl3b</td>
+      <td>3694|2106</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>AAAGTAGCAGCTGGCT-1</td>
+      <td>2</td>
+      <td>Non-Targeting|sgPKM_MPD</td>
+      <td>1335|19</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>AACCATGCACCAGTTA-1</td>
+      <td>14</td>
+      <td>Non-Targeting|non-targeting_02847|sgDHX30_MPA|...</td>
+      <td>27|45|11|14|71|20|28|76|36|55|17|35|6|19</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>AACTCAGCAAGCCATT-1</td>
+      <td>2</td>
+      <td>Non-Targeting|sgNegCtrl3b</td>
+      <td>1813|550</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>AACTCAGGTATCACCA-1</td>
+      <td>2</td>
+      <td>Non-Targeting|sgNegCtrl3b</td>
+      <td>1861|518</td>
+    </tr>
+  </tbody>
+</table>
+</div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">feature_call</span><span class="o">=</span><span class="n">protospacer_calls</span><span class="o">.</span><span class="n">set_index</span><span class="p">([</span><span class="s1">&#39;cell_barcode&#39;</span><span class="p">,</span><span class="s2">&quot;num_features&quot;</span><span class="p">])[</span><span class="s1">&#39;feature_call&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;|&#39;</span><span class="p">,</span> <span class="n">expand</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">stack</span><span class="p">()</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
+<span class="n">feature_call</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">feature_call</span><span class="o">=</span><span class="n">feature_call</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="s2">&quot;level_2&quot;</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+
+<span class="c1"># form a dataframe of cellb arcode, feature call and num_umis</span>
+<span class="n">num_umi</span><span class="o">=</span><span class="n">protospacer_calls</span><span class="o">.</span><span class="n">set_index</span><span class="p">([</span><span class="s1">&#39;cell_barcode&#39;</span><span class="p">,</span><span class="s2">&quot;num_features&quot;</span><span class="p">])[</span><span class="s1">&#39;num_umis&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;|&#39;</span><span class="p">,</span> <span class="n">expand</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">stack</span><span class="p">()</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
+<span class="n">num_umi</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">num_umi</span><span class="o">=</span><span class="n">num_umi</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="s2">&quot;level_2&quot;</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">feature_call_stacked</span><span class="o">=</span><span class="n">num_umi</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">feature_call</span><span class="p">,</span><span class="n">on</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;cell_barcode&quot;</span><span class="p">,</span> <span class="s2">&quot;index&quot;</span><span class="p">,</span><span class="s2">&quot;num_features&quot;</span><span class="p">])</span>
+
+<span class="n">feature_call_stacked</span><span class="o">.</span><span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;index&#39;</span><span class="p">,</span> <span class="s1">&#39;cell_barcode&#39;</span><span class="p">,</span> <span class="s1">&#39;num_features&#39;</span><span class="p">,</span> <span class="s1">&#39;UMI_count&#39;</span><span class="p">,</span> <span class="s1">&#39;guide_identity&#39;</span><span class="p">]</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">feature_call_stacked</span><span class="p">[</span><span class="n">feature_call_stacked</span><span class="p">[</span><span class="s2">&quot;cell_barcode&quot;</span><span class="p">]</span><span class="o">==</span><span class="s2">&quot;CGAATGTGTCTAGTCA-1&quot;</span><span class="p">])</span>
+<br/></pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+     index        cell_barcode  num_features UMI_count guide_identity
+944    944  CGAATGTGTCTAGTCA-1             1      1315  Non-Targeting
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">read_info</span><span class="o">=</span><span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;../../cellranger_output/molinfo_data_crispr_only.csv&quot;</span><span class="p">,</span><span class="n">names</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;cell&quot;</span><span class="p">,</span><span class="s2">&quot;umi&quot;</span><span class="p">,</span><span class="s2">&quot;gem_group&quot;</span><span class="p">,</span><span class="s2">&quot;gene&quot;</span><span class="p">,</span><span class="s2">&quot;reads&quot;</span><span class="p">,</span><span class="s2">&quot;library&quot;</span><span class="p">],</span><span class="n">skiprows</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">gene_name</span><span class="o">=</span><span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;../../cellranger_output/molinfo_genes.csv&quot;</span><span class="p">)</span>
+
+<span class="n">read_info</span><span class="p">[</span><span class="s2">&quot;cell_barcode&quot;</span><span class="p">]</span><span class="o">=</span><span class="n">read_info</span><span class="p">[</span><span class="s2">&quot;cell&quot;</span><span class="p">]</span><span class="o">+</span><span class="s2">&quot;-1&quot;</span>
+<span class="n">read_info</span><span class="o">=</span><span class="n">read_info</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">gene_name</span><span class="p">,</span><span class="n">right_index</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">left_on</span><span class="o">=</span><span class="s2">&quot;gene&quot;</span><span class="p">,</span> <span class="n">how</span><span class="o">=</span><span class="s2">&quot;inner&quot;</span><span class="p">)</span>
+<span class="n">read_info</span><span class="p">[</span><span class="s2">&quot;guide_identity&quot;</span><span class="p">]</span><span class="o">=</span><span class="n">read_info</span><span class="p">[</span><span class="s2">&quot;0&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span>
+<span class="n">read_info</span><span class="o">=</span><span class="n">read_info</span><span class="p">[[</span><span class="s2">&quot;cell_barcode&quot;</span><span class="p">,</span><span class="s2">&quot;guide_identity&quot;</span><span class="p">,</span><span class="s2">&quot;reads&quot;</span><span class="p">]]</span>
+<span class="n">read_umi_check</span><span class="o">=</span><span class="n">read_info</span><span class="o">.</span><span class="n">groupby</span><span class="p">([</span><span class="s2">&quot;cell_barcode&quot;</span><span class="p">,</span><span class="s2">&quot;guide_identity&quot;</span><span class="p">])</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
+
+<span class="n">read_umi</span><span class="o">=</span><span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;../../cellranger_output/crispr_analysis/read_umi_identity.csv&quot;</span><span class="p">,</span> <span class="n">names</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;cell_barcode&quot;</span><span class="p">,</span><span class="s2">&quot;guide_identity&quot;</span><span class="p">,</span><span class="s2">&quot;read_count&quot;</span><span class="p">],</span> <span class="n">skiprows</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">read_umi</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area rendered_html docutils container">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>cell_barcode</th>
+      <th>guide_identity</th>
+      <th>read_count</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>6</th>
+      <td>AAACCCAAGAAACCCG-1</td>
+      <td>non-targeting_00373</td>
+      <td>1.0</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>AAACCCAAGAAACCCG-1</td>
+      <td>sgCALR_MPA</td>
+      <td>2.0</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>AAACCCAAGAAACCCG-1</td>
+      <td>sgCHD8_MPC</td>
+      <td>1.0</td>
+    </tr>
+    <tr>
+      <th>9</th>
+      <td>AAACCCAAGAAACCCG-1</td>
+      <td>sgSRSF5_APC</td>
+      <td>1.0</td>
+    </tr>
+    <tr>
+      <th>10</th>
+      <td>AAACCCAAGAAACCCG-1</td>
+      <td>sgGTF2F1_APA</td>
+      <td>1.0</td>
+    </tr>
+  </tbody>
+</table>
+</div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">read_umi_check</span><span class="o">=</span><span class="n">read_umi</span><span class="o">.</span><span class="n">groupby</span><span class="p">([</span><span class="s2">&quot;cell_barcode&quot;</span><span class="p">,</span><span class="s2">&quot;guide_identity&quot;</span><span class="p">])</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">read_umi_check</span><span class="o">.</span><span class="n">head</span><span class="p">())</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+         cell_barcode       guide_identity  read_count
+0  AAACCCAAGAAACCCG-1  non-targeting_00373         1.0
+1  AAACCCAAGAAACCCG-1           sgCALR_MPA         2.0
+2  AAACCCAAGAAACCCG-1           sgCHD8_MPC         1.0
+3  AAACCCAAGAAACCCG-1         sgGTF2F1_APA         1.0
+4  AAACCCAAGAAACCCG-1         sgNFE2L2_MPD         1.0
+</pre></div></div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">feature_call_stacked</span><span class="o">=</span><span class="n">read_umi_check</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">feature_call_stacked</span><span class="p">,</span><span class="n">on</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;cell_barcode&quot;</span><span class="p">,</span><span class="s2">&quot;guide_identity&quot;</span><span class="p">])</span><span class="o">.</span><span class="n">drop_duplicates</span><span class="p">()</span>
+<span class="n">feature_call_stacked</span><span class="p">[</span><span class="s1">&#39;UMI_count&#39;</span><span class="p">]</span><span class="o">=</span><span class="n">feature_call_stacked</span><span class="p">[</span><span class="s1">&#39;UMI_count&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s1">&#39;float&#39;</span><span class="p">)</span>
+<span class="n">feature_call_stacked</span><span class="p">[</span><span class="s1">&#39;coverage&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">feature_call_stacked</span><span class="p">[</span><span class="s1">&#39;read_count&#39;</span><span class="p">]</span><span class="o">/</span><span class="n">feature_call_stacked</span><span class="p">[</span><span class="s1">&#39;UMI_count&#39;</span><span class="p">]</span>
+<span class="n">feature_call_stacked</span><span class="p">[</span><span class="s2">&quot;coverage&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">value_counts</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">##### cell_barcode,guide_identity,read_count,UMI_count,coverage,gemgroup,good_coverage,number_of_cells</span>
+<span class="c1">##output table</span>
+<span class="n">output_dir</span><span class="o">=</span><span class="s2">&quot;../../cellranger_output/&quot;</span>
+<span class="n">feature_call_stacked</span><span class="p">[</span><span class="s1">&#39;good_coverage&#39;</span><span class="p">]</span><span class="o">=</span><span class="kc">True</span>
+<span class="n">feature_call_stacked</span><span class="p">[</span><span class="s1">&#39;number_of_cells&#39;</span><span class="p">]</span><span class="o">=</span><span class="mf">1.0</span>
+<span class="n">feature_call_stacked</span><span class="p">[</span><span class="s2">&quot;gemgroup&quot;</span><span class="p">]</span><span class="o">=</span><span class="mi">1</span>
+
+<span class="n">tst</span><span class="o">=</span><span class="n">feature_call_stacked</span><span class="p">[[</span><span class="s1">&#39;cell_barcode&#39;</span><span class="p">,</span><span class="s1">&#39;guide_identity&#39;</span><span class="p">,</span><span class="s1">&#39;read_count&#39;</span><span class="p">,</span><span class="s1">&#39;UMI_count&#39;</span><span class="p">,</span><span class="s1">&#39;coverage&#39;</span><span class="p">,</span><span class="s1">&#39;gemgroup&#39;</span><span class="p">,</span><span class="s1">&#39;good_coverage&#39;</span><span class="p">,</span><span class="s1">&#39;number_of_cells&#39;</span><span class="p">]]</span>
+<span class="n">tst</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">output_dir</span><span class="o">+</span><span class="s1">&#39;cell_identities.csv&#39;</span><span class="p">,</span><span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<br/></pre></div>
+</div>
+</div>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../../analysis_scripts.html" class="btn btn-neutral float-left" title="Analysis Scripts &amp; Pipelines" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="2B_guide_calling_cellrangerfilter4_idealguides.html" class="btn btn-neutral float-right" title="Filtering for Cells with Ideal Combination of Guides" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026, Helen King.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

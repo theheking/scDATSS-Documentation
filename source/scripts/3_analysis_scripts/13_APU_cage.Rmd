@@ -1,0 +1,319 @@
+---
+title: "13_APU_TFs"
+output: html_document
+date: "2025-03-13"
+---
+
+
+Promoter Distribution Analysis
+This section integrates CAGE-seq data from the Eukaryotic Promoter Database (EPD) with TF and RNA-binding protein (RBP) reference lists.
+
+Quantification: The script calculates the number of unique promoters associated with each gene (Ensembl ID).
+
+Binning: Genes are categorized into discrete groups (1, 2, 3, 4, 5+) and a binary classification (Single vs. Multi-promoter).
+
+Visualisation: Bar charts illustrate the global distribution of promoter counts, revealing how many genes in the MCF-7 line utilize multiple transcription start sites.
+
+```{r}
+
+#Load MCF7 CAGE seq 
+
+###---------------
+#LOAD LIBRARIES
+###----------------
+library(readr)
+library(pROC)
+library(cowplot)
+library(ggpubr)
+library(tidyr)
+library(clusterProfiler)
+library(enrichplot)
+library(ggplot2)
+library(broom)
+library(dplyr)
+library(org.Hs.eg.db)
+
+# Define colors
+color1 <- "#4d00c7"
+palecolor1 <- "#b366ff"
+color2 <- "#da3c07"
+palecolor2 <- "#ff8954"
+color3 <- "#05d3d3"
+color4 <- "#c6c7c5"
+color5 <- "black"
+
+#make palette 15 longer
+pal_1 <- c("#FC8B9F","#89B432","#645AA4","#F6E6BD", "#EE5A5A", "#315A7B", "#31573F", "#DE73CD",
+           "#81B9E5","#F7A5A7", "#801E1E", "#FF8B00", "#FFB300", "#FFDA00", "#A3D8E0" )
+palette_1 <- c( "#3E7BBF",  "#E55352", "#801E1E", "#81B9E5","#F7A5A7", "#F37374", "#0F4B82", "#5A9BD3",   "#315A7B","#31573F")
+```
+
+
+
+
+
+
+```{r}
+# Read the CSV file
+#check https://humantfs.ccbr.utoronto.ca/download/v_1.01/TFs_Ensembl_v_1.01.txt#https://humant fs.ccbr.utoronto.ca/download.php
+EPD_CAGE <- readr::read_csv("../../../alt-prom-crispr-fiveprime/files/reference/ENCFF917XEM_EPD.csv")
+human_tfs <- read.table("../../../alt-prom-crispr-fiveprime/files/reference/TFs_Ensembl_v_1.01.txt" ,header = TRUE, sep = "\t", skip = 1)
+rbps <- read.csv("../../../alt-prom-crispr-fiveprime/files/reference/RBPbase_Download_2025-03-14.csv" ,header = TRUE)
+loc <- "../../../alt-prom-crispr-fiveprime/files/bulk_rnaseq/"
+
+
+# Count occurrences per gene
+grouped <- EPD_CAGE %>%
+  group_by(ensembl_id) %>%
+  summarise(count_num = n())
+
+#group together any genes that have over 6
+grouped$count_num_discrete <- ifelse(grouped$count_num > 4, "5+", as.character(grouped$count_num))
+grouped$count_num_binary <- ifelse(grouped$count_num > 1, "2+", as.character(grouped$count_num))
+
+# Create count plot
+a <- ggplot(grouped, aes(x = factor(count_num_discrete))) +  # Treat x-axis as categorical
+  geom_bar(fill = palecolor1, color = color1) +
+  scale_x_discrete(breaks = c("1", "2", "3", "4", "5","6","7+")) +  # Show only discrete ticks
+  labs(x = "Number of Promoters \n Found Per Gene w CAGE EPD", 
+       y = "Frequency in \n MCF-7 Cell-Line") 
+b <- ggplot(grouped, aes(x = factor(count_num_binary))) +  # Treat x-axis as categorical
+  geom_bar(fill = palecolor1, color = color1) +
+  scale_x_discrete(breaks = c("1", "2+")) +  # Show only discrete ticks
+  labs(x = "Number of Promoters \n Found Per Gene w CAGE EPD", 
+       y = "Frequency in \n MCF-7 Cell-Line")
+
+ggarrange(a, b, ncol = 2, nrow = 1, #labbel A and B
+          labels = c("A", "B"))
+
+```
+
+
+
+
+
+
+```{r}
+#look at the genes expressing two or more promoters 
+genes <- grouped %>% 
+  mutate(count_num = as.numeric(count_num)) %>% #sort by count
+  filter(count_num > 1) 
+#sort accourting to count_num
+genes <- genes[order(genes$count_num, decreasing = TRUE),]
+
+```
+
+
+
+
+```{r}
+#get the expression of the genes it iterating through "files/bulk_rnaseq/SGNex_MCF7_Illumina_replicate2_run1.gene.tpm.gz"  import and make a column in the 
+count_start=0
+for (sample_name in list.files(loc, pattern="gene", full.names = TRUE)){
+  if (count_start == 0){
+    print(sample_name)
+       sample <- read_table(sample_name) #remove loc at beginning of sample name and .gene.tpm.gz at the end 
+       strstr <- strsplit(sample_name, "/")[[1]][10]
+       sample_name_str <- as.character(strsplit(strstr, ".gene.tpm.gz")[1])
+        #change the colnames add sample name to TpM and read counts 
+       sample$sample_name <- sample_name_str
+       count_start <- count_start + 1
+     } else {
+       sample2 <- read_table(sample_name)
+       sample2$sample_name <- sample_name
+       sample <- rbind(sample, sample2)
+     }
+}
+
+#make so that there is only TPM for each sample with genes as each row 
+sample_matrix <- sample %>% as.data.frame() %>%
+  dplyr::select(Gene, sample_name, TpM) %>% #pivot wider
+  pivot_wider(names_from = sample_name, values_from = TpM) %>% 
+  tibble::column_to_rownames(var = "Gene") %>% 
+  as.data.frame() %>% mutate(mean_TpM = rowMeans(.[,1:ncol(.)], na.rm = TRUE))
+
+expressed <- sample_matrix %>% filter(mean_TpM > 5) %>% rownames() %>% as.data.frame()
+#make a liust of genes that are exprssed above 5 TPM 
+write_delim(sample_matrix %>% filter(mean_TpM > 5) %>% rownames() %>% as.data.frame(), "/Users/helenking/Documents/Weatheritt_Lab/alternative-promoter-identification/annotations/CAGE/genes_expressed_above_5.txt")
+#left merge sample_matrix with genes grouped 
+sample_matrix <- merge(sample_matrix, grouped, by.x = "row.names", by.y="ensembl_id", all.y = TRUE)
+
+#YN is there TFs 
+sample_matrix$TF <- ifelse(sample_matrix$Row.names %in% human_tfs$DUX3_HUMAN, "TF", "Non-TF")
+#there are sometimes | in the gene names so need to remove them and expand 
+rbps_list <- strsplit(rbps$ID, "\\|") %>% unlist() %>% unique()
+sample_matrix$RBPS <- ifelse(sample_matrix$Row.names %in% rbps_list, "RBP", "Non-RBP")
+sample_matrix_final <- sample_matrix
+```
+
+
+Modeling Expression vs. Promoter Complexity
+This block explores whether genes with more promoters are more highly expressed or regulated differently.
+
+Violin Plots (A): Compares mean TPM between single and multi-promoter genes, stratified by TF status. Statistical significance is assessed using Bonferroni-adjusted t-tests.
+
+Regression Analysis (B): A regression model quantifies the correlation between the absolute number of promoters and the mean gene expression, utilizing a log10 scale for clarity.
+
+
+```{r}
+
+# Count the number of samples per group
+sample_counts <- sample_matrix %>%
+  group_by(count_num_binary,TF) %>%
+  summarise(n = n())
+
+# Create the violin plot
+a <- ggviolin(sample_matrix[order(sample_matrix$count_num, decreasing = FALSE),], 
+              x = "count_num_binary", y = "mean_TpM", color = "TF", 
+              ylab = "Mean TPM", xlab = "Number of Promoters",  
+              yscale = "log10", palette = c("#3E7BBF", "#E55352"), 
+              add = "boxplot", add.params = list(fill = "white")) +
+  # Add statistical comparisons
+  geom_pwc(aes(group = TF), tip.length = 0,
+           method = "t_test", label = "{p.adj.format}{p.adj.signif}",
+           p.adjust.method = "bonferroni", p.adjust.by = "group",
+           hide.ns = TRUE) +
+
+  # Add sample size labels for both `count_num_binary` and `TF`
+  geom_text(data = sample_counts, aes(x = count_num_binary, y = 0.05, 
+                                      label = paste0("n=", n), color = TF), 
+            position = position_dodge(width = 0.8), vjust = 1.5, size = 5, fontface = "bold")
+
+b <- ggplot(sample_matrix %>% filter(count_num < 9), aes(x = count_num, y = mean_TpM)) +
+  stat_summary(fun = mean, geom = "point", size = 3, color = "#3E7BBF") + 
+  stat_summary(fun.data = mean_cl_boot, geom = "errorbar", width = 0.3, color = "#3E7BBF") + 
+  geom_smooth(method = "lm", se = TRUE, color = "black") + 
+  scale_y_log10() +
+  labs(x = "Number of Promoters", y = "Mean Gene TPM") +
+  theme_classic() + #add regression 
+  stat_cor(aes(), label.x = 1)
+#plot 
+cowplot::plot_grid(a, b, ncol = 2, labels = c("A", "B"), #make larger
+                   rel_heights = c(1, 1))
+          
+```
+
+
+```{r}
+#actually calculate the p-value bonferroini 
+#with geom_pwc 
+
+# Compute Bonferroni-adjusted pairwise t-tests
+pval_table <- compare_means(
+  formula = mean_TpM ~ TF, 
+  data = sample_matrix, 
+  group.by = "count_num_binary", 
+  method = "t.test",
+  p.adjust.method = "bonferroni"
+)
+
+# View the result
+print(pval_table)
+```
+
+
+
+Transcription Factor Prevalence Analysis
+Focusing on the subset of expressed genes (TPM > 5), this block visualizes TF density.
+
+Absolute Counts (C): A stacked bar chart showing the raw number of genes at each promoter level.
+
+Proportional Shifts (D): A filled bar chart showing the proportion of TFs vs. non-TFs. This visualization highlights a key finding: as the number of promoters increases, the proportion of genes that are Transcription Factors also rises significantly.
+
+```{r}
+#filter for the TPM above 5 
+
+
+sample_matrix_sub <- sample_matrix %>% filter(mean_TpM > 5)
+ #do count plot of the number of genes that are TF per promoter
+a <- sample_matrix_sub %>% group_by(count_num_discrete, TF) %>%
+  ggplot(aes(x = TF, fill = count_num_discrete )) + #plot the percentage population
+  geom_bar(stat = "count", position = "stack") +
+  labs(y = "Absolute Count of Genes", x = "", fill = "Number of \n Promoters") +
+  theme_minimal() +  #add palette
+  scale_fill_manual(values = pal_1) 
+#do count plot of the number of genes that are TF per promoter
+b <- sample_matrix_sub %>% group_by(count_num_binary, TF) %>% summarise(n = n()) %>% 
+  ggplot(aes(x = TF, y = n, fill = count_num_binary )) + #plot the percentage population
+  geom_bar(stat = "identity", position = "fill") +
+  labs(y = "Proportion of Genes", x = "", fill = "Number of \n Promoters") +
+  theme_minimal() + #add palette
+  scale_fill_manual(values = palette_1) 
+#statsitcal test between proportion 
+
+ggarrange(a, b, ncol = 2, nrow = 1, #labbel A and B
+          labels = c("C", "D"))
+
+
+```
+
+This section moves beyond visualization to formal enrichment testing. Using a Fisher's Exact Test and a Chi-squared test, the script calculates whether multi-promoter usage is statistically "enriched" in Transcription Factors compared to the rest of the genome.
+
+
+```{r}
+#fishers exact test 
+mosaic_data <- sample_matrix_sub %>% group_by(count_num_binary, TF) %>% summarise(n = n()) %>% #make pivot table
+  pivot_wider(names_from = TF, values_from = n) %>% as.data.frame() 
+rownames(mosaic_data) <- mosaic_data$count_num_binary
+mosaic_data <- mosaic_data %>% dplyr::select(-count_num_binary)
+
+print(fisher.test(mosaic_data))
+print(chisq.test(mosaic_data)$expected)
+print(mosaic_data)
+
+```
+Logistic Regression & Predictive Modeling
+To determine the predictive power of promoter counts, a logistic regression model is fitted to the data.
+
+Probability Curve: The model estimates the probability of a gene being a TF based solely on its promoter count.
+
+Performance Evaluation: An ROC (Receiver Operating Characteristic) curve is plotted, and the AUC (Area Under the Curve) is calculated to measure how accurately promoter complexity can distinguish TFs from other genes.
+
+```{r}
+#count the number of promoters per gene and the number of genes that are TFs
+sample_matrix_pergene <- sample_matrix_sub %>% dplyr::select(TF, count_num, count_num_discrete, Row.names) %>%
+  mutate(TF_binary = ifelse(TF == "TF", 1, 0)) 
+
+
+# Fit logistic regression model
+model <- glm(TF_binary ~ count_num, data = sample_matrix_pergene, family = binomial)
+summary(model) 
+
+#plot
+
+# Predict probabilities
+sample_matrix_pergene$predicted_prob <- predict(model, type = "response")
+
+# Plot
+ggplot(sample_matrix_pergene, aes(x = count_num, y = TF_binary)) +
+  geom_jitter(height = 0.05, alpha = 0.3) +  # Jitter points for better visibility
+  geom_smooth(method = "glm", method.args = list(family = "binomial"), se = TRUE, color = "blue") +
+  labs(x = "Number of Promoters", y = "Probability of Being a TF") +
+  theme_minimal()
+
+tidy(model) %>%
+  mutate(OR = exp(estimate), lower = exp(estimate - 1.96 * std.error), upper = exp(estimate + 1.96 * std.error)) %>%
+  ggplot(aes(x = term, y = OR)) +
+  geom_col(fill = "lightblue") +
+  geom_errorbar(aes(ymin = lower, ymax = upper), width = 0.2) +
+  scale_y_log10() +
+  labs(x = "Predictor", y = "Odds Ratio (log scale)") +
+  theme_minimal()
+
+
+
+roc_curve <- roc(sample_matrix_pergene$TF_binary, predict(model, type = "response"))
+plot(roc_curve, col = "red", main = "ROC Curve for TF Prediction")
+auc(roc_curve)  # Get AUC value
+
+```
+
+
+```{r}
+head(sample_matrix_final)
+```
+
+
+
+
+

@@ -1,0 +1,10 @@
+Transcriptional Divergence (E-Stats & Differential Expression)
+===============================================================
+
+.. toctree::
+   :maxdepth: 1
+   
+   ../scripts/3_analysis_scripts/4_estatistic_gene_guide.ipynb
+   ../scripts/3_analysis_scripts/5_genekd_neighbouring_gene_expression.ipynb
+   ../scripts/3_analysis_scripts/6_perturbseq_tsne_kldivergence_umap.ipynb
+   ../scripts/3_analysis_scripts/8_perturbseq_differentialexpression.ipynb

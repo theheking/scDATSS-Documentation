@@ -1,0 +1,158 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Guide Design &mdash; Isoform Specific Perturb-Seq  documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="_static/copybutton.js?v=f281be69"></script>
+      <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="FlashFry Dual Guide Design" href="scripts/2_guide_design/2_FlashFry_dualguide.html" />
+    <link rel="prev" title="RefTSS and TSS Comparison" href="scripts/1_promoter_identification/1C_refTSS_andTSS.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            Isoform Specific Perturb-Seq
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Analysis Pipeline:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="promoter_identification.html">Promoter Identification</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Guide Design</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#flashfry-analysis">FlashFry Analysis</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="scripts/2_guide_design/2_FlashFry_dualguide.html">FlashFry Dual Guide Design</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#design-strategy">Design Strategy</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="analysis_scripts.html">Analysis Scripts &amp; Pipelines</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Isoform Specific Perturb-Seq</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Guide Design</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/guide_design.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="guide-design">
+<span id="id1"></span><h1>Guide Design<a class="headerlink" href="#guide-design" title="Link to this heading"></a></h1>
+<p>Procedures for selecting ideal promoter-specific guides using FlashFry. We prioritize
+protospacers within the first 100 bp of the TSS to maximize CRISPRi efficiency.</p>
+<section id="flashfry-analysis">
+<span id="id2"></span><h2>FlashFry Analysis<a class="headerlink" href="#flashfry-analysis" title="Link to this heading"></a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="scripts/2_guide_design/2_FlashFry_dualguide.html">FlashFry Dual Guide Design</a></li>
+</ul>
+</div>
+</section>
+<section id="design-strategy">
+<h2>Design Strategy<a class="headerlink" href="#design-strategy" title="Link to this heading"></a></h2>
+<p><strong>Negative Controls</strong></p>
+<p>With regards to negative controls: in previous papers the % varies from ~2% to ~5% of total sgRNA with a minimum number of 5 negative controls. For the controls here, we are using the negative controls from Weissman hCRISPRi library which are scrambled. To make these guides, the frequency of each DNA base at each position along the sgRNA protospacer sequence was calculated. Random sgRNA protospacer sequences weighted by these base frequencies were then generated to mirror the composition of the targeting sgRNAs. These were then filtered for sgRNAs based on mismatch scores proximal to TSS.</p>
+<p><strong>Guide Selection Workflow</strong></p>
+<p>Using the P1 and P2 regions that are found through the promoter identification pipeline, the guides chosen were decided through these following steps:</p>
+<ol class="arabic simple">
+<li><p><strong>Quality Filtering:</strong>
+* Removed enzyme sites, polyT (length &gt;= 4bp) and GC content between 80% and 20%
+* Removed sites close to one another</p></li>
+<li><p><strong>Database Priority:</strong>
+* First chose guides that are found in hCRISPRiv2.1 database
+* Then chose guides in CRISPRDO with greater than 80% efficacy score</p></li>
+<li><p><strong>Final Selection:</strong>
+* Then chose the top 4 guides by rank (the rank is an aggregated score of all the different on-target and off-target metrics)
+* E.g. guide with rank 1 would be chosen first</p></li>
+</ol>
+<p><strong>Quick Downloads:</strong></p>
+<ul class="simple">
+<li><p><a class="reference download internal" download="" href="_downloads/e15e6133ac85b8a0b0bd512a50a1055b/2_FlashFry_dualguide.html"><code class="xref download docutils literal notranslate"><span class="pre">FlashFry</span> <span class="pre">Analysis</span> <span class="pre">Report</span> <span class="pre">(HTML)</span></code></a></p></li>
+</ul>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Refer to the internal <code class="docutils literal notranslate"><span class="pre">README.md</span></code> in the guide design folder for specific library construction details.</p>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="scripts/1_promoter_identification/1C_refTSS_andTSS.html" class="btn btn-neutral float-left" title="RefTSS and TSS Comparison" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="scripts/2_guide_design/2_FlashFry_dualguide.html" class="btn btn-neutral float-right" title="FlashFry Dual Guide Design" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026, Helen King.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

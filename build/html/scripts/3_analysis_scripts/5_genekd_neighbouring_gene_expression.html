@@ -1,0 +1,533 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Target gene and neighbouring gene expression &mdash; Isoform Specific Perturb-Seq  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../_static/nbsphinx-code-cells.css?v=2aa19091" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../_static/copybutton.js?v=f281be69"></script>
+      <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+      <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+      <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-mml-chtml.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Quantitative individual UMAPs per gene of interest" href="6_perturbseq_tsne_kldivergence_umap.html" />
+    <link rel="prev" title="Guide Calling Using the Cellranger Module HDF5 File" href="4_estatistic_gene_guide.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            Isoform Specific Perturb-Seq
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Analysis Pipeline:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../promoter_identification.html">Promoter Identification</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../guide_design.html">Guide Design</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../analysis_scripts.html">Analysis Scripts &amp; Pipelines</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../../analysis_scripts.html#preprocessing-guide-calling">Preprocessing &amp; Guide Calling</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../analysis_scripts.html#splicing-rna-velocity">Splicing &amp; RNA Velocity</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../analysis_scripts.html#transcriptional-divergence-e-stats">Transcriptional Divergence (E-Stats)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../analysis_scripts.html#cell-phase-pathway-modeling">Cell Phase &amp; Pathway Modeling</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../../analysis_scripts.html#clinical-differential-expression">Clinical &amp; Differential Expression</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="2A_cellranger_guidecalling.html">Guide Calling for Dual Guides</a></li>
+<li class="toctree-l3"><a class="reference internal" href="2B_guide_calling_cellrangerfilter4_idealguides.html">Filtering for Cells with Ideal Combination of Guides</a></li>
+<li class="toctree-l3"><a class="reference internal" href="4_estatistic_gene_guide.html">Guide Calling Using the Cellranger Module HDF5 File</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Target gene and neighbouring gene expression</a></li>
+<li class="toctree-l3"><a class="reference internal" href="6_perturbseq_tsne_kldivergence_umap.html">Quantitative individual UMAPs per gene of interest</a></li>
+<li class="toctree-l3"><a class="reference internal" href="7_cellphase_model.html">Cell Assignment Model from FUCCI-Matched Single-Cell Paper</a></li>
+<li class="toctree-l3"><a class="reference internal" href="8_perturbseq_differentialexpression.html">Differential Expression analysis between P1 &amp; P2</a></li>
+<li class="toctree-l3"><a class="reference internal" href="9A_cnv_score.html">Investigating Copy Number Variation Across KD Populations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="9B_velocity_loom.html">Velocity and pyGSEA calculations of ESR1</a></li>
+<li class="toctree-l3"><a class="reference internal" href="11_spectra.html">Spectra Analysis</a></li>
+<li class="toctree-l3"><a class="reference internal" href="12_negativecontrol.html">Guide Calling Using the Cellranger Module HDF5 File</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Isoform Specific Perturb-Seq</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../analysis_scripts.html">Analysis Scripts &amp; Pipelines</a></li>
+      <li class="breadcrumb-item active">Target gene and neighbouring gene expression</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/scripts/3_analysis_scripts/5_genekd_neighbouring_gene_expression.ipynb.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="Target-gene-and-neighbouring-gene-expression">
+<h1>Target gene and neighbouring gene expression<a class="headerlink" href="#Target-gene-and-neighbouring-gene-expression" title="Link to this heading"></a></h1>
+<ol class="arabic simple">
+<li><p>Run through the 10x Cellranger pipeline and velocyto for single cell RNAseq quatification and using (2) guides quantifiction. all found in the cellranger files folder <strong>bash</strong></p></li>
+<li><p>Guide Calling for dual guide. Use repogle method to take molecule.h5 generated by cellranger and py to run through repogle version of guide calling or use cellranger_guidecalling.ipynb for Direct Capture Perturb-Seq dual guide. Formed guide-specific lists of cells.</p></li>
+<li><p>Pseudobulk analysis. A. Seperation of guide-specific fastq files. <strong>bash</strong> B. Whippet pseudobulk for transcript specific analysis, post UMI deduplication. <strong>bash</strong> C. Transcript quality control. <strong>R</strong> D. Whippet result visualisation.</p></li>
+<li><p>Normalisation of adata object and E-distance of KD</p></li>
+<li><p><strong>Check gene and neighboring gene expression</strong></p></li>
+<li><p>Create individual umaps per gene of interest A. UMAPs B. Rand Index score</p></li>
+<li><p>Cell phase assignment model from FUCCI-matched single cell paper (GSE146773_)</p></li>
+<li><p>Differential Expression analysis. A. Find the shared P1 and P2 genes. B. Check the shared P1 and P2 across different protospacers with the same A/B and C/D.</p></li>
+<li><p>CNV Score &amp; Numbat to quantify and Velocity quantification with loom file</p></li>
+<li><p>ESR1-specific analysis from proliferation analysis to rt-qpcr</p></li>
+<li><p>Spectra analysis and visualisation for pathway enrichment</p></li>
+</ol>
+<p>This notebook, 5_genekd_neighbouring_gene_expression.ipynb, focuses on the specificity and quality control of the CRISPR interference (CRISPRi) perturbations. Specifically, it ensures that the observed transcriptomic changes are caused by the targeted gene knockdown and not by accidental silencing of nearby “neighbouring” genes.</p>
+<p>Here is a breakdown of the computational steps and biological significance of this notebook:</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="k">load_ext</span> autoreload
+<span class="o">%</span><span class="k">matplotlib</span> inline
+<span class="o">%</span><span class="k">autoreload</span> 2
+<span class="c1">#general</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">scanpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sc</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pl</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">anndata</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">ad</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">hdf5plugin</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">warnings</span>
+<span class="c1">#form a location</span>
+<span class="n">loc</span><span class="o">=</span><span class="s2">&quot;alt-prom-crispr-fiveprime/&quot;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">seaborn</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sns</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">tqdm.notebook</span><span class="w"> </span><span class="kn">import</span> <span class="n">tqdm</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">scperturb</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
+<span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">loc</span><span class="o">+</span><span class="s1">&#39;scripts/&#39;</span><span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">apu_analysis</span><span class="w"> </span><span class="kn">import</span> <span class="o">*</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">scperturb</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">infercnvpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">cnv</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">apu_analysis.cell_import</span><span class="w"> </span><span class="kn">import</span> <span class="n">CellPopulation</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">IPython.display</span><span class="w"> </span><span class="kn">import</span> <span class="n">clear_output</span>
+<span class="n">pd</span><span class="o">.</span><span class="n">options</span><span class="o">.</span><span class="n">display</span><span class="o">.</span><span class="n">float_format</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{:.4f}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+
+<span class="c1">#for this python</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">scipy.special</span><span class="w"> </span><span class="kn">import</span> <span class="n">rel_entr</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">sklearn.cluster</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">cluster</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">umap</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">scipy</span><span class="w"> </span><span class="kn">import</span> <span class="n">stats</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">scipy.stats</span><span class="w"> </span><span class="kn">import</span> <span class="n">bootstrap</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">statsmodels.stats.multitest</span><span class="w"> </span><span class="kn">import</span> <span class="n">multipletests</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="kn">import</span> <span class="n">reshape</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="kn">import</span> <span class="n">array</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.decomposition</span><span class="w"> </span><span class="kn">import</span> <span class="n">PCA</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.patches</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">mpatches</span>
+<span class="c1"># from statannotations.Annotator import Annotator</span>
+
+
+<span class="c1"># Taken from:</span>
+<span class="c1"># Adamson, B.A., Norman, T.M., *et al.* &quot;A multiplexed CRISPR screening platform enables systematic dissection of the unfolded protein response&quot;, *Cell*, 2016.</span>
+<span class="c1"># My experiment deals with two KDs- one of the MP, one of the AP using two guides. Positve controls include GINS1 ect. This is a combnatorial KD double for the same gene. No treatments were used</span>
+
+<span class="c1"># colours using garvan</span>
+<span class="n">color1</span> <span class="o">=</span><span class="s1">&#39;#4d00c7&#39;</span>
+<span class="n">palecolor1</span><span class="o">=</span><span class="s2">&quot;#b366ff&quot;</span>
+<span class="n">color2</span><span class="o">=</span> <span class="s1">&#39;#da3c07&#39;</span>
+<span class="n">palecolor2</span><span class="o">=</span><span class="s2">&quot;#ff8954&quot;</span>
+<span class="n">color3</span><span class="o">=</span><span class="s1">&#39;#05d3d3&#39;</span>
+<span class="n">color4</span><span class="o">=</span><span class="s1">&#39;#c6c7c5&#39;</span>
+<span class="n">color4</span><span class="o">=</span><span class="s2">&quot;#434541&quot;</span>
+<span class="n">color5</span><span class="o">=</span><span class="s2">&quot;#eb31e1&quot;</span>
+<span class="n">color6</span><span class="o">=</span><span class="s2">&quot;#3175eb&quot;</span>
+<span class="n">color7</span><span class="o">=</span><span class="s2">&quot;#a7eb31&quot;</span>
+<span class="n">color8</span><span class="o">=</span><span class="s2">&quot;#b366ff&quot;</span>
+<span class="n">color9</span><span class="o">=</span><span class="s2">&quot;#ff8954&quot;</span>
+<span class="n">color10</span><span class="o">=</span><span class="s2">&quot;#35c9d4&quot;</span>
+
+<span class="c1">#use viridis</span>
+<span class="c1"># color1=&quot;#fde725&quot;</span>
+<span class="c1"># color2=&quot;#7ad151&quot;</span>
+<span class="c1"># color3=&quot;#22a884&quot;</span>
+<span class="c1"># color4=&quot;#2a788e&quot;</span>
+<span class="c1"># color5=&quot;#2a788e&quot;</span>
+<span class="c1"># color6=&#39;#440154&#39;</span>
+
+<span class="c1"># # Set the color for the histogram</span>
+<span class="n">color1</span> <span class="o">=</span><span class="s1">&#39;#4d00c7&#39;</span>
+<span class="n">palecolor1</span><span class="o">=</span><span class="s2">&quot;#b366ff&quot;</span>
+<span class="n">color2</span><span class="o">=</span> <span class="s1">&#39;#da3c07&#39;</span>
+<span class="n">palecolor2</span><span class="o">=</span><span class="s2">&quot;#ff8954&quot;</span>
+<span class="n">color3</span><span class="o">=</span><span class="s1">&#39;#05d3d3&#39;</span>
+<span class="n">color4</span><span class="o">=</span><span class="s1">&#39;#c6c7c5&#39;</span>
+<span class="n">color5</span><span class="o">=</span><span class="s1">&#39;black&#39;</span>
+
+<span class="c1"># Set the color for the histogram</span>
+<span class="n">color1</span> <span class="o">=</span><span class="s1">&#39;#4d00c7&#39;</span>
+<span class="n">palecolor1</span><span class="o">=</span><span class="s2">&quot;#b366ff&quot;</span>
+<span class="n">color2</span><span class="o">=</span> <span class="s1">&#39;#da3c07&#39;</span>
+<span class="n">palecolor2</span><span class="o">=</span><span class="s2">&quot;#ff8954&quot;</span>
+<span class="n">color3</span><span class="o">=</span><span class="s1">&#39;#05d3d3&#39;</span>
+<span class="n">color4</span><span class="o">=</span><span class="s1">&#39;#c6c7c5&#39;</span>
+<span class="n">color5</span><span class="o">=</span><span class="s1">&#39;black&#39;</span>
+
+<span class="c1"># # Create the color palette</span>
+<span class="c1"># Create the color palette</span>
+<span class="n">palette</span> <span class="o">=</span> <span class="n">sns</span><span class="o">.</span><span class="n">color_palette</span><span class="p">([</span><span class="n">palecolor1</span><span class="p">,</span><span class="n">palecolor2</span><span class="p">])</span>
+<span class="n">palette2</span> <span class="o">=</span> <span class="n">sns</span><span class="o">.</span><span class="n">color_palette</span><span class="p">([</span><span class="n">color1</span><span class="p">,</span> <span class="n">color2</span><span class="p">,</span> <span class="n">color3</span><span class="p">,</span> <span class="n">color4</span><span class="p">,</span><span class="n">color5</span><span class="p">,</span><span class="n">color6</span> <span class="p">,</span><span class="n">color7</span><span class="p">])</span>
+<span class="n">new_palette</span> <span class="o">=</span> <span class="n">sns</span><span class="o">.</span><span class="n">color_palette</span><span class="p">([</span><span class="n">color1</span><span class="p">,</span> <span class="n">color2</span><span class="p">,</span><span class="n">color3</span><span class="p">,</span> <span class="n">color2</span><span class="p">,</span><span class="n">color1</span><span class="p">,</span> <span class="n">color2</span><span class="p">,</span><span class="n">color1</span><span class="p">,</span> <span class="n">color2</span><span class="p">,</span><span class="n">color1</span><span class="p">,</span> <span class="n">color2</span><span class="p">,</span><span class="n">color1</span><span class="p">,</span> <span class="n">color2</span><span class="p">,</span> <span class="n">color3</span><span class="p">,</span> <span class="n">color4</span><span class="p">])</span>
+
+
+<span class="n">warnings</span><span class="o">.</span><span class="n">filterwarnings</span><span class="p">(</span><span class="s1">&#39;ignore&#39;</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Scanpy&quot;</span><span class="p">,</span> <span class="n">sc</span><span class="o">.</span><span class="n">__version__</span><span class="p">)</span>
+<span class="o">%</span><span class="k">matplotlib</span> inline
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+/Users/helenking/anaconda3/envs/apu/lib/python3.12/site-packages/tqdm/auto.py:21: TqdmWarning: IProgress not found. Please update jupyter and ipywidgets. See https://ipywidgets.readthedocs.io/en/stable/user_install.html
+  from .autonotebook import tqdm as notebook_tqdm
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Scanpy 1.10.3
+</pre></div></div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%capture</span>
+<span class="c1">##load the adata frame</span>
+<span class="n">adata</span> <span class="o">=</span> <span class="n">ad</span><span class="o">.</span><span class="n">read_h5ad</span><span class="p">(</span><span class="n">loc</span><span class="o">+</span><span class="s2">&quot;files/adata_normalised.h5ad&quot;</span><span class="p">)</span>
+<span class="c1">#set adata.X as log1p</span>
+<span class="n">adata</span><span class="o">.</span><span class="n">X</span> <span class="o">=</span> <span class="n">adata</span><span class="o">.</span><span class="n">layers</span><span class="p">[</span><span class="s2">&quot;log1p&quot;</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#gene list import</span>
+<span class="n">gene_list</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;</span>
+            <span class="n">sep</span><span class="o">=</span><span class="s1">&#39;</span><span class="se">\t</span><span class="s1">&#39;</span><span class="p">,</span>
+            <span class="n">header</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">names</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;chr&#39;</span><span class="p">,</span> <span class="s1">&#39;source&#39;</span><span class="p">,</span> <span class="s1">&#39;type&#39;</span><span class="p">,</span> <span class="s1">&#39;start&#39;</span><span class="p">,</span> <span class="s1">&#39;end&#39;</span><span class="p">,</span> <span class="s1">&#39;null1&#39;</span><span class="p">,</span> <span class="s1">&#39;orientation&#39;</span><span class="p">,</span> <span class="s1">&#39;null2&#39;</span><span class="p">,</span> <span class="s1">&#39;notes&#39;</span><span class="p">])</span>
+
+<span class="n">gene_list</span> <span class="o">=</span> <span class="n">gene_list</span><span class="p">[[</span><span class="s1">&#39;chr&#39;</span><span class="p">,</span> <span class="s1">&#39;source&#39;</span><span class="p">,</span> <span class="s1">&#39;type&#39;</span><span class="p">,</span> <span class="s1">&#39;start&#39;</span><span class="p">,</span> <span class="s1">&#39;end&#39;</span><span class="p">,</span> <span class="s1">&#39;orientation&#39;</span><span class="p">,</span> <span class="s1">&#39;notes&#39;</span><span class="p">]]</span>
+<span class="n">gene_list</span><span class="p">[</span><span class="s1">&#39;gene_id&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">gene_list</span><span class="p">[</span><span class="s1">&#39;notes&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;&quot;&#39;</span><span class="p">)[</span><span class="mi">1</span><span class="p">])</span>
+
+<span class="n">gene_list</span><span class="p">[</span><span class="s2">&quot;notes&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+
+<span class="n">gene_list</span><span class="p">[</span><span class="s1">&#39;gene_name&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">gene_list</span><span class="p">[</span><span class="s1">&#39;notes&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;&quot;&#39;</span><span class="p">)[</span><span class="mi">7</span><span class="p">])</span>
+<span class="n">gene_list</span><span class="p">[</span><span class="s1">&#39;gene_type&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">gene_list</span><span class="p">[</span><span class="s1">&#39;notes&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;&quot;&#39;</span><span class="p">)[</span><span class="mi">5</span><span class="p">])</span>
+
+<span class="n">protein_gene_list</span> <span class="o">=</span> <span class="n">gene_list</span><span class="p">[</span><span class="n">gene_list</span><span class="p">[</span><span class="s1">&#39;gene_type&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;protein_coding&quot;</span><span class="p">]</span>
+<span class="n">protein_gene_list</span> <span class="o">=</span> <span class="n">protein_gene_list</span><span class="p">[</span><span class="n">protein_gene_list</span><span class="p">[</span><span class="s2">&quot;gene_name&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">adata</span><span class="o">.</span><span class="n">var_names</span><span class="p">))]</span> <span class="c1">##subseet for the genes found in the signle cell matrix</span>
+<span class="n">protein_gene_list</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">genes_interest</span><span class="o">=</span><span class="n">adata</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;perturbation&quot;</span><span class="p">][</span><span class="o">~</span><span class="n">adata</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;perturbation&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">isin</span><span class="p">([</span><span class="s2">&quot;non-targeting&quot;</span><span class="p">])]</span><span class="o">.</span><span class="n">drop_duplicates</span><span class="p">()</span> <span class="c1">#create a list of genes to subset</span>
+<br/><br/></pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%capture</span>
+<span class="n">n</span> <span class="o">=</span><span class="mi">10</span>
+<span class="n">output</span><span class="o">=</span><span class="nb">list</span><span class="p">()</span>
+<span class="k">for</span> <span class="n">goi</span> <span class="ow">in</span> <span class="n">genes_interest</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">goi</span><span class="p">)</span>
+    <span class="n">subset</span> <span class="o">=</span> <span class="n">get_subset</span><span class="p">(</span><span class="n">gene_list</span><span class="p">,</span> <span class="n">goi</span><span class="p">)</span>
+    <span class="k">if</span> <span class="p">((</span><span class="n">subset</span><span class="o">.</span><span class="n">empty</span><span class="p">)</span> <span class="o">|</span> <span class="p">(</span><span class="n">goi</span><span class="o">==</span><span class="s2">&quot;UPF3B&quot;</span><span class="p">)</span> <span class="o">|</span> <span class="p">(</span><span class="n">goi</span><span class="o">==</span><span class="s2">&quot;STAG2&quot;</span><span class="p">)):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">goi</span><span class="p">,</span><span class="s2">&quot;not found&quot;</span><span class="p">)</span>
+        <span class="k">continue</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">check_promoters</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">goi</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">promoter</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;MP&quot;</span><span class="p">,</span><span class="s2">&quot;AP&quot;</span><span class="p">]:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="n">goi</span><span class="p">,</span><span class="s2">&quot;found&quot;</span><span class="p">)</span>
+                <span class="n">cell_barcodes</span> <span class="o">=</span> <span class="n">get_cell_barcodes_goi</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">goi</span><span class="p">,</span> <span class="n">promoter</span><span class="p">)</span>
+                <span class="n">neighboring_genes</span> <span class="o">=</span> <span class="n">get_neighboring_genes</span><span class="p">(</span><span class="n">protein_gene_list</span><span class="p">,</span> <span class="n">goi</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">subset</span><span class="p">)</span>
+                <span class="n">neighborhood</span> <span class="o">=</span> <span class="n">get_neighborhood</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">cell_barcodes</span><span class="p">,</span> <span class="n">neighboring_genes</span><span class="p">)</span>
+                <span class="n">control_neighborhood</span> <span class="o">=</span> <span class="n">get_control_neighborhood</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">neighboring_genes</span><span class="p">)</span>
+                <span class="n">output</span> <span class="o">+=</span> <span class="n">perform_ztest</span><span class="p">(</span><span class="n">neighborhood</span><span class="p">,</span> <span class="n">control_neighborhood</span><span class="p">,</span> <span class="n">neighboring_genes</span><span class="p">,</span> <span class="n">goi</span><span class="p">,</span> <span class="n">promoter</span><span class="p">,</span> <span class="n">n</span><span class="p">)</span>
+<span class="n">output_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">output</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;gene&#39;</span><span class="p">,</span> <span class="s1">&#39;promoter&#39;</span><span class="p">,</span><span class="s1">&#39;neighbouring_gene&#39;</span><span class="p">,</span> <span class="s1">&#39;position&#39;</span><span class="p">,</span><span class="s1">&#39;distance&#39;</span><span class="p">,</span><span class="s2">&quot;samechr&quot;</span> <span class="p">,</span><span class="s1">&#39;z_test&#39;</span><span class="p">,</span> <span class="s1">&#39;z_test_pvalue&#39;</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+<p>Neighbouring Gene Identification CRISPRi uses a KRAB domain to silence promoters, but this silencing can sometimes spread to adjacent genomic regions.</p>
+<p>What is happening: The code uses genomic coordinates to identify all genes located within a specific window (e.g., the “next-door” genes) of the 42 targeted candidates.</p>
+<p>Purpose: To create a reference set of genes that should not be affected if the CRISPRi targeting is truly promoter-specific.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Create a figure with two subplots</span>
+<span class="c1">#set style</span>
+<span class="n">sns</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">style</span><span class="o">=</span><span class="s2">&quot;whitegrid&quot;</span><span class="p">)</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">5</span><span class="p">),</span> <span class="n">dpi</span><span class="o">=</span> <span class="mi">600</span><span class="p">,</span> <span class="n">facecolor</span><span class="o">=</span><span class="s1">&#39;none&#39;</span><span class="p">)</span>
+<span class="c1"># order=[&quot;-5&quot;,&quot;-4&quot;,&quot;-3&quot;,&quot;-2&quot;,&quot;-1&quot;,&quot;0&quot;,&quot;1&quot;,&quot;2&quot;,&quot;3&quot;,&quot;4&quot;,&quot;5&quot;]</span>
+<span class="n">sns</span><span class="o">.</span><span class="n">boxplot</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">output_df</span><span class="p">[</span><span class="n">output_df</span><span class="p">[</span><span class="s2">&quot;z_test_pvalue&quot;</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mf">0.05</span><span class="p">],</span> <span class="n">y</span><span class="o">=</span><span class="s2">&quot;z_test&quot;</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="s2">&quot;position&quot;</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span> <span class="n">hue</span><span class="o">=</span><span class="s2">&quot;position&quot;</span><span class="p">,</span>  <span class="n">palette</span><span class="o">=</span><span class="n">palette</span><span class="p">)</span>
+<span class="c1"># , order=order)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;Z-Test (Relative to Negative Control)&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;Location Relative to Knockdown of Interest&quot;</span><span class="p">)</span>
+<span class="c1">#tremove the legend</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">([],[],</span> <span class="n">frameon</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">loc</span><span class="o">+</span><span class="s2">&quot;figures/5_gene_kd_neighboring/distance_overall.pdf&quot;</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s2">&quot;pdf&quot;</span><span class="p">,</span> <span class="n">bbox_inches</span><span class="o">=</span><span class="s2">&quot;tight&quot;</span><span class="p">)</span>
+<span class="n">sns</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">font_scale</span><span class="o">=</span><span class="mf">0.8</span><span class="p">)</span>
+<br/></pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+INFO:matplotlib.category:Using categorical units to plot a list of strings that are all parsable as floats or dates. If these strings should be plotted as numbers, cast to the appropriate data type before plotting.
+INFO:matplotlib.category:Using categorical units to plot a list of strings that are all parsable as floats or dates. If these strings should be plotted as numbers, cast to the appropriate data type before plotting.
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../../_images/scripts_3_analysis_scripts_5_genekd_neighbouring_gene_expression_7_1.png" src="../../_images/scripts_3_analysis_scripts_5_genekd_neighbouring_gene_expression_7_1.png" />
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">f</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">7</span><span class="p">,</span> <span class="mi">7</span><span class="p">))</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">xscale</span><span class="o">=</span><span class="s2">&quot;log&quot;</span><span class="p">)</span>
+
+<span class="n">sns</span><span class="o">.</span><span class="n">histplot</span><span class="p">(</span><span class="n">output_df</span><span class="p">[</span><span class="s2">&quot;distance&quot;</span><span class="p">][(</span><span class="n">output_df</span><span class="p">[</span><span class="s2">&quot;position&quot;</span><span class="p">]</span><span class="o">==</span><span class="mi">1</span><span class="p">)</span> <span class="o">&amp;</span><span class="p">(</span><span class="n">output_df</span><span class="p">[</span><span class="s2">&quot;promoter&quot;</span><span class="p">]</span><span class="o">==</span><span class="s2">&quot;MP&quot;</span><span class="p">)</span> <span class="p">]</span><span class="o">.</span><span class="n">abs</span><span class="p">(),</span><span class="n">ax</span><span class="o">=</span><span class="n">ax</span> <span class="p">)</span>
+<span class="c1"># save figujre</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">loc</span><span class="o">+</span><span class="s2">&quot;figures/5_gene_kd_neighboring/distance_hist.pdf&quot;</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s2">&quot;pdf&quot;</span><span class="p">,</span> <span class="n">bbox_inches</span><span class="o">=</span><span class="s2">&quot;tight&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../../_images/scripts_3_analysis_scripts_5_genekd_neighbouring_gene_expression_8_0.png" src="../../_images/scripts_3_analysis_scripts_5_genekd_neighbouring_gene_expression_8_0.png" />
+</div>
+</div>
+<p>The notebook performs a rigorous statistical comparison between “on-target” effects and “off-target” effects on genomic neighbours.</p>
+<p>Differential Expression: It compares the expression of the targeted gene and its neighbours in perturbed cells versus non-targeting control (NTC) cells using z-tests.</p>
+<p>Result Found: The analysis shows that while the targeted genes (e.g., ESR1) show significant knockdown, their neighbouring genes remain stably expressed. This confirms that the Isoform-Specific Perturb-Seq approach has high spatial resolution and does not cause widespread collateral silencing in the genome.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><br/><span></span><span class="c1">#get corrrelation between</span>
+<span class="n">output_df_zero</span> <span class="o">=</span> <span class="n">output_df</span><span class="p">[</span><span class="n">output_df</span><span class="p">[</span><span class="s2">&quot;position&quot;</span><span class="p">]</span><span class="o">==</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">output_df_zero</span><span class="o">=</span><span class="n">pd</span><span class="o">.</span><span class="n">pivot_table</span><span class="p">(</span><span class="n">output_df</span><span class="p">,</span> <span class="n">values</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;z_test&#39;</span><span class="p">],</span> <span class="n">index</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;gene&#39;</span><span class="p">,</span><span class="s1">&#39;position&#39;</span><span class="p">],</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;promoter&#39;</span><span class="p">])</span>
+<span class="n">output_df_zero</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">output_df_zero</span><span class="p">[</span><span class="s1">&#39;notzero&#39;</span><span class="p">]</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">output_df_zero</span><span class="p">[</span><span class="s2">&quot;position&quot;</span><span class="p">]</span><span class="o">==</span><span class="mi">0</span><span class="p">,</span><span class="kc">True</span><span class="p">,</span><span class="kc">False</span><span class="p">)</span>
+
+<span class="c1">#correlation between MP and AP KD</span>
+<span class="n">statistics_ttest_1</span><span class="o">=</span><span class="n">stats</span><span class="o">.</span><span class="n">ttest_ind</span><span class="p">(</span><span class="n">output_df_zero</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">output_df_zero</span><span class="p">[</span><span class="s1">&#39;notzero&#39;</span><span class="p">]</span><span class="o">==</span><span class="kc">True</span><span class="p">,(</span><span class="s1">&#39;z_test&#39;</span><span class="p">,</span> <span class="s1">&#39;MP&#39;</span><span class="p">)]</span><span class="o">.</span><span class="n">values</span><span class="p">,</span><span class="n">output_df_zero</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">output_df_zero</span><span class="p">[</span><span class="s1">&#39;notzero&#39;</span><span class="p">]</span><span class="o">==</span><span class="kc">False</span><span class="p">,(</span><span class="s1">&#39;z_test&#39;</span><span class="p">,</span> <span class="s1">&#39;MP&#39;</span><span class="p">)]</span><span class="o">.</span><span class="n">values</span> <span class="p">,</span> <span class="n">equal_var</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">statistics_ttest_2</span><span class="o">=</span><span class="n">stats</span><span class="o">.</span><span class="n">ttest_ind</span><span class="p">(</span><span class="n">output_df_zero</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">output_df_zero</span><span class="p">[</span><span class="s1">&#39;notzero&#39;</span><span class="p">]</span><span class="o">==</span><span class="kc">True</span><span class="p">,(</span><span class="s1">&#39;z_test&#39;</span><span class="p">,</span> <span class="s1">&#39;AP&#39;</span><span class="p">)]</span><span class="o">.</span><span class="n">values</span><span class="p">,</span><span class="n">output_df_zero</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">output_df_zero</span><span class="p">[</span><span class="s1">&#39;notzero&#39;</span><span class="p">]</span><span class="o">==</span><span class="kc">False</span><span class="p">,(</span><span class="s1">&#39;z_test&#39;</span><span class="p">,</span> <span class="s1">&#39;AP&#39;</span><span class="p">)]</span><span class="o">.</span><span class="n">values</span> <span class="p">,</span> <span class="n">equal_var</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+
+
+<span class="c1"># Create a figure with two subplots</span>
+<span class="n">sns</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">style</span><span class="o">=</span><span class="s2">&quot;white&quot;</span><span class="p">)</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">5</span><span class="p">),</span> <span class="n">dpi</span><span class="o">=</span> <span class="mi">600</span><span class="p">,</span> <span class="n">facecolor</span><span class="o">=</span><span class="s1">&#39;none&#39;</span><span class="p">)</span>
+<span class="n">sns</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">font_scale</span><span class="o">=</span><span class="mf">0.8</span><span class="p">)</span>
+<span class="n">order</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;0&quot;</span><span class="p">,</span><span class="s2">&quot;1&quot;</span><span class="p">,</span><span class="s2">&quot;2&quot;</span><span class="p">,</span><span class="s2">&quot;3&quot;</span><span class="p">,</span><span class="s2">&quot;4&quot;</span><span class="p">,</span><span class="s2">&quot;5&quot;</span><span class="p">]</span>
+<span class="n">output_df_sig</span><span class="o">=</span><span class="n">output_df</span><span class="p">[</span><span class="n">output_df</span><span class="p">[</span><span class="s2">&quot;z_test_pvalue&quot;</span><span class="p">]</span><span class="o">&lt;</span><span class="mf">0.05</span><span class="p">]</span>
+<span class="n">output_df_sig</span><span class="p">[</span><span class="s2">&quot;pos_position&quot;</span><span class="p">]</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">output_df_sig</span><span class="p">[</span><span class="s2">&quot;position&quot;</span><span class="p">])</span>
+<span class="n">g1</span><span class="o">=</span><span class="n">sns</span><span class="o">.</span><span class="n">boxplot</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">output_df_sig</span><span class="p">[(</span><span class="n">output_df_sig</span><span class="p">[</span><span class="s2">&quot;promoter&quot;</span><span class="p">]</span><span class="o">==</span><span class="s2">&quot;MP&quot;</span><span class="p">)],</span> <span class="n">y</span><span class="o">=</span><span class="s2">&quot;z_test&quot;</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="s2">&quot;pos_position&quot;</span><span class="p">,</span> <span class="n">hue</span><span class="o">=</span><span class="s2">&quot;pos_position&quot;</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">palette</span><span class="o">=</span><span class="n">palette</span><span class="p">,</span> <span class="n">order</span><span class="o">=</span><span class="n">order</span><span class="p">)</span>
+<span class="n">g2</span><span class="o">=</span><span class="n">sns</span><span class="o">.</span><span class="n">boxplot</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">output_df_sig</span><span class="p">[(</span><span class="n">output_df_sig</span><span class="p">[</span><span class="s2">&quot;promoter&quot;</span><span class="p">]</span><span class="o">==</span><span class="s2">&quot;AP&quot;</span><span class="p">)],</span> <span class="n">y</span><span class="o">=</span><span class="s2">&quot;z_test&quot;</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="s2">&quot;pos_position&quot;</span><span class="p">,</span> <span class="n">hue</span><span class="o">=</span><span class="s2">&quot;pos_position&quot;</span><span class="p">,</span><span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">palette</span><span class="o">=</span><span class="n">palette</span><span class="p">,</span> <span class="n">order</span><span class="o">=</span><span class="n">order</span><span class="p">)</span>
+<span class="c1">#remove the legend from each plot</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">legend</span><span class="p">([],[],</span> <span class="n">frameon</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">legend</span><span class="p">([],[],</span> <span class="n">frameon</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="mf">2.5</span><span class="p">,</span><span class="o">+</span><span class="mf">18.5</span><span class="p">,</span> <span class="s2">&quot;sgP1 Target v OffTarget: &quot;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span> <span class="n">statistics_ttest_1</span><span class="o">.</span><span class="n">pvalue</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="mi">12</span><span class="p">)),</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">12</span><span class="p">,</span> <span class="n">ha</span><span class="o">=</span><span class="s1">&#39;center&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="mf">2.5</span><span class="p">,</span><span class="o">-</span><span class="mf">8.5</span><span class="p">,</span> <span class="s2">&quot;sgP2 Target v OffTarget: &quot;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span> <span class="n">statistics_ttest_2</span><span class="o">.</span><span class="n">pvalue</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="mi">12</span><span class="p">)),</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">12</span><span class="p">,</span> <span class="n">ha</span><span class="o">=</span><span class="s1">&#39;center&#39;</span><span class="p">)</span>
+
+<span class="c1">#remove the xlabel from</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+<span class="c1">#same for ylabel</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+<span class="c1">#put the text</span>
+<span class="c1">#add the labels</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;Knockdown (z-test)&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;Knockdown Relative to the gene of interest&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">loc</span><span class="o">+</span><span class="s2">&quot;figures/5_gene_kd_neighboring/distance_promoter_spec.pdf&quot;</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s2">&quot;pdf&quot;</span><span class="p">,</span> <span class="n">bbox_inches</span><span class="o">=</span><span class="s2">&quot;tight&quot;</span><span class="p">)</span>
+<br/></pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+INFO:matplotlib.category:Using categorical units to plot a list of strings that are all parsable as floats or dates. If these strings should be plotted as numbers, cast to the appropriate data type before plotting.
+INFO:matplotlib.category:Using categorical units to plot a list of strings that are all parsable as floats or dates. If these strings should be plotted as numbers, cast to the appropriate data type before plotting.
+INFO:matplotlib.category:Using categorical units to plot a list of strings that are all parsable as floats or dates. If these strings should be plotted as numbers, cast to the appropriate data type before plotting.
+INFO:matplotlib.category:Using categorical units to plot a list of strings that are all parsable as floats or dates. If these strings should be plotted as numbers, cast to the appropriate data type before plotting.
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../../_images/scripts_3_analysis_scripts_5_genekd_neighbouring_gene_expression_10_1.png" src="../../_images/scripts_3_analysis_scripts_5_genekd_neighbouring_gene_expression_10_1.png" />
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[79]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#get corrrelation between</span>
+<span class="n">output_df_zero</span> <span class="o">=</span> <span class="n">output_df</span><span class="p">[</span><span class="n">output_df</span><span class="p">[</span><span class="s2">&quot;position&quot;</span><span class="p">]</span><span class="o">==</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">output_df_zero</span><span class="o">=</span><span class="n">pd</span><span class="o">.</span><span class="n">pivot_table</span><span class="p">(</span><span class="n">output_df</span><span class="p">[</span><span class="n">output_df</span><span class="p">[</span><span class="s2">&quot;z_test_pvalue&quot;</span><span class="p">]</span><span class="o">&lt;</span><span class="mf">0.05</span><span class="p">],</span> <span class="n">values</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;z_test&#39;</span><span class="p">],</span> <span class="n">index</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;gene&#39;</span><span class="p">,</span><span class="s1">&#39;position&#39;</span><span class="p">],</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;promoter&#39;</span><span class="p">])</span>
+<span class="c1">#correlation between MP and AP KD</span>
+<span class="c1"># statistics_ttest=stats.ttest_ind(, , equal_var=False)</span>
+<span class="c1"># put the statistics between</span>
+<span class="n">output_df_zero</span><span class="p">[(</span><span class="s1">&#39;z_test&#39;</span><span class="p">,</span> <span class="s1">&#39;MP&#39;</span><span class="p">)]</span><span class="o">.</span><span class="n">corr</span><span class="p">(</span><span class="n">output_df_zero</span><span class="p">[(</span><span class="s1">&#39;z_test&#39;</span><span class="p">,</span> <span class="s1">&#39;AP&#39;</span><span class="p">)])</span>
+<span class="c1">#remove warnings output</span>
+<span class="c1"># Create a figure with two subplots</span>
+<span class="n">sns</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">style</span><span class="o">=</span><span class="s2">&quot;white&quot;</span><span class="p">)</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">5</span><span class="p">),</span> <span class="n">dpi</span><span class="o">=</span> <span class="mi">600</span><span class="p">,</span> <span class="n">facecolor</span><span class="o">=</span><span class="s1">&#39;none&#39;</span><span class="p">)</span>
+<span class="n">sns</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">font_scale</span><span class="o">=</span><span class="mf">0.8</span><span class="p">)</span>
+<span class="n">order</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;-5&quot;</span><span class="p">,</span><span class="s2">&quot;-4&quot;</span><span class="p">,</span><span class="s2">&quot;-3&quot;</span><span class="p">,</span><span class="s2">&quot;-2&quot;</span><span class="p">,</span><span class="s2">&quot;-1&quot;</span><span class="p">,</span><span class="s2">&quot;0&quot;</span><span class="p">,</span><span class="s2">&quot;1&quot;</span><span class="p">,</span><span class="s2">&quot;2&quot;</span><span class="p">,</span><span class="s2">&quot;3&quot;</span><span class="p">,</span><span class="s2">&quot;4&quot;</span><span class="p">,</span><span class="s2">&quot;5&quot;</span><span class="p">]</span>
+<span class="c1">#split for AP and MP into two plots</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="mf">2.5</span><span class="p">,</span><span class="o">-</span><span class="mf">8.5</span><span class="p">,</span> <span class="s2">&quot;R2: &quot;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">output_df_zero</span><span class="p">[(</span><span class="s1">&#39;z_test&#39;</span><span class="p">,</span> <span class="s1">&#39;MP&#39;</span><span class="p">)]</span><span class="o">.</span><span class="n">corr</span><span class="p">(</span><span class="n">output_df_zero</span><span class="p">[(</span><span class="s1">&#39;z_test&#39;</span><span class="p">,</span> <span class="s1">&#39;AP&#39;</span><span class="p">)])</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span> <span class="p">),</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">12</span><span class="p">,</span> <span class="n">ha</span><span class="o">=</span><span class="s1">&#39;center&#39;</span><span class="p">)</span>
+<span class="c1">#melt the dataframe output_df_zero so z_test for MP and AP</span>
+<span class="c1">#put texct on the plot</span>
+<span class="n">output_df_sig</span><span class="o">=</span><span class="n">output_df</span><span class="p">[</span><span class="n">output_df</span><span class="p">[</span><span class="s2">&quot;z_test_pvalue&quot;</span><span class="p">]</span><span class="o">&lt;</span><span class="mf">0.05</span><span class="p">]</span>
+<span class="n">g1</span><span class="o">=</span><span class="n">sns</span><span class="o">.</span><span class="n">boxplot</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">output_df_sig</span><span class="p">[(</span><span class="n">output_df_sig</span><span class="p">[</span><span class="s2">&quot;promoter&quot;</span><span class="p">]</span><span class="o">==</span><span class="s2">&quot;MP&quot;</span><span class="p">)],</span> <span class="n">y</span><span class="o">=</span><span class="s2">&quot;z_test&quot;</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="s2">&quot;position&quot;</span><span class="p">,</span> <span class="n">hue</span><span class="o">=</span><span class="s2">&quot;position&quot;</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">palette</span><span class="o">=</span><span class="n">palette</span><span class="p">,</span> <span class="n">order</span><span class="o">=</span><span class="n">order</span><span class="p">)</span>
+<span class="n">g2</span><span class="o">=</span><span class="n">sns</span><span class="o">.</span><span class="n">boxplot</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">output_df_sig</span><span class="p">[(</span><span class="n">output_df_sig</span><span class="p">[</span><span class="s2">&quot;promoter&quot;</span><span class="p">]</span><span class="o">==</span><span class="s2">&quot;AP&quot;</span><span class="p">)],</span> <span class="n">y</span><span class="o">=</span><span class="s2">&quot;z_test&quot;</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="s2">&quot;position&quot;</span><span class="p">,</span> <span class="n">hue</span><span class="o">=</span><span class="s2">&quot;position&quot;</span><span class="p">,</span><span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">palette</span><span class="o">=</span><span class="n">palette</span><span class="p">,</span> <span class="n">order</span><span class="o">=</span><span class="n">order</span><span class="p">)</span>
+<span class="c1">#remove the legend from each plot</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">legend</span><span class="p">([],[],</span> <span class="n">frameon</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">legend</span><span class="p">([],[],</span> <span class="n">frameon</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="c1">#remove the xlabel from</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+<span class="c1">#same for ylabel</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+<span class="c1">#put the text</span>
+<span class="c1">#add the labels</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;Knockdown (z-test)&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;Knockdown Relative to the gene of interest&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">loc</span><span class="o">+</span><span class="s2">&quot;figures/5_gene_kd_neighboring/distance_promoter_spec.pdf&quot;</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s2">&quot;pdf&quot;</span><span class="p">,</span> <span class="n">bbox_inches</span><span class="o">=</span><span class="s2">&quot;tight&quot;</span><span class="p">)</span>
+<span class="c1">#check the number A, B, C and D for each of the gene_targets</span>
+<span class="n">adata</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;protospacer_number&quot;</span><span class="p">]</span><span class="o">=</span><span class="n">adata</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;guide_assignment&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;_&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+<span class="c1"># adata.obs[&quot;protospacer_number&quot;].value_counts()</span>
+<span class="o">%%capture</span>
+<span class="n">output</span><span class="o">=</span> <span class="p">[</span><span class="n">process_gene</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">goi</span><span class="p">,</span> <span class="n">geneset</span><span class="o">=</span><span class="s2">&quot;transcriptome&quot;</span><span class="p">)</span> <span class="k">for</span> <span class="n">goi</span> <span class="ow">in</span> <span class="n">genes_interest</span> <span class="k">if</span> <span class="n">process_gene</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">goi</span><span class="p">,</span><span class="n">geneset</span><span class="o">=</span><span class="s2">&quot;transcriptome&quot;</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">]</span>
+
+<span class="n">output_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">output</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;gene&#39;</span><span class="p">,</span> <span class="s1">&#39;Protospacer_P1_1&#39;</span><span class="p">,</span> <span class="s1">&#39;pvalue_P1_1&#39;</span><span class="p">,</span><span class="s1">&#39;Random_Guide_P1_1&#39;</span><span class="p">,</span> <span class="s1">&#39;pvalue_other_P1_1&#39;</span><span class="p">,</span><span class="s1">&#39;Protospacer_P1_2&#39;</span><span class="p">,</span> <span class="s1">&#39;pvalue_P1_2&#39;</span><span class="p">,</span><span class="s1">&#39;Random_Guide_P1_2&#39;</span><span class="p">,</span> <span class="s1">&#39;pvalue_other_P1_2&#39;</span><span class="p">,</span><span class="s1">&#39;Protospacer_P2_1&#39;</span><span class="p">,</span> <span class="s1">&#39;pvalue_P2_1&#39;</span><span class="p">,</span><span class="s1">&#39;Random_Guide_P2_1&#39;</span><span class="p">,</span> <span class="s1">&#39;pvalue_other_P2_1&#39;</span><span class="p">,</span><span class="s1">&#39;Protospacer_P2_2&#39;</span><span class="p">,</span> <span class="s1">&#39;pvalue_P2_2&#39;</span><span class="p">,</span> <span class="s1">&#39;Random_Guide_P2_2&#39;</span><span class="p">,</span> <span class="s1">&#39;pvalue_other_P2_2&#39;</span><span class="p">])</span>
+<span class="n">correlation</span><span class="o">=</span><span class="n">output_df</span><span class="p">[[</span><span class="s2">&quot;Protospacer_P1_1&quot;</span><span class="p">,</span><span class="s2">&quot;Protospacer_P1_2&quot;</span><span class="p">,</span><span class="s2">&quot;Random_Guide_P1_1&quot;</span><span class="p">,</span><span class="s2">&quot;Random_Guide_P1_2&quot;</span><span class="p">,</span><span class="s2">&quot;Protospacer_P2_1&quot;</span><span class="p">,</span><span class="s2">&quot;Protospacer_P2_2&quot;</span><span class="p">,</span><span class="s2">&quot;Random_Guide_P2_1&quot;</span><span class="p">,</span><span class="s2">&quot;Random_Guide_P2_2&quot;</span><span class="p">]]</span><span class="o">.</span><span class="n">corr</span><span class="p">()</span>
+<span class="c1"># correlation=output_df[[&quot;Protospacer_P1_1&quot;,&quot;Protospacer_P1_2&quot;,&quot;Protospacer_P2_1&quot;,&quot;Protospacer_P2_2&quot;]].corr()</span>
+<span class="n">sns</span><span class="o">.</span><span class="n">heatmap</span><span class="p">(</span><span class="n">correlation</span><span class="p">,</span><span class="n">annot</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s2">&quot;OrRd&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">loc</span><span class="o">+</span><span class="s2">&quot;figures/5_gene_kd_neighboring/correlation_allgene.pdf&quot;</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s2">&quot;pdf&quot;</span><span class="p">,</span> <span class="n">bbox_inches</span><span class="o">=</span><span class="s2">&quot;tight&quot;</span><span class="p">)</span>
+<br/></pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+INFO:matplotlib.category:Using categorical units to plot a list of strings that are all parsable as floats or dates. If these strings should be plotted as numbers, cast to the appropriate data type before plotting.
+INFO:matplotlib.category:Using categorical units to plot a list of strings that are all parsable as floats or dates. If these strings should be plotted as numbers, cast to the appropriate data type before plotting.
+INFO:matplotlib.category:Using categorical units to plot a list of strings that are all parsable as floats or dates. If these strings should be plotted as numbers, cast to the appropriate data type before plotting.
+INFO:matplotlib.category:Using categorical units to plot a list of strings that are all parsable as floats or dates. If these strings should be plotted as numbers, cast to the appropriate data type before plotting.
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../../_images/scripts_3_analysis_scripts_5_genekd_neighbouring_gene_expression_11_1.png" src="../../_images/scripts_3_analysis_scripts_5_genekd_neighbouring_gene_expression_11_1.png" />
+</div>
+</div>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="4_estatistic_gene_guide.html" class="btn btn-neutral float-left" title="Guide Calling Using the Cellranger Module HDF5 File" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="6_perturbseq_tsne_kldivergence_umap.html" class="btn btn-neutral float-right" title="Quantitative individual UMAPs per gene of interest" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026, Helen King.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

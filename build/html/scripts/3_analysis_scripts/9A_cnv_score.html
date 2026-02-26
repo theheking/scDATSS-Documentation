@@ -1,0 +1,1799 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Investigating Copy Number Variation Across KD Populations &mdash; Isoform Specific Perturb-Seq  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../_static/nbsphinx-code-cells.css?v=2aa19091" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../_static/copybutton.js?v=f281be69"></script>
+      <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+      <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+      <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-mml-chtml.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Velocity and pyGSEA calculations of ESR1" href="9B_velocity_loom.html" />
+    <link rel="prev" title="Differential Expression analysis between P1 &amp; P2" href="8_perturbseq_differentialexpression.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            Isoform Specific Perturb-Seq
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Analysis Pipeline:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../promoter_identification.html">Promoter Identification</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../guide_design.html">Guide Design</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../analysis_scripts.html">Analysis Scripts &amp; Pipelines</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../../analysis_scripts.html#preprocessing-guide-calling">Preprocessing &amp; Guide Calling</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../analysis_scripts.html#splicing-rna-velocity">Splicing &amp; RNA Velocity</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../analysis_scripts.html#transcriptional-divergence-e-stats">Transcriptional Divergence (E-Stats)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../analysis_scripts.html#cell-phase-pathway-modeling">Cell Phase &amp; Pathway Modeling</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../../analysis_scripts.html#clinical-differential-expression">Clinical &amp; Differential Expression</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="2A_cellranger_guidecalling.html">Guide Calling for Dual Guides</a></li>
+<li class="toctree-l3"><a class="reference internal" href="2B_guide_calling_cellrangerfilter4_idealguides.html">Filtering for Cells with Ideal Combination of Guides</a></li>
+<li class="toctree-l3"><a class="reference internal" href="4_estatistic_gene_guide.html">Guide Calling Using the Cellranger Module HDF5 File</a></li>
+<li class="toctree-l3"><a class="reference internal" href="5_genekd_neighbouring_gene_expression.html">Target gene and neighbouring gene expression</a></li>
+<li class="toctree-l3"><a class="reference internal" href="6_perturbseq_tsne_kldivergence_umap.html">Quantitative individual UMAPs per gene of interest</a></li>
+<li class="toctree-l3"><a class="reference internal" href="7_cellphase_model.html">Cell Assignment Model from FUCCI-Matched Single-Cell Paper</a></li>
+<li class="toctree-l3"><a class="reference internal" href="8_perturbseq_differentialexpression.html">Differential Expression analysis between P1 &amp; P2</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Investigating Copy Number Variation Across KD Populations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="9B_velocity_loom.html">Velocity and pyGSEA calculations of ESR1</a></li>
+<li class="toctree-l3"><a class="reference internal" href="11_spectra.html">Spectra Analysis</a></li>
+<li class="toctree-l3"><a class="reference internal" href="12_negativecontrol.html">Guide Calling Using the Cellranger Module HDF5 File</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Isoform Specific Perturb-Seq</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../analysis_scripts.html">Analysis Scripts &amp; Pipelines</a></li>
+      <li class="breadcrumb-item active">Investigating Copy Number Variation Across KD Populations</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/scripts/3_analysis_scripts/9A_cnv_score.ipynb.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="Investigating-Copy-Number-Variation-Across-KD-Populations">
+<h1>Investigating Copy Number Variation Across KD Populations<a class="headerlink" href="#Investigating-Copy-Number-Variation-Across-KD-Populations" title="Link to this heading"></a></h1>
+<ol class="arabic simple">
+<li><p>Run through the 10x Cellranger pipeline and velocyto for single cell RNAseq quatification and using (2) guides quantifiction. all found in the cellranger files folder <strong>bash</strong></p></li>
+<li><p>Guide Calling for dual guide. Use repogle method to take molecule.h5 generated by cellranger and py to run through repogle version of guide calling or use cellranger_guidecalling.ipynb for Direct Capture Perturb-Seq dual guide. Formed guide-specific lists of cells.</p></li>
+<li><p>Pseudobulk analysis. A. Seperation of guide-specific fastq files. <strong>bash</strong> B. Whippet pseudobulk for transcript specific analysis, post UMI deduplication. <strong>bash</strong> C. Transcript quality control. <strong>R</strong> D. Whippet result visualisation.</p></li>
+<li><p>Normalisation of adata object and E-distance of KD</p></li>
+<li><p>Check gene and neighboring gene expression</p></li>
+<li><p>Create individual umaps per gene of interest A. UMAPs B. Rand Index score</p></li>
+<li><p>Cell phase assignment model from FUCCI-matched single cell paper (GSE146773)</p></li>
+<li><p>Differential Expression analysis. A. Find the shared P1 and P2 genes. B. Check the shared P1 and P2 across different protospacers with the same A/B and C/D.</p></li>
+<li><p><strong>CNV Score &amp; Numbat to quantify and Velocity quantification with loom file</strong></p></li>
+<li><p>ESR1-specific analysis from proliferation analysis to rt-qpcr</p></li>
+<li><p>Spectra analysis and visualisation for pathway enrichment</p></li>
+</ol>
+<p>This script is dedicated to the chromosomal analysis part of the study. Specifically, it uses single-cell RNA sequencing (scRNA-seq) data to infer Copy Number Variations (CNVs)—large-scale chromosomal gains or losses—to understand how different promoter knockdowns impact genomic stability in breast cancer cells.</p>
+<p>Inferring Chromosomal Changes from Gene Expression Since the study uses scRNA-seq rather than DNA sequencing, it employs a tool called inferCNV to estimate chromosomal changes.</p>
+<p>What is happening: The code computes a rolling average of gene expression across genomic windows (typically 100 genes).</p>
+<p>The Logic: If a large block of adjacent genes shows consistently higher or lower expression compared to a reference set, the model infers a chromosomal gain or loss in that region</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="k">load_ext</span> autoreload
+<span class="o">%</span><span class="k">matplotlib</span> inline
+<span class="o">%</span><span class="k">autoreload</span> 2
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
+<span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">loc</span><span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">infercnvpy_test</span><span class="w"> </span><span class="kn">import</span> <span class="o">*</span>
+
+<span class="c1">#general</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">scanpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sc</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pl</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">anndata</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">ad</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">hdf5plugin</span>
+
+<span class="c1">#form a location</span>
+<span class="n">loc</span><span class="o">=</span><span class="s2">&quot;alt-prom-crispr-fiveprime/&quot;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">seaborn</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sns</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">tqdm.notebook</span><span class="w"> </span><span class="kn">import</span> <span class="n">tqdm</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">scperturb</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
+<span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">loc</span><span class="o">+</span><span class="s1">&#39;scripts/&#39;</span><span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">apu_analysis</span><span class="w"> </span><span class="kn">import</span> <span class="o">*</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">scperturb</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">infercnvpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">cnv</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">apu_analysis.cell_import</span><span class="w"> </span><span class="kn">import</span> <span class="n">CellPopulation</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">IPython.display</span><span class="w"> </span><span class="kn">import</span> <span class="n">clear_output</span>
+<span class="n">pd</span><span class="o">.</span><span class="n">options</span><span class="o">.</span><span class="n">display</span><span class="o">.</span><span class="n">float_format</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{:.4f}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">scvelo</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">scv</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">matplotlib_venn</span><span class="w"> </span><span class="kn">import</span> <span class="n">venn3</span>
+
+<span class="c1">#for this python</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">scipy.special</span><span class="w"> </span><span class="kn">import</span> <span class="n">rel_entr</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">sklearn.cluster</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">cluster</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">umap</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">scipy</span><span class="w"> </span><span class="kn">import</span> <span class="n">stats</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">scipy.stats</span><span class="w"> </span><span class="kn">import</span> <span class="n">bootstrap</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">statsmodels.api</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sm</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">statsmodels.stats.multitest</span><span class="w"> </span><span class="kn">import</span> <span class="n">multipletests</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="kn">import</span> <span class="n">reshape</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="kn">import</span> <span class="n">array</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.decomposition</span><span class="w"> </span><span class="kn">import</span> <span class="n">PCA</span>
+
+
+<span class="c1"># Taken from:</span>
+<span class="c1"># Adamson, B.A., Norman, T.M., *et al.* &quot;A multiplexed CRISPR screening platform enables systematic dissection of the unfolded protein response&quot;, *Cell*, 2016.</span>
+<span class="c1"># My experiment deals with two KDs- one of the MP, one of the AP using two guides. Positve controls include GINS1 ect. This is a combnatorial KD double for the same gene. No treatments were used</span>
+
+<span class="c1"># colours using garvan</span>
+<span class="n">color1</span> <span class="o">=</span><span class="s1">&#39;#4d00c7&#39;</span>
+<span class="n">palecolor1</span><span class="o">=</span><span class="s2">&quot;#b366ff&quot;</span>
+<span class="n">color2</span><span class="o">=</span> <span class="s1">&#39;#da3c07&#39;</span>
+<span class="n">palecolor2</span><span class="o">=</span><span class="s2">&quot;#ff8954&quot;</span>
+<span class="n">color3</span><span class="o">=</span><span class="s1">&#39;#05d3d3&#39;</span>
+<span class="n">color4</span><span class="o">=</span><span class="s1">&#39;#c6c7c5&#39;</span>
+<span class="n">color4</span><span class="o">=</span><span class="s2">&quot;#434541&quot;</span>
+<span class="n">color5</span><span class="o">=</span><span class="s2">&quot;#eb31e1&quot;</span>
+<span class="n">color6</span><span class="o">=</span><span class="s2">&quot;#3175eb&quot;</span>
+<span class="n">color7</span><span class="o">=</span><span class="s2">&quot;#a7eb31&quot;</span>
+<span class="n">color8</span><span class="o">=</span><span class="s2">&quot;#b366ff&quot;</span>
+<span class="n">color9</span><span class="o">=</span><span class="s2">&quot;#ff8954&quot;</span>
+<span class="n">color10</span><span class="o">=</span><span class="s2">&quot;#35c9d4&quot;</span>
+
+<span class="c1">#use viridis</span>
+<span class="n">color1</span><span class="o">=</span><span class="s2">&quot;#fde725&quot;</span>
+<span class="n">color2</span><span class="o">=</span><span class="s2">&quot;#7ad151&quot;</span>
+<span class="n">color3</span><span class="o">=</span><span class="s2">&quot;#22a884&quot;</span>
+<span class="n">color4</span><span class="o">=</span><span class="s2">&quot;#2a788e&quot;</span>
+<span class="n">color5</span><span class="o">=</span><span class="s2">&quot;#2a788e&quot;</span>
+<span class="n">color6</span><span class="o">=</span><span class="s1">&#39;#440154&#39;</span>
+<span class="c1"># %%capture</span>
+
+
+<span class="c1"># Create the color palette</span>
+<span class="n">palette</span> <span class="o">=</span> <span class="n">sns</span><span class="o">.</span><span class="n">color_palette</span><span class="p">([</span><span class="n">palecolor1</span><span class="p">,</span><span class="n">palecolor2</span><span class="p">])</span>
+<span class="n">palette2</span> <span class="o">=</span> <span class="n">sns</span><span class="o">.</span><span class="n">color_palette</span><span class="p">([</span><span class="n">color1</span><span class="p">,</span> <span class="n">color2</span><span class="p">,</span> <span class="n">color3</span><span class="p">,</span> <span class="n">color4</span><span class="p">,</span><span class="n">color5</span><span class="p">,</span><span class="n">color6</span> <span class="p">,</span><span class="n">color7</span><span class="p">])</span>
+
+<span class="c1"># Create the color palette</span>
+<span class="n">palette</span> <span class="o">=</span> <span class="n">sns</span><span class="o">.</span><span class="n">color_palette</span><span class="p">([</span><span class="n">color1</span><span class="p">,</span> <span class="n">color2</span><span class="p">,</span><span class="n">color3</span><span class="p">])</span>
+<span class="n">new_palette</span> <span class="o">=</span> <span class="n">sns</span><span class="o">.</span><span class="n">color_palette</span><span class="p">([</span><span class="n">color1</span><span class="p">,</span> <span class="n">color2</span><span class="p">,</span><span class="n">color1</span><span class="p">,</span> <span class="n">color2</span><span class="p">,</span><span class="n">color1</span><span class="p">,</span> <span class="n">color2</span><span class="p">,</span><span class="n">color1</span><span class="p">,</span> <span class="n">color2</span><span class="p">,</span><span class="n">color1</span><span class="p">,</span> <span class="n">color2</span><span class="p">,</span><span class="n">color1</span><span class="p">,</span> <span class="n">color2</span><span class="p">,</span> <span class="n">color3</span><span class="p">,</span> <span class="n">color4</span><span class="p">])</span>
+
+
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Scanpy&quot;</span><span class="p">,</span> <span class="n">sc</span><span class="o">.</span><span class="n">__version__</span><span class="p">)</span>
+<span class="o">%</span><span class="k">matplotlib</span> inline
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">adata</span> <span class="o">=</span> <span class="n">ad</span><span class="o">.</span><span class="n">read_h5ad</span><span class="p">(</span><span class="n">loc</span><span class="o">+</span><span class="s2">&quot;files/adata_normalised.h5ad&quot;</span><span class="p">)</span>
+<span class="c1">#set the log1p</span>
+<span class="c1"># adata.X = adata.layers[&quot;raw&quot;]</span>
+<span class="n">adata</span><span class="o">.</span><span class="n">X</span> <span class="o">=</span> <span class="n">adata</span><span class="o">.</span><span class="n">layers</span><span class="p">[</span><span class="s2">&quot;counts&quot;</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span> <span class="c1">#import and process the protein list</span>
+<span class="n">gene_list</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">loc</span><span class="o">+</span><span class="s1">&#39;files/reference/cellranger-GRCh38-1.2.0_only_genes.gtf&#39;</span><span class="p">,</span>
+            <span class="n">sep</span><span class="o">=</span><span class="s1">&#39;</span><span class="se">\t</span><span class="s1">&#39;</span><span class="p">,</span>
+            <span class="n">header</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">names</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;chr&#39;</span><span class="p">,</span> <span class="s1">&#39;source&#39;</span><span class="p">,</span> <span class="s1">&#39;type&#39;</span><span class="p">,</span> <span class="s1">&#39;start&#39;</span><span class="p">,</span> <span class="s1">&#39;end&#39;</span><span class="p">,</span> <span class="s1">&#39;null1&#39;</span><span class="p">,</span> <span class="s1">&#39;orientation&#39;</span><span class="p">,</span> <span class="s1">&#39;null2&#39;</span><span class="p">,</span> <span class="s1">&#39;notes&#39;</span><span class="p">])</span>
+
+<span class="n">gene_list</span> <span class="o">=</span> <span class="n">gene_list</span><span class="p">[[</span><span class="s1">&#39;chr&#39;</span><span class="p">,</span> <span class="s1">&#39;source&#39;</span><span class="p">,</span> <span class="s1">&#39;type&#39;</span><span class="p">,</span> <span class="s1">&#39;start&#39;</span><span class="p">,</span> <span class="s1">&#39;end&#39;</span><span class="p">,</span> <span class="s1">&#39;orientation&#39;</span><span class="p">,</span> <span class="s1">&#39;notes&#39;</span><span class="p">]]</span>
+<span class="n">gene_list</span><span class="p">[</span><span class="s1">&#39;gene_id&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">gene_list</span><span class="p">[</span><span class="s1">&#39;notes&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;&quot;&#39;</span><span class="p">)[</span><span class="mi">1</span><span class="p">])</span>
+
+<span class="n">gene_list</span><span class="p">[</span><span class="s2">&quot;notes&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+
+<span class="n">gene_list</span><span class="p">[</span><span class="s1">&#39;gene_name&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">gene_list</span><span class="p">[</span><span class="s1">&#39;notes&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;&quot;&#39;</span><span class="p">)[</span><span class="mi">7</span><span class="p">])</span>
+<span class="n">gene_list</span><span class="p">[</span><span class="s1">&#39;gene_type&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">gene_list</span><span class="p">[</span><span class="s1">&#39;notes&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;&quot;&#39;</span><span class="p">)[</span><span class="mi">5</span><span class="p">])</span>
+
+<span class="n">protein_gene_list</span> <span class="o">=</span> <span class="n">gene_list</span><span class="p">[</span><span class="n">gene_list</span><span class="p">[</span><span class="s1">&#39;gene_type&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;protein_coding&quot;</span><span class="p">]</span>
+<span class="n">protein_gene_list</span> <span class="o">=</span> <span class="n">protein_gene_list</span><span class="p">[</span><span class="n">protein_gene_list</span><span class="p">[</span><span class="s2">&quot;gene_name&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">adata</span><span class="o">.</span><span class="n">var_names</span><span class="p">))]</span> <span class="c1">##subseet for the genes found in the signle cell matrix</span>
+<span class="n">protein_gene_list</span><span class="o">=</span><span class="n">protein_gene_list</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s2">&quot;gene_name&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="n">n</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">protein_gene_list</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="c1">##add annotations for snv</span>
+<span class="c1">#subset adata to only include the genes that are in the protein_gene_list</span>
+<span class="n">adata_ens</span><span class="o">=</span><span class="n">adata</span><span class="p">[:,</span><span class="n">adata</span><span class="o">.</span><span class="n">var</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">protein_gene_list</span><span class="p">[</span><span class="s2">&quot;gene_name&quot;</span><span class="p">])]</span>
+<span class="n">adata_ens</span><span class="o">.</span><span class="n">var</span><span class="p">[</span><span class="s2">&quot;ensg&quot;</span><span class="p">]</span><span class="o">=</span><span class="n">pd</span><span class="o">.</span><span class="n">Categorical</span><span class="p">(</span><span class="n">protein_gene_list</span><span class="p">[</span><span class="s2">&quot;gene_id&quot;</span><span class="p">][</span><span class="n">protein_gene_list</span><span class="p">[</span><span class="s2">&quot;gene_name&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">adata_ens</span><span class="o">.</span><span class="n">var</span><span class="o">.</span><span class="n">index</span><span class="p">)])</span>
+<span class="n">adata_ens</span><span class="o">.</span><span class="n">var</span><span class="p">[</span><span class="s2">&quot;chromosome&quot;</span><span class="p">]</span><span class="o">=</span><span class="n">pd</span><span class="o">.</span><span class="n">Categorical</span><span class="p">(</span><span class="n">protein_gene_list</span><span class="p">[</span><span class="s2">&quot;chr&quot;</span><span class="p">][</span><span class="n">protein_gene_list</span><span class="p">[</span><span class="s2">&quot;gene_name&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">adata_ens</span><span class="o">.</span><span class="n">var</span><span class="o">.</span><span class="n">index</span><span class="p">)])</span>
+<span class="n">adata_ens</span><span class="o">.</span><span class="n">var</span><span class="p">[</span><span class="s2">&quot;start&quot;</span><span class="p">]</span><span class="o">=</span><span class="n">pd</span><span class="o">.</span><span class="n">Categorical</span><span class="p">(</span><span class="n">protein_gene_list</span><span class="p">[</span><span class="s2">&quot;start&quot;</span><span class="p">][</span><span class="n">protein_gene_list</span><span class="p">[</span><span class="s2">&quot;gene_name&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">adata_ens</span><span class="o">.</span><span class="n">var</span><span class="o">.</span><span class="n">index</span><span class="p">)])</span>
+<span class="n">adata_ens</span><span class="o">.</span><span class="n">var</span><span class="p">[</span><span class="s2">&quot;end&quot;</span><span class="p">]</span><span class="o">=</span><span class="n">pd</span><span class="o">.</span><span class="n">Categorical</span><span class="p">(</span><span class="n">protein_gene_list</span><span class="p">[</span><span class="s2">&quot;end&quot;</span><span class="p">][</span><span class="n">protein_gene_list</span><span class="p">[</span><span class="s2">&quot;gene_name&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">adata_ens</span><span class="o">.</span><span class="n">var</span><span class="o">.</span><span class="n">index</span><span class="p">)])</span>
+<br/></pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Define file path</span>
+<span class="n">file_path</span> <span class="o">=</span> <span class="n">loc</span> <span class="o">+</span> <span class="s1">&#39;files/reference/cellranger-GRCh38-1.2.0_only_genes.gtf&#39;</span>
+
+<span class="c1"># Import and process the protein list</span>
+<span class="n">gene_list</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">file_path</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s1">&#39;</span><span class="se">\t</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">header</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                        <span class="n">names</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;chr&#39;</span><span class="p">,</span> <span class="s1">&#39;source&#39;</span><span class="p">,</span> <span class="s1">&#39;type&#39;</span><span class="p">,</span> <span class="s1">&#39;start&#39;</span><span class="p">,</span> <span class="s1">&#39;end&#39;</span><span class="p">,</span> <span class="s1">&#39;null1&#39;</span><span class="p">,</span> <span class="s1">&#39;orientation&#39;</span><span class="p">,</span> <span class="s1">&#39;null2&#39;</span><span class="p">,</span> <span class="s1">&#39;notes&#39;</span><span class="p">])</span>
+
+<span class="c1"># Select necessary columns</span>
+<span class="n">gene_list</span> <span class="o">=</span> <span class="n">gene_list</span><span class="p">[[</span><span class="s1">&#39;chr&#39;</span><span class="p">,</span> <span class="s1">&#39;source&#39;</span><span class="p">,</span> <span class="s1">&#39;type&#39;</span><span class="p">,</span> <span class="s1">&#39;start&#39;</span><span class="p">,</span> <span class="s1">&#39;end&#39;</span><span class="p">,</span> <span class="s1">&#39;orientation&#39;</span><span class="p">,</span> <span class="s1">&#39;notes&#39;</span><span class="p">]]</span>
+
+<span class="c1"># Extract gene_id, gene_name, and gene_type from &#39;notes&#39; column</span>
+<span class="n">gene_list</span><span class="p">[</span><span class="s1">&#39;gene_id&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">gene_list</span><span class="p">[</span><span class="s1">&#39;notes&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;&quot;&#39;</span><span class="p">)[</span><span class="mi">1</span><span class="p">])</span>
+<span class="n">gene_list</span><span class="p">[</span><span class="s1">&#39;gene_name&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">gene_list</span><span class="p">[</span><span class="s1">&#39;notes&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;&quot;&#39;</span><span class="p">)[</span><span class="mi">7</span><span class="p">])</span>
+<span class="n">gene_list</span><span class="p">[</span><span class="s1">&#39;gene_type&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">gene_list</span><span class="p">[</span><span class="s1">&#39;notes&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;&quot;&#39;</span><span class="p">)[</span><span class="mi">5</span><span class="p">])</span>
+
+<span class="c1"># Filter for protein coding genes</span>
+<span class="n">protein_gene_list</span> <span class="o">=</span> <span class="n">gene_list</span><span class="p">[</span><span class="n">gene_list</span><span class="p">[</span><span class="s1">&#39;gene_type&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;protein_coding&quot;</span><span class="p">]</span>
+
+<span class="c1"># Subset for the genes found in the single cell matrix</span>
+<span class="n">protein_gene_list</span> <span class="o">=</span> <span class="n">protein_gene_list</span><span class="p">[</span><span class="n">protein_gene_list</span><span class="p">[</span><span class="s2">&quot;gene_name&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">adata</span><span class="o">.</span><span class="n">var_names</span><span class="p">))]</span>
+
+<span class="c1"># Group by gene_name and keep first entry</span>
+<span class="n">protein_gene_list</span> <span class="o">=</span> <span class="n">protein_gene_list</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s2">&quot;gene_name&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">first</span><span class="p">()</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
+
+<span class="c1"># Subset adata to only include the genes that are in the protein_gene_list</span>
+<span class="n">adata_ens</span> <span class="o">=</span> <span class="n">adata</span><span class="p">[:,</span> <span class="p">((</span><span class="n">adata</span><span class="o">.</span><span class="n">var</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">protein_gene_list</span><span class="p">[</span><span class="s2">&quot;gene_name&quot;</span><span class="p">])</span><span class="o">&amp;</span><span class="p">(</span><span class="n">adata</span><span class="o">.</span><span class="n">var</span><span class="p">[</span><span class="s1">&#39;mt&#39;</span><span class="p">]</span><span class="o">==</span><span class="kc">False</span><span class="p">)))]</span>
+<span class="c1"># adata_ens = adata</span>
+<br/><br/></pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">adata_ens</span><span class="o">.</span><span class="n">var</span><span class="o">=</span><span class="n">adata_ens</span><span class="o">.</span><span class="n">var</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">protein_gene_list</span><span class="p">,</span><span class="n">right_on</span><span class="o">=</span><span class="s2">&quot;gene_name&quot;</span><span class="p">,</span><span class="n">left_index</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s1">&#39;gene_name&#39;</span><span class="p">)</span>
+<span class="c1">#change column names from in dictionary_columns</span>
+<span class="n">dictionary_columns</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;ensg&quot;</span><span class="p">:</span><span class="s2">&quot;gene_id&quot;</span><span class="p">,</span><span class="s2">&quot;chr&quot;</span><span class="p">:</span><span class="s2">&quot;chromosome&quot;</span><span class="p">,</span><span class="s2">&quot;start&quot;</span><span class="p">:</span><span class="s2">&quot;start&quot;</span><span class="p">,</span><span class="s2">&quot;end&quot;</span><span class="p">:</span><span class="s2">&quot;end&quot;</span><span class="p">}</span>
+<span class="n">adata_ens</span><span class="o">.</span><span class="n">var</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="n">dictionary_columns</span><span class="p">,</span><span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sc</span><span class="o">.</span><span class="n">tl</span><span class="o">.</span><span class="n">umap</span><span class="p">(</span><span class="n">adata_ens</span><span class="p">)</span>
+<span class="c1">###iterate through and create correlation matrix</span>
+<span class="n">sc</span><span class="o">.</span><span class="n">pl</span><span class="o">.</span><span class="n">umap</span><span class="p">(</span><span class="n">adata_ens</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;perturbation&quot;</span><span class="p">)</span>
+<span class="n">sc</span><span class="o">.</span><span class="n">pl</span><span class="o">.</span><span class="n">umap</span><span class="p">(</span><span class="n">adata_ens</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;promoter_type&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+... storing &#39;chromosome&#39; as categorical
+... storing &#39;source&#39; as categorical
+... storing &#39;type&#39; as categorical
+... storing &#39;orientation&#39; as categorical
+... storing &#39;gene_type&#39; as categorical
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../../_images/scripts_3_analysis_scripts_9A_cnv_score_8_1.png" src="../../_images/scripts_3_analysis_scripts_9A_cnv_score_8_1.png" />
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../../_images/scripts_3_analysis_scripts_9A_cnv_score_8_2.png" src="../../_images/scripts_3_analysis_scripts_9A_cnv_score_8_2.png" />
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#check that the gtf contains genes that were contained</span>
+<span class="n">gencode_peaks_gtf_esr1</span><span class="o">=</span><span class="n">loc</span><span class="o">+</span><span class="s2">&quot;files/reference/remap2022_ESR1_nr_macs2_hg38_v1_0.mcf7.gencode.gtf&quot;</span>
+<span class="c1">#subset select for genes of interest</span>
+<span class="n">gencode_peaks_gtf_esr1</span><span class="o">=</span><span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">gencode_peaks_gtf_esr1</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s2">&quot;</span><span class="se">\t</span><span class="s2">&quot;</span><span class="p">,</span><span class="n">header</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+<span class="c1">#check that the gtf contains genes that were contained</span>
+<span class="n">gencode_peaks_gtf_ar</span><span class="o">=</span><span class="n">loc</span><span class="o">+</span><span class="s2">&quot;files/reference/GSE48930.AR.MCF-7.gencode.gtf&quot;</span>
+<span class="c1">#subset select for genes of interest</span>
+<span class="n">gencode_peaks_gtf_ar</span><span class="o">=</span><span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">gencode_peaks_gtf_ar</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s2">&quot;</span><span class="se">\t</span><span class="s2">&quot;</span><span class="p">,</span><span class="n">header</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#get list of genes that arre in adata_ens</span>
+<span class="n">adata_gene_names</span><span class="o">=</span><span class="n">adata_ens</span><span class="o">.</span><span class="n">var_names</span>
+<span class="c1">#get the names of androgen</span>
+<span class="n">esr1_targeted_gene_names</span><span class="o">=</span><span class="n">gencode_peaks_gtf_esr1</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="o">.</span><span class="n">drop_duplicates</span><span class="p">()</span>
+<span class="c1">#interection of the two lists</span>
+<span class="n">esr1_adata_targeted_genelist</span><span class="o">=</span><span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">adata_gene_names</span><span class="p">)</span><span class="o">.</span><span class="n">intersection</span><span class="p">(</span><span class="n">esr1_targeted_gene_names</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">esr1_adata_targeted_genelist</span><span class="p">))</span>
+<span class="n">esr1_adata</span><span class="o">=</span><span class="n">adata_ens</span><span class="p">[:,</span><span class="n">adata_ens</span><span class="o">.</span><span class="n">var_names</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">esr1_adata_targeted_genelist</span><span class="p">)]</span>
+<span class="c1">#match the genes selected for new_not to be similarly expressed</span>
+<span class="n">min_esr1_value</span><span class="o">=</span><span class="n">esr1_adata</span><span class="o">.</span><span class="n">var</span><span class="o">.</span><span class="n">means</span><span class="o">.</span><span class="n">min</span><span class="p">()</span>
+<span class="c1">#subset the genes that have the mean expression value greater than the min_esr1_value and not included in esr1_adata_targeted_genelist</span>
+<span class="n">esr1_not_in_gene_names</span><span class="o">=</span><span class="n">adata_ens</span><span class="o">.</span><span class="n">var_names</span><span class="p">[(</span><span class="n">adata_ens</span><span class="o">.</span><span class="n">var</span><span class="o">.</span><span class="n">means</span><span class="o">&gt;</span><span class="n">min_esr1_value</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="o">~</span><span class="n">adata_ens</span><span class="o">.</span><span class="n">var_names</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">esr1_adata_targeted_genelist</span><span class="p">))]</span>
+<span class="nb">print</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">esr1_not_in_gene_names</span><span class="p">))</span>
+
+<span class="c1">#input esr1_adata_min</span>
+<span class="n">esr1_adata_notin</span><span class="o">=</span><span class="n">adata_ens</span><span class="p">[:,</span><span class="n">adata_ens</span><span class="o">.</span><span class="n">var_names</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">esr1_not_in_gene_names</span><span class="p">)]</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+144
+11081
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#form two dataframes ar_adata and ar_adata_notin</span>
+<span class="n">ar_targeted_gene_names</span><span class="o">=</span><span class="n">gencode_peaks_gtf_ar</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="o">.</span><span class="n">drop_duplicates</span><span class="p">()</span>
+<span class="c1">#interection of the two lists</span>
+<span class="n">ar_adata_targeted_genelist</span><span class="o">=</span><span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">adata_gene_names</span><span class="p">)</span><span class="o">.</span><span class="n">intersection</span><span class="p">(</span><span class="n">ar_targeted_gene_names</span><span class="p">))</span>
+<span class="c1">#remove all genes that are in er_targeted_gene_names</span>
+<span class="n">ar_adata_targeted_genelist</span><span class="o">=</span><span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">ar_adata_targeted_genelist</span><span class="p">)</span><span class="o">-</span><span class="nb">set</span><span class="p">(</span><span class="n">esr1_adata_targeted_genelist</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">ar_adata_targeted_genelist</span><span class="p">))</span>
+<span class="n">ar_adata</span><span class="o">=</span><span class="n">adata_ens</span><span class="p">[:,</span><span class="n">adata_ens</span><span class="o">.</span><span class="n">var_names</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">ar_adata_targeted_genelist</span><span class="p">)]</span>
+
+<span class="c1">#match the genes selected for new_not to be similarly expressed</span>
+<span class="n">min_ar_value</span><span class="o">=</span><span class="n">ar_adata</span><span class="o">.</span><span class="n">var</span><span class="o">.</span><span class="n">means</span><span class="o">.</span><span class="n">min</span><span class="p">()</span>
+<span class="c1">#subset the genes that have the mean expression value greater than the min_esr1_value and not included in esr1_adata_targeted_genelist</span>
+<span class="n">ar_not_in_gene_names</span><span class="o">=</span><span class="n">adata_ens</span><span class="o">.</span><span class="n">var_names</span><span class="p">[(</span><span class="n">adata_ens</span><span class="o">.</span><span class="n">var</span><span class="o">.</span><span class="n">means</span><span class="o">&gt;</span><span class="n">min_ar_value</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="o">~</span><span class="n">adata_ens</span><span class="o">.</span><span class="n">var_names</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">ar_adata_targeted_genelist</span><span class="p">))]</span>
+<span class="nb">print</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">ar_not_in_gene_names</span><span class="p">))</span>
+
+<span class="c1">#input esr1_adata_min</span>
+<span class="n">ar_adata_notin</span><span class="o">=</span><span class="n">adata_ens</span><span class="p">[:,</span><span class="n">adata_ens</span><span class="o">.</span><span class="n">var_names</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">ar_not_in_gene_names</span><span class="p">)]</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+52
+10917
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#only the</span>
+<span class="n">venn3</span><span class="p">([</span><span class="nb">set</span><span class="p">(</span><span class="n">esr1_adata_targeted_genelist</span><span class="p">),</span> <span class="nb">set</span><span class="p">(</span><span class="n">adata_gene_names</span><span class="p">),</span><span class="nb">set</span><span class="p">(</span><span class="n">ar_adata_targeted_genelist</span><span class="p">)</span> <span class="p">],</span> <span class="p">(</span><span class="s1">&#39;ESR1&#39;</span><span class="p">,</span> <span class="s1">&#39;All Genes&#39;</span><span class="p">,</span> <span class="s1">&#39;AR&#39;</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../../_images/scripts_3_analysis_scripts_9A_cnv_score_12_0.png" src="../../_images/scripts_3_analysis_scripts_9A_cnv_score_12_0.png" />
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#need to repeat the calculation 6 times</span>
+<span class="c1">#once for esr1 only</span>
+<span class="n">esr1_not_int</span><span class="o">=</span><span class="n">esr1_adata_notin</span><span class="p">[(</span><span class="n">esr1_adata_notin</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;promoter_type&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;Control&quot;</span><span class="p">)</span> <span class="o">|</span> <span class="p">(</span><span class="n">esr1_adata_notin</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;perturbation&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;ESR1&quot;</span><span class="p">)]</span>
+<span class="n">esr1</span><span class="o">=</span><span class="n">esr1_adata</span><span class="p">[(</span><span class="n">esr1_adata</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;promoter_type&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;Control&quot;</span><span class="p">)</span> <span class="o">|</span> <span class="p">(</span><span class="n">esr1_adata</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;perturbation&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;ESR1&quot;</span><span class="p">)]</span>
+<span class="n">ar_not_in</span><span class="o">=</span><span class="n">ar_adata_notin</span><span class="p">[(</span><span class="n">ar_adata_notin</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;promoter_type&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;Control&quot;</span><span class="p">)</span> <span class="o">|</span> <span class="p">(</span><span class="n">ar_adata_notin</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;perturbation&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;ESR1&quot;</span><span class="p">)]</span>
+<span class="n">ar</span><span class="o">=</span><span class="n">ar_adata</span><span class="p">[(</span><span class="n">ar_adata</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;promoter_type&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;Control&quot;</span><span class="p">)</span> <span class="o">|</span> <span class="p">(</span><span class="n">ar_adata</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;perturbation&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;ESR1&quot;</span><span class="p">)]</span>
+<span class="n">esr1_full</span><span class="o">=</span><span class="n">adata_ens</span><span class="p">[(</span><span class="n">adata_ens</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;promoter_type&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;Control&quot;</span><span class="p">)</span> <span class="o">|</span> <span class="p">(</span><span class="n">adata_ens</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;perturbation&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;ESR1&quot;</span><span class="p">)]</span>
+<br/></pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[19]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">esr1_full</span><span class="o">=</span><span class="n">esr1_full</span><span class="p">[:,</span><span class="o">~</span><span class="n">esr1_full</span><span class="o">.</span><span class="n">var</span><span class="p">[</span><span class="s2">&quot;chromosome&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">isin</span><span class="p">([</span><span class="s2">&quot;chrX&quot;</span><span class="p">,</span><span class="s2">&quot;chrY&quot;</span><span class="p">])]</span>
+
+<span class="c1"># #window size is the size of the running window (so the number of genes to iunclude)</span>
+<span class="c1"># #step means the computong the number of window</span>
+<span class="n">chr_pos</span><span class="p">,</span> <span class="n">res</span><span class="p">,</span> <span class="n">df</span><span class="p">,</span><span class="n">full_gene_df</span> <span class="o">=</span> <span class="n">tl</span><span class="o">.</span><span class="n">infercnv</span><span class="p">(</span>
+<span class="n">esr1_full</span><span class="p">,</span>
+<span class="n">reference_key</span><span class="o">=</span><span class="s2">&quot;guide_id&quot;</span><span class="p">,</span>
+<span class="n">reference_cat</span><span class="o">=</span><span class="s2">&quot;non-targeting_Control&quot;</span><span class="p">,</span>
+<span class="n">window_size</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+<span class="n">inplace</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+<span class="n">step</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+<span class="n">calculate_gene_values</span><span class="o">=</span><span class="kc">True</span>
+<span class="p">)</span>
+<span class="c1">#merge test with  esr1_full.obs</span>
+<span class="n">full_gene_df</span><span class="o">=</span><span class="n">pd</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">esr1_full</span><span class="o">.</span><span class="n">obs</span><span class="p">[[</span><span class="s2">&quot;guide_id&quot;</span><span class="p">,</span><span class="s2">&quot;guide_assignment&quot;</span><span class="p">,</span><span class="s2">&quot;perturbation&quot;</span><span class="p">]],</span><span class="n">full_gene_df</span><span class="p">,</span><span class="n">left_index</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span><span class="n">right_index</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">full_gene_df_mean</span><span class="o">=</span><span class="n">full_gene_df</span><span class="o">.</span><span class="n">drop</span><span class="p">([</span><span class="s2">&quot;guide_assignment&quot;</span><span class="p">,</span><span class="s2">&quot;perturbation&quot;</span><span class="p">],</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">groupby</span><span class="p">([</span><span class="s2">&quot;guide_id&quot;</span><span class="p">])</span><span class="o">.</span><span class="n">agg</span><span class="p">({</span><span class="s1">&#39;mean&#39;</span><span class="p">})</span><span class="o">.</span><span class="n">transpose</span><span class="p">()</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="n">by</span><span class="o">=</span><span class="s2">&quot;ESR1_AP&quot;</span><span class="p">,</span><span class="n">ascending</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="c1">#add the gene info from the adata_ens.var</span>
+<span class="n">full_gene_df_mean</span><span class="o">=</span><span class="n">full_gene_df_mean</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
+<span class="c1"># full_gene_df_mean</span>
+<span class="n">full_gene_df_mean</span><span class="o">.</span><span class="n">columns</span><span class="o">=</span><span class="p">[</span> <span class="s2">&quot;gene_id&quot;</span><span class="p">,</span><span class="s2">&quot;metric&quot;</span><span class="p">,</span> <span class="s2">&quot;ESR1_AP&quot;</span><span class="p">,</span><span class="s2">&quot;ESR1_MP&quot;</span><span class="p">,</span><span class="s2">&quot;non-targeting_Control&quot;</span><span class="p">]</span>
+<span class="n">full_gene_df_mean</span><span class="o">=</span><span class="n">full_gene_df_mean</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">adata_ens</span><span class="o">.</span><span class="n">var</span><span class="p">[[</span><span class="s2">&quot;chromosome&quot;</span><span class="p">,</span><span class="s2">&quot;start&quot;</span><span class="p">,</span><span class="s2">&quot;end&quot;</span><span class="p">,</span><span class="s2">&quot;gene_id&quot;</span><span class="p">,</span><span class="s2">&quot;orientation&quot;</span><span class="p">,</span><span class="s2">&quot;notes&quot;</span><span class="p">]],</span><span class="n">left_on</span><span class="o">=</span><span class="s2">&quot;gene_id&quot;</span><span class="p">,</span><span class="n">right_index</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="s2">&quot;gene_id_x&quot;</span><span class="p">,</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;gene_id_y&quot;</span><span class="p">:</span><span class="s2">&quot;ensembl_id&quot;</span><span class="p">})</span>
+<span class="n">full_gene_df_mean</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">loc</span><span class="o">+</span><span class="s2">&quot;files/cnv_mean_score_esr1.csv&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+100%|██████████| 1/1 [01:30&lt;00:00, 90.50s/it]
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+check
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[23]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#input df</span>
+<span class="n">cnv_score_list</span><span class="o">=</span><span class="p">[]</span>
+<span class="n">c</span><span class="o">=</span><span class="mi">0</span>
+<span class="n">df_list</span><span class="o">=</span><span class="p">[</span><span class="n">esr1_not_int</span><span class="p">,</span><span class="n">esr1</span><span class="p">,</span><span class="n">ar_not_in</span><span class="p">,</span><span class="n">ar</span><span class="p">,</span><span class="n">esr1_full</span><span class="p">]</span>
+<span class="n">elements_list</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;F&quot;</span><span class="p">,</span><span class="s2">&quot;T&quot;</span><span class="p">,</span><span class="s2">&quot;F&quot;</span><span class="p">,</span><span class="s2">&quot;T&quot;</span><span class="p">,</span><span class="s2">&quot;None&quot;</span><span class="p">]</span>
+<span class="n">binding_regions_list</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;esr1&quot;</span><span class="p">,</span><span class="s2">&quot;esr1&quot;</span><span class="p">,</span><span class="s2">&quot;ar&quot;</span><span class="p">,</span><span class="s2">&quot;ar&quot;</span><span class="p">,</span><span class="s2">&quot;non_targeting&quot;</span><span class="p">]</span>
+<span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">5</span><span class="p">):</span>
+    <span class="n">df</span><span class="o">=</span><span class="n">df_list</span><span class="p">[</span><span class="n">c</span><span class="p">]</span>
+    <span class="n">cnv</span><span class="o">.</span><span class="n">tl</span><span class="o">.</span><span class="n">infercnv</span><span class="p">(</span>
+        <span class="n">df</span><span class="p">,</span>
+        <span class="n">reference_key</span><span class="o">=</span><span class="s2">&quot;guide_id&quot;</span><span class="p">,</span>
+        <span class="n">reference_cat</span><span class="o">=</span><span class="s2">&quot;non-targeting_Control&quot;</span><span class="p">,</span>
+        <span class="n">window_size</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+        <span class="n">step</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">cnv</span><span class="o">.</span><span class="n">pp</span><span class="o">.</span><span class="n">neighbors</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+    <span class="n">cnv</span><span class="o">.</span><span class="n">tl</span><span class="o">.</span><span class="n">leiden</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+    <span class="c1">#check the input df name is esr1</span>
+    <span class="n">cnv</span><span class="o">.</span><span class="n">tl</span><span class="o">.</span><span class="n">cnv_score</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+    <span class="n">cnv_score</span><span class="o">=</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">obs</span><span class="p">[[</span><span class="s2">&quot;cnv_score&quot;</span><span class="p">,</span><span class="s2">&quot;perturbation&quot;</span><span class="p">,</span><span class="s2">&quot;promoter_type&quot;</span><span class="p">]])</span>
+    <span class="n">cnv_score</span><span class="p">[</span><span class="s2">&quot;elements&quot;</span><span class="p">]</span><span class="o">=</span><span class="n">elements_list</span><span class="p">[</span><span class="n">c</span><span class="p">]</span>
+    <span class="n">cnv_score</span><span class="p">[</span><span class="s2">&quot;binding_regions&quot;</span><span class="p">]</span><span class="o">=</span><span class="n">binding_regions_list</span><span class="p">[</span><span class="n">c</span><span class="p">]</span>
+    <span class="c1">#add the dataframe esr1 cnv_score_list</span>
+    <span class="n">cnv_score_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">cnv_score</span><span class="p">)</span>
+    <span class="c1">#plot binding regions esr1 and elements list T</span>
+
+
+
+<span class="c1">#concatenate the dataframes</span>
+<span class="n">cnv_score_df</span><span class="o">=</span><span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="n">cnv_score_list</span><span class="p">)</span>
+<span class="c1">#need to make a graph which shows x-axis the cnv score and y-axis score</span>
+<span class="c1">#export cnv_score to csv</span>
+
+<span class="n">cnv_score_df</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">loc</span><span class="o">+</span><span class="s2">&quot;files/singlecell_shortread_analysis/cnv_score.csv&quot;</span><span class="p">)</span>
+<br/></pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+100%|██████████| 1/1 [00:03&lt;00:00,  3.87s/it]
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+WARNING: X_cnv_pca not found in adata.obsm. Computing PCA with default parameters
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+  File &#34;/Users/helenking/anaconda3/envs/apu/lib/python3.12/site-packages/joblib/externals/loky/backend/context.py&#34;, line 270, in _count_physical_cores
+    cpu_info = subprocess.run(
+               ^^^^^^^^^^^^^^^
+  File &#34;/Users/helenking/anaconda3/envs/apu/lib/python3.12/subprocess.py&#34;, line 548, in run
+    with Popen(*popenargs, **kwargs) as process:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File &#34;/Users/helenking/anaconda3/envs/apu/lib/python3.12/subprocess.py&#34;, line 1026, in __init__
+    self._execute_child(args, executable, preexec_fn, close_fds,
+  File &#34;/Users/helenking/anaconda3/envs/apu/lib/python3.12/subprocess.py&#34;, line 1955, in _execute_child
+    raise child_exception_type(errno_num, err_msg, err_filename)
+OMP: Info #276: omp_set_nested routine deprecated, please use omp_set_max_active_levels instead.
+100%|██████████| 1/1 [00:01&lt;00:00,  1.94s/it]
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+WARNING: X_cnv_pca not found in adata.obsm. Computing PCA with default parameters
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+100%|██████████| 1/1 [00:03&lt;00:00,  3.37s/it]
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+WARNING: X_cnv_pca not found in adata.obsm. Computing PCA with default parameters
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+100%|██████████| 1/1 [00:01&lt;00:00,  1.63s/it]
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+WARNING: X_cnv_pca not found in adata.obsm. Computing PCA with default parameters
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+100%|██████████| 1/1 [00:03&lt;00:00,  3.36s/it]
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+WARNING: X_cnv_pca not found in adata.obsm. Computing PCA with default parameters
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[25]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#for every perturbation of interest</span>
+<span class="n">adata_gene</span><span class="o">=</span><span class="n">adata_ens</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;perturbation&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">()</span>
+<span class="c1">#only extract perturbations which contain P1 or P2</span>
+<span class="n">cnv_score_list_total</span><span class="o">=</span><span class="p">[]</span>
+<span class="k">for</span> <span class="n">gene_pos</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="nb">len</span><span class="p">(</span><span class="n">adata_gene</span><span class="p">)):</span>
+<span class="c1"># for gene_pos in range(0,2):</span>
+    <span class="n">gene</span><span class="o">=</span><span class="n">adata_gene</span><span class="p">[</span><span class="n">gene_pos</span><span class="p">]</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">gene</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">gene</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;non-targeting&quot;</span><span class="p">]:</span>
+        <span class="k">continue</span>
+    <span class="c1">#subset the adata to only include the gene of interest</span>
+    <span class="n">df</span><span class="o">=</span><span class="n">adata_ens</span><span class="p">[(</span><span class="n">adata_ens</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;perturbation&quot;</span><span class="p">]</span><span class="o">==</span><span class="n">gene</span><span class="p">)</span><span class="o">|</span><span class="p">(</span><span class="n">adata_ens</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;perturbation&quot;</span><span class="p">]</span><span class="o">==</span><span class="s2">&quot;non-targeting&quot;</span><span class="p">)]</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+    <span class="n">cnv</span><span class="o">.</span><span class="n">tl</span><span class="o">.</span><span class="n">infercnv</span><span class="p">(</span>
+        <span class="n">df</span><span class="p">,</span>
+        <span class="n">reference_key</span><span class="o">=</span><span class="s2">&quot;guide_id&quot;</span><span class="p">,</span>
+        <span class="n">reference_cat</span><span class="o">=</span><span class="s2">&quot;non-targeting_Control&quot;</span><span class="p">,</span>
+        <span class="n">window_size</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+        <span class="n">step</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+
+    <span class="p">)</span>
+    <span class="n">cnv</span><span class="o">.</span><span class="n">pp</span><span class="o">.</span><span class="n">neighbors</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+    <span class="n">cnv</span><span class="o">.</span><span class="n">tl</span><span class="o">.</span><span class="n">leiden</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+    <span class="n">cnv</span><span class="o">.</span><span class="n">tl</span><span class="o">.</span><span class="n">cnv_score</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+    <span class="n">cnv_score</span><span class="o">=</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">obs</span><span class="p">[[</span><span class="s2">&quot;cnv_score&quot;</span><span class="p">,</span><span class="s2">&quot;perturbation&quot;</span><span class="p">,</span><span class="s2">&quot;promoter_type&quot;</span><span class="p">]])</span>
+    <span class="c1">#add the dataframe esr1 cnv_score_list</span>
+    <span class="n">cnv_score_list_total</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">cnv_score</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+NBN
+(2812, 11266)
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+100%|██████████| 1/1 [00:03&lt;00:00,  3.86s/it]
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+WARNING: X_cnv_pca not found in adata.obsm. Computing PCA with default parameters
+PA2G4
+(2738, 11266)
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+100%|██████████| 1/1 [00:03&lt;00:00,  3.76s/it]
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+WARNING: X_cnv_pca not found in adata.obsm. Computing PCA with default parameters
+PKM
+(2763, 11266)
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+100%|██████████| 1/1 [00:03&lt;00:00,  3.70s/it]
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+WARNING: X_cnv_pca not found in adata.obsm. Computing PCA with default parameters
+SIN3A
+(3020, 11266)
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+100%|██████████| 1/1 [00:03&lt;00:00,  3.91s/it]
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+WARNING: X_cnv_pca not found in adata.obsm. Computing PCA with default parameters
+non-targeting
+SP1
+(2885, 11266)
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+100%|██████████| 1/1 [00:04&lt;00:00,  4.19s/it]
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+WARNING: X_cnv_pca not found in adata.obsm. Computing PCA with default parameters
+FHL2
+(2808, 11266)
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+100%|██████████| 1/1 [00:04&lt;00:00,  4.07s/it]
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+WARNING: X_cnv_pca not found in adata.obsm. Computing PCA with default parameters
+AHCYL1
+(2753, 11266)
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+100%|██████████| 1/1 [00:03&lt;00:00,  3.84s/it]
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+WARNING: X_cnv_pca not found in adata.obsm. Computing PCA with default parameters
+CHD4
+(2745, 11266)
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+100%|██████████| 1/1 [00:03&lt;00:00,  3.89s/it]
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+WARNING: X_cnv_pca not found in adata.obsm. Computing PCA with default parameters
+CUX1
+(2773, 11266)
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+100%|██████████| 1/1 [00:05&lt;00:00,  5.35s/it]
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+WARNING: X_cnv_pca not found in adata.obsm. Computing PCA with default parameters
+XRCC5
+(2759, 11266)
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+100%|██████████| 1/1 [00:03&lt;00:00,  3.97s/it]
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+WARNING: X_cnv_pca not found in adata.obsm. Computing PCA with default parameters
+PRRC2C
+(2731, 11266)
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+100%|██████████| 1/1 [00:05&lt;00:00,  5.29s/it]
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+WARNING: X_cnv_pca not found in adata.obsm. Computing PCA with default parameters
+CALR
+(2847, 11266)
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+100%|██████████| 1/1 [00:04&lt;00:00,  4.23s/it]
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+WARNING: X_cnv_pca not found in adata.obsm. Computing PCA with default parameters
+GATA3
+(2670, 11266)
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+100%|██████████| 1/1 [00:04&lt;00:00,  4.11s/it]
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+WARNING: X_cnv_pca not found in adata.obsm. Computing PCA with default parameters
+ESR1
+(2691, 11266)
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+100%|██████████| 1/1 [00:03&lt;00:00,  3.95s/it]
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+WARNING: X_cnv_pca not found in adata.obsm. Computing PCA with default parameters
+CHD8
+(2778, 11266)
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+100%|██████████| 1/1 [00:04&lt;00:00,  4.35s/it]
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+WARNING: X_cnv_pca not found in adata.obsm. Computing PCA with default parameters
+SMARCA4
+(2980, 11266)
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+100%|██████████| 1/1 [00:04&lt;00:00,  4.70s/it]
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+WARNING: X_cnv_pca not found in adata.obsm. Computing PCA with default parameters
+APP
+(2700, 11266)
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+100%|██████████| 1/1 [00:04&lt;00:00,  4.47s/it]
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+WARNING: X_cnv_pca not found in adata.obsm. Computing PCA with default parameters
+JARID2
+(2695, 11266)
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+100%|██████████| 1/1 [00:04&lt;00:00,  4.73s/it]
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+WARNING: X_cnv_pca not found in adata.obsm. Computing PCA with default parameters
+KDM2A
+(2664, 11266)
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+100%|██████████| 1/1 [00:04&lt;00:00,  4.17s/it]
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+WARNING: X_cnv_pca not found in adata.obsm. Computing PCA with default parameters
+MYBBP1A
+(2784, 11266)
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+100%|██████████| 1/1 [00:04&lt;00:00,  4.58s/it]
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+WARNING: X_cnv_pca not found in adata.obsm. Computing PCA with default parameters
+STAT3
+(2946, 11266)
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+100%|██████████| 1/1 [00:04&lt;00:00,  4.35s/it]
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+WARNING: X_cnv_pca not found in adata.obsm. Computing PCA with default parameters
+NAP1L1
+(2735, 11266)
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+100%|██████████| 1/1 [00:03&lt;00:00,  3.74s/it]
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+WARNING: X_cnv_pca not found in adata.obsm. Computing PCA with default parameters
+SRSF5
+(2749, 11266)
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+100%|██████████| 1/1 [00:03&lt;00:00,  3.84s/it]
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+WARNING: X_cnv_pca not found in adata.obsm. Computing PCA with default parameters
+STAG2
+(2811, 11266)
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+100%|██████████| 1/1 [00:03&lt;00:00,  3.78s/it]
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+WARNING: X_cnv_pca not found in adata.obsm. Computing PCA with default parameters
+SAFB
+(2709, 11266)
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+100%|██████████| 1/1 [00:03&lt;00:00,  3.72s/it]
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+WARNING: X_cnv_pca not found in adata.obsm. Computing PCA with default parameters
+SET
+(2899, 11266)
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+100%|██████████| 1/1 [00:03&lt;00:00,  3.81s/it]
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+WARNING: X_cnv_pca not found in adata.obsm. Computing PCA with default parameters
+HNRNPU
+(2724, 11266)
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+100%|██████████| 1/1 [00:03&lt;00:00,  3.69s/it]
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+WARNING: X_cnv_pca not found in adata.obsm. Computing PCA with default parameters
+NME2
+(2769, 11266)
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+100%|██████████| 1/1 [00:03&lt;00:00,  3.96s/it]
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+WARNING: X_cnv_pca not found in adata.obsm. Computing PCA with default parameters
+ZNF217
+(2790, 11266)
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+100%|██████████| 1/1 [00:03&lt;00:00,  3.70s/it]
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+WARNING: X_cnv_pca not found in adata.obsm. Computing PCA with default parameters
+NCOR2
+(2776, 11266)
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+100%|██████████| 1/1 [00:03&lt;00:00,  3.67s/it]
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+WARNING: X_cnv_pca not found in adata.obsm. Computing PCA with default parameters
+TGIF1
+(2805, 11266)
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+100%|██████████| 1/1 [00:03&lt;00:00,  3.82s/it]
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+WARNING: X_cnv_pca not found in adata.obsm. Computing PCA with default parameters
+DHX30
+(2793, 11266)
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+100%|██████████| 1/1 [00:03&lt;00:00,  3.84s/it]
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+WARNING: X_cnv_pca not found in adata.obsm. Computing PCA with default parameters
+BRIP1
+(2775, 11266)
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+100%|██████████| 1/1 [00:03&lt;00:00,  3.75s/it]
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+WARNING: X_cnv_pca not found in adata.obsm. Computing PCA with default parameters
+GPBP1
+(2811, 11266)
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+100%|██████████| 1/1 [00:03&lt;00:00,  3.81s/it]
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+WARNING: X_cnv_pca not found in adata.obsm. Computing PCA with default parameters
+NR2F2
+(2726, 11266)
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+100%|██████████| 1/1 [00:03&lt;00:00,  3.72s/it]
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+WARNING: X_cnv_pca not found in adata.obsm. Computing PCA with default parameters
+YWHAZ
+(2936, 11266)
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+100%|██████████| 1/1 [00:03&lt;00:00,  3.75s/it]
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+WARNING: X_cnv_pca not found in adata.obsm. Computing PCA with default parameters
+STAU2
+(2812, 11266)
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+100%|██████████| 1/1 [00:03&lt;00:00,  3.74s/it]
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+WARNING: X_cnv_pca not found in adata.obsm. Computing PCA with default parameters
+ADAR
+(2892, 11266)
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+100%|██████████| 1/1 [00:03&lt;00:00,  3.77s/it]
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+WARNING: X_cnv_pca not found in adata.obsm. Computing PCA with default parameters
+BZW1
+(2859, 11266)
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+100%|██████████| 1/1 [00:03&lt;00:00,  3.87s/it]
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+WARNING: X_cnv_pca not found in adata.obsm. Computing PCA with default parameters
+ARNT
+(2553, 11266)
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+100%|██████████| 1/1 [00:03&lt;00:00,  3.66s/it]
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+WARNING: X_cnv_pca not found in adata.obsm. Computing PCA with default parameters
+CTNNB1
+(2833, 11266)
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+100%|██████████| 1/1 [00:03&lt;00:00,  3.78s/it]
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+WARNING: X_cnv_pca not found in adata.obsm. Computing PCA with default parameters
+CCND1
+(2655, 11266)
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+100%|██████████| 1/1 [00:03&lt;00:00,  3.78s/it]
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+WARNING: X_cnv_pca not found in adata.obsm. Computing PCA with default parameters
+GTF2F1
+(2657, 11266)
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+100%|██████████| 1/1 [00:03&lt;00:00,  3.82s/it]
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+WARNING: X_cnv_pca not found in adata.obsm. Computing PCA with default parameters
+CSNK1E
+(2478, 11266)
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+100%|██████████| 1/1 [00:03&lt;00:00,  3.98s/it]
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+WARNING: X_cnv_pca not found in adata.obsm. Computing PCA with default parameters
+ZNF3
+(2709, 11266)
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+100%|██████████| 1/1 [00:04&lt;00:00,  4.54s/it]
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+WARNING: X_cnv_pca not found in adata.obsm. Computing PCA with default parameters
+TPD52L1
+(2754, 11266)
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+100%|██████████| 1/1 [00:04&lt;00:00,  4.04s/it]
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+WARNING: X_cnv_pca not found in adata.obsm. Computing PCA with default parameters
+PSMC5
+(2828, 11266)
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+100%|██████████| 1/1 [00:04&lt;00:00,  4.19s/it]
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+WARNING: X_cnv_pca not found in adata.obsm. Computing PCA with default parameters
+EEF2
+(2780, 11266)
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+100%|██████████| 1/1 [00:04&lt;00:00,  4.15s/it]
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+WARNING: X_cnv_pca not found in adata.obsm. Computing PCA with default parameters
+NFE2L2
+(2658, 11266)
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+100%|██████████| 1/1 [00:03&lt;00:00,  3.78s/it]
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+WARNING: X_cnv_pca not found in adata.obsm. Computing PCA with default parameters
+SLTM
+(2725, 11266)
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+100%|██████████| 1/1 [00:04&lt;00:00,  4.05s/it]
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+WARNING: X_cnv_pca not found in adata.obsm. Computing PCA with default parameters
+UPF3B
+(2618, 11266)
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+100%|██████████| 1/1 [00:04&lt;00:00,  4.21s/it]
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+WARNING: X_cnv_pca not found in adata.obsm. Computing PCA with default parameters
+RBM47
+(2672, 11266)
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+100%|██████████| 1/1 [00:04&lt;00:00,  4.51s/it]
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+WARNING: X_cnv_pca not found in adata.obsm. Computing PCA with default parameters
+RC3H2
+(2707, 11266)
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+100%|██████████| 1/1 [00:04&lt;00:00,  4.59s/it]
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+WARNING: X_cnv_pca not found in adata.obsm. Computing PCA with default parameters
+P4HB
+(2759, 11266)
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+100%|██████████| 1/1 [00:05&lt;00:00,  5.83s/it]
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+WARNING: X_cnv_pca not found in adata.obsm. Computing PCA with default parameters
+</pre></div></div>
+</div>
+<p>Identifying Promoter-Specific Genomic Instability A major biological finding in the paper is that different promoters of the same gene can have vastly different effects on genomic integrity.</p>
+<p>The ESR1 Discovery: The notebook compares CNV scores between the P1 and P2 knockdowns of the estrogen receptor gene (ESR1).</p>
+<p>Result Found: Knocking down the P2 promoter of ESR1 led to a significant increase in CNVs among cell cycle-related genes compared to P1 and control populations (<span class="math notranslate nohighlight">\(p &lt; 1.1 \times 10^{-7}\)</span>)77.</p>
+<p>Statistical Validation of CNV Differences To ensure these inferred changes are statistically robust, the notebook applies several tests:</p>
+<p>Wilcoxon Rank Sum Test: Used to determine if the distribution of CNV scores in P2-knockdown cells is significantly higher than in P1 or NTC (Non-Targeting Control) cells.</p>
+<p>Effect Size Calculation: The code calculates metrics like Cliff’s delta and Vargha and Delaney’s A to quantify the magnitude of the difference in genomic instability between the different promoter-targeted populations</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[28]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">cnv</span><span class="o">.</span><span class="n">tl</span><span class="o">.</span><span class="n">infercnv</span><span class="p">(</span>
+    <span class="n">esr1_full</span><span class="p">,</span>
+    <span class="n">reference_key</span><span class="o">=</span><span class="s2">&quot;guide_id&quot;</span><span class="p">,</span>
+    <span class="n">reference_cat</span><span class="o">=</span><span class="s2">&quot;non-targeting_Control&quot;</span><span class="p">,</span>
+
+<span class="p">)</span>
+<span class="n">cnv</span><span class="o">.</span><span class="n">pp</span><span class="o">.</span><span class="n">neighbors</span><span class="p">(</span><span class="n">esr1_full</span><span class="p">)</span>
+<span class="n">cnv</span><span class="o">.</span><span class="n">tl</span><span class="o">.</span><span class="n">leiden</span><span class="p">(</span><span class="n">esr1_full</span><span class="p">)</span>
+<span class="n">cnv</span><span class="o">.</span><span class="n">tl</span><span class="o">.</span><span class="n">cnv_score</span><span class="p">(</span><span class="n">esr1_full</span><span class="p">)</span>
+<span class="n">cnv</span><span class="o">.</span><span class="n">pl</span><span class="o">.</span><span class="n">chromosome_heatmap</span><span class="p">(</span><span class="n">esr1_full</span><span class="p">,</span> <span class="n">groupby</span><span class="o">=</span><span class="s2">&quot;guide_id&quot;</span><span class="p">)</span>
+<span class="n">cnv</span><span class="o">.</span><span class="n">pl</span><span class="o">.</span><span class="n">chromosome_heatmap_summary</span><span class="p">(</span><span class="n">esr1_full</span><span class="p">,</span> <span class="n">groupby</span><span class="o">=</span><span class="s2">&quot;guide_id&quot;</span><span class="p">,</span><span class="n">save</span><span class="o">=</span><span class="s2">&quot;esr1_full.pdf&quot;</span><span class="p">)</span>
+<br/></pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+100%|██████████| 1/1 [00:02&lt;00:00,  2.77s/it]
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../../_images/scripts_3_analysis_scripts_9A_cnv_score_18_1.png" src="../../_images/scripts_3_analysis_scripts_9A_cnv_score_18_1.png" />
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+... storing &#39;guide_id&#39; as categorical
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+WARNING: saving figure to file figures/heatmapesr1_full.pdf
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../../_images/scripts_3_analysis_scripts_9A_cnv_score_18_4.png" src="../../_images/scripts_3_analysis_scripts_9A_cnv_score_18_4.png" />
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[29]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">cnv</span><span class="o">.</span><span class="n">pl</span><span class="o">.</span><span class="n">chromosome_heatmap</span><span class="p">(</span><span class="n">esr1_full</span><span class="p">,</span> <span class="n">groupby</span><span class="o">=</span><span class="s2">&quot;guide_id&quot;</span><span class="p">)</span>
+<span class="n">cnv</span><span class="o">.</span><span class="n">pl</span><span class="o">.</span><span class="n">chromosome_heatmap_summary</span><span class="p">(</span><span class="n">esr1_full</span><span class="p">,</span> <span class="n">groupby</span><span class="o">=</span><span class="s2">&quot;guide_id&quot;</span><span class="p">,</span><span class="n">save</span><span class="o">=</span><span class="s2">&quot;esr1_full.pdf&quot;</span><span class="p">)</span>
+<br/></pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../../_images/scripts_3_analysis_scripts_9A_cnv_score_19_0.png" src="../../_images/scripts_3_analysis_scripts_9A_cnv_score_19_0.png" />
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+... storing &#39;guide_id&#39; as categorical
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+WARNING: saving figure to file figures/heatmapesr1_full.pdf
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../../_images/scripts_3_analysis_scripts_9A_cnv_score_19_3.png" src="../../_images/scripts_3_analysis_scripts_9A_cnv_score_19_3.png" />
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[31]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#need to make a graph which shows x-axis the cnv score and y-axis score</span>
+<span class="c1">#export cnv_score to csv</span>
+<span class="n">cnv_score_df</span><span class="o">=</span><span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="n">cnv_score_list_total</span><span class="p">)</span>
+
+<span class="n">cnv_score_df</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">loc</span><span class="o">+</span><span class="s2">&quot;files/singlecell_shortread_analysis/cnv_score_allgene.csv&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="8_perturbseq_differentialexpression.html" class="btn btn-neutral float-left" title="Differential Expression analysis between P1 &amp; P2" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="9B_velocity_loom.html" class="btn btn-neutral float-right" title="Velocity and pyGSEA calculations of ESR1" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026, Helen King.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

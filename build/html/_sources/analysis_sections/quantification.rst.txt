@@ -1,0 +1,11 @@
+Transcript Quantification
+=========================
+
+.. toctree::
+   :maxdepth: 1
+
+   ../scripts/3_analysis_scripts/3C_whippet_pseudobulk
+
+**Additional Files:**
+
+* **Shell Scripts:** :download:`3A_seperate_bam_file_ideal.sh <../scripts/3_analysis_scripts/3A_seperate_bam_file_ideal.sh>` | :download:`3B_whippet_pseudobulk.sh <../scripts/3_analysis_scripts/3B_whippet_pseudobulk.sh>`

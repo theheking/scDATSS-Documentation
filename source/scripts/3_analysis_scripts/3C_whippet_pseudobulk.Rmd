@@ -1,0 +1,631 @@
+---
+title: "3C_whippet_pseudobulk"
+output: html_document
+date: "2025-03-20"
+---
+
+Calculating the TPM values for the P1 & P2 promoters and then calculating the knockdown efficiency for off-target and on-target targets, as well as generating visualisations of the data.
+
+The provided R code serves as the core validation engine, quantifying transcript-level changes to prove that CRISPR interference (CRISPRi) can selectively repress one promoter without affecting others in the same gene.
+
+- Isoform Quantification: It utilises Whippet outputs to quantify expression in Transcripts Per Million (TPM), allowing for a high-resolution view of which specific promoter is active in which cell.
+
+- On-Target vs. Off-Target Precision: It calculates the percentage knockdown for transcripts initiated by the targeted promoter (On-target) versus transcripts from untargeted promoters of the same gene (Off-target)
+
+- Quality Filtering: The script establishes strict criteria for "Successful KD" (e.g., P2 knockdown < 40%) and ensures that background expression in non-targeting control (NTC) populations is sufficient (NTC TPM ≥ 0.5) to make reliable conclusions.
+
+
+Load libraries and define functions.
+```{r setup, include=FALSE}
+library(ggvenn)
+library(readr)
+library(dplyr)
+library(purrr)
+library(stringr)
+library(ggplot2)
+library(reshape2)
+library(pheatmap)
+library(ggpubr)
+library(rstatix)
+library(RColorBrewer)
+library(ggpubr)
+library(tidyr)
+library(ggalluvial)
+library(cowplot)
+library(readr)
+library(dplyr)
+library(purrr)
+library(stringr)
+library(ggplot2)
+library(reshape2)
+library(pheatmap)
+library(ggpubr)
+library(rstatix)
+library(tidyr)
+library(scCustomize)
+
+palletee1 <- c("#00AFBB", "#BEE6EE")
+palletee2 <- c ("#FC4E07", "#E69683")
+
+
+# Function to process each file
+process_file <- function(file) {
+  data <- read.table(file, header = TRUE, sep = "\t", row.names = NULL)
+  colnames(data) <- c("Isoform", "Tpm", "Read_Counts")
+  data <- data %>% select(Isoform, Tpm)
+  colnames(data)[2] <- paste("Tpm", gsub(".deduplicated.isoform.tpm.gz", "", basename(file)), sep = "_")
+  #reset rownames to Isoform 
+  return(data)
+}
+
+# Define directory and file paths
+dir <- '../../files/whippet_dedup'
+files <- list.files(dir, pattern = ".gz", full.names = TRUE)
+table_name <- file.path(dir, "all_data.txt")
+process_file <- function(file) {
+  data <- read.table(file, header = TRUE, sep = "\t", row.names = NULL)
+  colnames(data) <- c("Isoform", "Tpm", "Read_Counts")
+  data <- data %>% select(Isoform, Tpm)
+  colnames(data)[2] <- paste("Tpm", gsub(".deduplicated.isoform.tpm.gz", "", basename(file)), sep = "_")
+  #reset rownames to Isoform 
+  return(data)
+}
+
+umi_sum <- function(file) {
+  data <- read.table(file, header = TRUE, sep = "\t", row.names = NULL)
+  colnames(data) <- c("Gene", "UMI Count")
+  new_line <- c(basename(file), sum(data$`UMI Count`))
+  #add new li
+  return(new_line) }
+
+cellcount_sum <- function(file) {
+  data <- read.table(file, header = TRUE, sep = "\t", row.names = NULL)
+  #create aline where they count the numbner of lines
+  new_line <- c(basename(file), nrow(data))
+  return(new_line) 
+}
+# Print the list of files
+print(files[1:3])
+
+```
+
+
+Define the function and the files. 
+```{r}
+rel_dir <- '../../'
+dir <- '../../files/whippet_dedup'
+files <- list.files(dir, pattern = ".gz", full.names = TRUE)
+table_name <- file.path(dir, "all_data.txt")
+
+
+# Print the list of files
+print(files[1:3])
+
+```
+
+
+Read through entire whippet output and create gene table if it does not exist. Here the off-target and on-target P1 and P2 knockdown percentages are calculated.  Other information such as the transcripts assigned to the P1 anad P2 promoters, the distance from the TSS and the negative control TPMs are also calculated. Finally, boolean values for if the KD is significant, if there is a significant NTC count (> 0.5 TPM in negative control population), if KD is looser (less than the 85th percentile) or strict (both P1 and P2 < 0% KD) are also calculated.
+
+
+```{r, echo=TRUE, warning=FALSE, message=FALSE}
+#if gene_table.csv exists then skip 
+if (file.exists(paste0(dir,"/gene_table.csv"))){
+  print("gene_table.csv exists")
+  #load the gene_table.csv
+  gene_table <- read.csv(paste0(dir,"/gene_table.csv")) 
+  } else {
+    print("gene_table.csv does not exist")   
+  # Read or create the table
+  if (file.exists(table_name)) {
+    all_data <- read.table(table_name, header = TRUE, sep = "\t", row.names = NULL)
+  } else {
+    #map the fiunction process to every element in list of files and merge the otuputs to simplest df use applyr
+    all_data <- lapply(files, process_file)
+    #flatten and merge on isforom column
+    all_data <- Reduce(function(x, y) merge(x, y, by = "Isoform", all = TRUE), all_data)
+    #instead of cbind use merge on Isoform
+    write.table(all_data, table_name, sep = "\t", row.names = FALSE, quote = FALSE)
+  }
+  
+  #tx2gene has list of transcripts and their associated genes 
+  tx2gene_loc <- "files/kallisto/transcriptome/tx2gene.txt"
+  tx2gene <- read_delim(tx2gene_loc, delim = "\t", col_names = c("transcript_id", "gene_id","gene_name","transcript_name","chromosome","start","end","strand"))
+  print(sum((tx2gene$start - tx2gene$end) > 0))
+  tx2gene$transcript_index <- 1:nrow(tx2gene)
+  tx2gene$tss <- ifelse(tx2gene$strand == "+", tx2gene$start, tx2gene$end)
+  
+  
+  #read in the cells that are assigned, place into metadata find
+  #read in the bed file which conrtains p1 and p2 locations
+  bed_loc <- "cellranger_input/candidate_AP_MP.bed"
+  bed <- read_delim(bed_loc, delim = "\t", col_names = c("chromosome", "start", "end", "name", "strand"))
+  print(sum((bed$start - bed$end) > 0))
+  bed$tss <- ifelse(bed$strand == "+", bed$start, bed$end)
+  #do an example for esr1 mp and ap subpopulations
+  #split _ and get last 
+  bed$promoter_type <- str_split(bed$name, "_") %>% map_chr(~last(.x))
+  #get the second to last element
+  bed$gene_name <- str_split(bed$name, "_") %>% map_chr(~.x[length(.x)-1])
+  bed$promoter_gene <- paste0(bed$gene_name,"_",bed$promoter_type)
+  #check the number of gene name prior to merge
+  print(length(unique(bed$gene_name)))
+  print(length(unique(bed$promoter_gene)))
+  #merge the dataframe on gene name 
+  
+  #merge the bed and tx2gene on gene name
+  bed <- merge(bed, tx2gene, by = "gene_name", suffixes = c("_target","_assigned"), how="inner")
+  print(length(unique(bed$gene_name)))
+  print(length(unique(bed$promoter_gene)))
+  #filter for for rows that only have 
+  #calculate column that has the distance from the tss
+  bed$distance <- abs(bed$tss_target - bed$tss_assigned)
+  #filter for rows that have a distance of less than 1000
+  bed <- bed %>% group_by(transcript_id) %>% mutate(min_distance = distance == min(distance))
+  print(length(unique(bed$transcript_id))==length(bed$transcript_id[bed$min_distance == TRUE]))
+  ggplot(bed) + 
+    labs(x = "Distance from TSS", y = "Count") + #add denistty plot
+    geom_density(aes(x=distance, color=min_distance), alpha = 0.5)
+  
+  #then find the numbers that assign to those transcripts
+  #get the number from the matrix number for those 
+  bed <- bed %>% filter(min_distance == TRUE)
+  #only keep genes with both P1 and P2
+  all_data_names <- stringr::str_split_i(colnames(all_data), "Tpm_", 2) 
+  #use these transcripts 
+  bed <- bed %>% group_by(gene_name) %>% filter(promoter_gene %in% unique(all_data_names)) %>% filter(n_distinct(promoter_type) == 2)
+  bed <- bed %>% filter(distance < 1000)
+  #split transcript ID by . and get the first element name column ISoform
+  bed$Isoform <- str_split_fixed(bed$transcript_id, "\\.", 2)[,1]
+
+  #merge the bed and all_data on Isoform
+  all_data <- merge(all_data, bed, by = "Isoform")
+  head(all_data)
+  
+  #create empty table gene_table with columsn for both mp and ap
+  gene_table_ontarget <- data.frame(gene = character(), percent_knockdown_mp = numeric(), distance_mp = numeric(), Isoform_mp = character(), transcript_name_mp = character(), neg_ctrl_tpm_mp= character(), percent_knockdown_ap = numeric(), distance_ap = numeric(), Isoform_ap = character(), transcript_name_ap = character(), neg_ctrl_tpm_ap= character(), stringsAsFactors = FALSE)
+  gene_table_offtarget <- data.frame(gene = character(), percent_knockdown_mp = numeric(), distance_mp = numeric(), Isoform_mp = character(), transcript_name_mp = character(),  neg_ctrl_tpm_mp= character(),percent_knockdown_ap = numeric(), distance_ap = numeric(), Isoform_ap = character(), transcript_name_ap = character(),  neg_ctrl_tpm_ap= character(),stringsAsFactors = FALSE)
+  gene_table_total <- data.frame(gene = character(), percent_knockdown_mp_total = numeric(), percent_knockdown_ap = numeric(), stringsAsFactors = FALSE)
+  #loop through every gene 
+  #unique gene names
+  for (gene in unique(all_data$gene_name)){
+    print(gene)
+    gene_prom_mp <- paste0(gene, "_MP")
+    gene_prom_mp_tpm <- paste0("Tpm_", gene_prom_mp)
+    gene_prom_ap <- paste0(gene, "_AP")
+    gene_prom_ap_tpm <- paste0("Tpm_", gene_prom_ap)
+    negative_column <- "Tpm_Negative"
+    #subset the data for the gene
+    #firrst for main promoter
+    gene_data_mp <- all_data %>% filter(promoter_gene == gene_prom_mp) 
+    #then for the alternative promoter
+    gene_data_ap <- all_data %>% filter(promoter_gene == gene_prom_ap)
+    #check if all the sum(gene_data_mp[[gene_prom_mp_tpm]]) or sum(gene_data_mp[[gene_prom_ap_tpm]]) for every column is greater than the minimum filter tpm
+    # if (( > filter) & (sum(gene_data_ap[[negative_column]]) > filter) ){
+    #   print("skipped")
+    #   next
+    # }
+    print(sum(gene_data_mp[[negative_column]]))
+    print(sum(gene_data_ap[[negative_column]]))
+    #calculate the % knockdown between negative control and ESR1_MP population by summing the Tpm and then dividing by the negative control
+    #fill NA wuth 0 in gene_data_ap[[gene_prom_ap_tpm]] and gene_data_mp[[gene_prom_mp_tpm]] and negative control and gene_data_mp[[gene_prom_ap_tpm]]
+    total_mp <- sum(gene_data_mp[[gene_prom_mp_tpm]]) + sum(gene_data_mp[[gene_prom_ap_tpm]])
+    total_ap <- sum(gene_data_ap[[gene_prom_mp_tpm]]) + sum(gene_data_ap[[gene_prom_ap_tpm]])
+    total_percentage_knockdown_mp <- (total_mp - sum(gene_data_mp[[negative_column]]))/sum(gene_data_mp[[negative_column]])*100
+    total_percentage_knockdown_ap <- (total_ap - sum(gene_data_ap[[negative_column]]))/sum(gene_data_ap[[negative_column]])*100
+    gene_data_mp_percent_knockdown_mp <- ( sum(gene_data_mp[[gene_prom_mp_tpm]])-sum(gene_data_mp[[negative_column]]))/sum(gene_data_mp[[negative_column]])*100
+    gene_data_ap_percent_knockdown_ap <- ( sum(gene_data_ap[[gene_prom_ap_tpm]])-sum(gene_data_ap[[negative_column]]))/sum(gene_data_ap[[negative_column]])*100
+    gene_data_mp_percent_knockdown_ap <- ( sum(gene_data_mp[[gene_prom_ap_tpm]])-sum(gene_data_mp[[negative_column]]))/sum(gene_data_mp[[negative_column]])*100
+    gene_data_ap_percent_knockdown_mp <- ( sum(gene_data_ap[[gene_prom_mp_tpm]])-sum(gene_data_ap[[negative_column]]))/sum(gene_data_ap[[negative_column]])*100
+    # whenever sum(gene_data_mp[[gene_prom_mp_tpm]]) == sum(gene_data_mp[[negative_column]])) make the value equal 0
+    gene_data_mp_percent_knockdown_mp[sum(gene_data_mp[[gene_prom_mp_tpm]]) == sum(gene_data_mp[[negative_column]])] <- 0
+    gene_data_ap_percent_knockdown_ap[sum(gene_data_ap[[gene_prom_ap_tpm]]) == sum(gene_data_ap[[negative_column]])] <- 0
+    gene_data_mp_percent_knockdown_ap[sum(gene_data_mp[[gene_prom_ap_tpm]]) == sum(gene_data_mp[[negative_column]])] <- 0
+    gene_data_ap_percent_knockdown_mp[sum(gene_data_ap[[gene_prom_mp_tpm]]) == sum(gene_data_ap[[negative_column]])] <- 0
+    
+   
+    gene_list_kd <- list(gene,total_percentage_knockdown_mp,total_percentage_knockdown_ap)
+    gene_list_ontarget <- list(gene, sum(gene_data_mp[[gene_prom_mp_tpm]]),
+                               gene_data_mp_percent_knockdown_mp,median(gene_data_mp$distance),str_flatten_comma(gene_data_mp$Isoform),str_flatten_comma(gene_data_mp$transcript_name),sum(gene_data_mp[[negative_column]]), 
+                               sum(gene_data_ap[[gene_prom_ap_tpm]]),
+                               gene_data_ap_percent_knockdown_ap,median(gene_data_ap$distance),str_flatten_comma(gene_data_ap$Isoform),str_flatten_comma(gene_data_ap$transcript_name),sum(gene_data_ap[[negative_column]]))
+    gene_list_offtarget <- list(gene, sum(gene_data_mp[[gene_prom_ap_tpm]]),
+                                gene_data_mp_percent_knockdown_ap,median(gene_data_mp$distance),str_flatten_comma(gene_data_mp$Isoform),str_flatten_comma(gene_data_mp$transcript_name),sum(gene_data_mp[[negative_column]]), 
+                                sum(gene_data_ap[[gene_prom_mp_tpm]]),
+                                gene_data_ap_percent_knockdown_mp,median(gene_data_ap$distance),str_flatten_comma(gene_data_ap$Isoform),str_flatten_comma(gene_data_ap$transcript_name),sum(gene_data_ap[[negative_column]]))
+    #add list to table keep column names
+    print(gene_prom_ap_tpm)
+    gene_table_ontarget <- rbind(gene_table_ontarget, gene_list_ontarget)
+    gene_table_offtarget <- rbind(gene_table_offtarget, gene_list_offtarget)
+    gene_table_total <- rbind(gene_table_total, gene_list_kd)
+  }
+  
+  #change gene_table names 
+  column_names <- c("gene", "sum_MP","percent_knockdown_MP", "distance_MP", "Isoform_MP", "transcript_name_MP", "neg_ctrl_tpm_MP",
+                    "sum_AP","percent_knockdown_AP", "distance_AP", "Isoform_AP", "transcript_name_AP","neg_ctrl_tpm_AP")
+  colnames(gene_table_ontarget) <-column_names
+  colnames(gene_table_offtarget) <- column_names
+  colnames(gene_table_total) <- c("gene", "percent_knockdown_MP_total", "percent_knockdown_AP_total")
+  gene_table <- merge(gene_table_ontarget, gene_table_offtarget, by = "gene", suffixes = c("_ontarget", "_offtarget"))
+  gene_table <- merge(gene_table, gene_table_total, by = "gene")
+  head(gene_table)
+  #plot the data
+  gene_table <- as.data.frame(gene_table)
+  dim(gene_table)
+  gene_table$successfulKD <- ifelse(gene_table$percent_knockdown_AP_ontarget < 40,TRUE,FALSE)
+  quantile_mp_on <- quantile(gene_table$percent_knockdown_MP_ontarget, c(0.1,0.9))
+quantile_ap_on <- quantile(gene_table$percent_knockdown_AP_ontarget, c(0.1,0.85))
+
+gene_table$sig_ntc_count <- ifelse(gene_table$neg_ctrl_tpm_MP_ontarget >= 0.5 & gene_table$neg_ctrl_tpm_AP_ontarget >= 0.5,TRUE,FALSE)
+gene_table$looser_KD <-  ifelse((  (gene_table$percent_knockdown_AP_ontarget  < quantile_ap_on[2])), TRUE,FALSE)
+gene_table$strict_KD <- ifelse(((gene_table$percent_knockdown_MP_ontarget < 0 )&  (gene_table$percent_knockdown_AP_ontarget  < 0) ), TRUE,FALSE)
+
+  #save gene_table as a file
+  write.csv(gene_table,paste0(dir,"/gene_table.csv"))
+  }
+
+```
+
+
+
+Create heatmap of the percent knockdown for both promoters with background of on-target and off-target effects.
+
+```{r, echo=TRUE, warning=FALSE, message=FALSE, fig.width=6, fig.height=10}
+gene_table_heatmap <-gene_table %>%
+ dplyr::select(gene,percent_knockdown_MP_ontarget, percent_knockdown_AP_ontarget, percent_knockdown_MP_offtarget, percent_knockdown_AP_offtarget,percent_knockdown_MP_total,percent_knockdown_AP_total) 
+#put column to rowname
+rownames(gene_table_heatmap) <- gene_table_heatmap$gene
+gene_table_heatmap <- gene_table_heatmap %>% dplyr::select(-gene)
+breaks2 <- seq(-100, 100, length.out = 150)
+
+
+pheatmap(gene_table_heatmap %>% 
+           dplyr::select(percent_knockdown_MP_ontarget,percent_knockdown_MP_offtarget,percent_knockdown_MP_total),
+         cluster_rows = TRUE, cluster_cols = FALSE, 
+         show_rownames = TRUE, show_colnames = TRUE, main = "P1", 
+         fontsize = 8, cellwidth = 8, cellheight = 8 , scale ="none" ,cutree_rows=5 ,colorRampPalette(brewer.pal(9,"Spectral"))(150),
+         breaks = breaks2)
+#explain the number present 
+print(paste0("Number of genes in heatmap: ", nrow(gene_table_heatmap %>% 
+           dplyr::select(percent_knockdown_MP_ontarget,percent_knockdown_MP_offtarget,percent_knockdown_MP_total) %>% drop_na()) ))
+```
+
+
+Repeat with P2-targeted guides. This is to show the difference in knockdown efficiency between the two promoters. 
+
+```{r, fig.width=6, fig.height=10, echo=TRUE, warning=FALSE, message=FALSE}
+breaks2 <- seq(-100, 100, length.out = 150)
+
+pheatmap(gene_table_heatmap %>% 
+           dplyr::select(percent_knockdown_AP_ontarget,percent_knockdown_AP_offtarget,percent_knockdown_AP_total) %>% drop_na(),
+         cluster_rows = TRUE, cluster_cols = FALSE, 
+         show_rownames = TRUE, show_colnames = TRUE, main = "P2", 
+         fontsize = 8, cellwidth = 8, cellheight = 10 , scale ="none" ,cutree_rows=5 ,colorRampPalette(brewer.pal(9,"Spectral"))(150),
+         breaks = breaks2)
+
+```
+
+
+Comparison of the boolean assignments, looser KD, strict KD and significant NTC expression. 
+```{r}
+ggven_plot <- gene_table[c("looser_KD","strict_KD","sig_ntc_count")] %>%
+  dplyr::rename(
+    "Successful \n KD" = looser_KD,
+    "Strict \n Successful KD" = strict_KD,
+    "NTC Count\n >= 0.5 TPM" = sig_ntc_count
+  )
+
+venn_diagram <- ggvenn(ggven_plot, show_stats="cp", text_size=3)
+#save venndiagram 
+ggsave(paste0(rel_dir,"figures/venn_diagram.pdf"), plot = venn_diagram, width = 10, height = 10, units = "cm")
+venn_diagram
+```
+
+
+Visualisation of the knockdown percentages for both promoters and both on-target and off-target effects.
+
+```{r}
+gene_table_melt <-  gene_table %>% 
+   filter((looser_KD ==TRUE)) %>%
+  melt(id.vars = c("gene","neg_ctrl_tpm_AP_ontarget","neg_ctrl_tpm_MP_ontarget"),
+                                       measure.vars = c("percent_knockdown_MP_ontarget", "percent_knockdown_AP_ontarget", 
+                                                        "percent_knockdown_MP_offtarget", "percent_knockdown_AP_offtarget"))
+gene_table_melt$target <- ifelse(grepl("ontarget", gene_table_melt$variable), "ontarget", "offtarget")
+gene_table_melt$promoter <- ifelse(grepl("MP", gene_table_melt$variable), "P1", "P2")
+ggplot(gene_table_melt) +
+  geom_boxplot(aes(x=variable, y=value, fill=variable)) + 
+  theme_minimal() + labs(x = "Promoter", y = "Percent Knockdown") + #rotate 
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) 
+
+```
+
+
+
+Plot the knockdown percentages for both promoters split by on-target and off-target for all 35 genes with NTC > 0.5. 
+```{r, echo=TRUE, warning=FALSE, message=FALSE}
+
+a <- gene_table_melt %>% filter(promoter=="P1") %>%
+  ggviolin( x = "target", y = "value",fill = "target",add = "boxplot",    ylab = "Percent Knockdown", xlab = "Promoter", 
+           palette = c(palletee1[1],palletee1[2]),add.params = list(fill = "white") ) +
+theme(axis.text.x = element_text(angle = 45, hjust = 1)) + 
+  stat_compare_means( paired = TRUE) 
+b <- gene_table_melt %>% filter(promoter=="P2") %>%
+  ggviolin( x = "target", y = "value",fill = "target",add = "boxplot",    ylab = "Percent Knockdown", xlab = "Promoter", 
+            palette = c(palletee2[1],palletee2[2]) ,add.params = list(fill = "white") ) +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) + 
+  stat_compare_means( paired = TRUE) 
+
+plot_grid(a, b,  ncol = 1)
+```
+
+Visualisation of the knockdown percentages for both promoters and both on-target and off-target effects.
+
+```{r}
+gene_table_melt <-  gene_table %>% 
+   filter((looser_KD ==TRUE) & (sig_ntc_count==TRUE) ) %>%
+  melt(id.vars = c("gene","neg_ctrl_tpm_AP_ontarget","neg_ctrl_tpm_MP_ontarget"),
+                                       measure.vars = c("percent_knockdown_MP_ontarget", "percent_knockdown_AP_ontarget", 
+                                                        "percent_knockdown_MP_offtarget", "percent_knockdown_AP_offtarget"))
+gene_table_melt$target <- ifelse(grepl("ontarget", gene_table_melt$variable), "ontarget", "offtarget")
+gene_table_melt$promoter <- ifelse(grepl("MP", gene_table_melt$variable), "P1", "P2")
+ggplot(gene_table_melt) +
+  geom_boxplot(aes(x=variable, y=value, fill=variable)) + 
+  theme_minimal() + labs(x = "Promoter", y = "Percent Knockdown") + #rotate 
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) 
+
+```
+
+
+
+Plot the knockdown percentages for both promoters split by on-target and off-target of the 31 genes that show "successful KD" which removes the top 15 quantiles.
+```{r, echo=TRUE, warning=FALSE, message=FALSE}
+
+a <- gene_table_melt %>% filter(promoter=="P1") %>%
+  ggviolin( x = "target", y = "value",fill = "target",add = "boxplot",    ylab = "Percent Knockdown", xlab = "Promoter", 
+           palette = c(palletee1[1],palletee1[2]),add.params = list(fill = "white") ) +
+theme(axis.text.x = element_text(angle = 45, hjust = 1)) + 
+  stat_compare_means( paired = TRUE) 
+b <- gene_table_melt %>% filter(promoter=="P2") %>%
+  ggviolin( x = "target", y = "value",fill = "target",add = "boxplot",    ylab = "Percent Knockdown", xlab = "Promoter", 
+            palette = c(palletee2[1],palletee2[2]) ,add.params = list(fill = "white") ) +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) + 
+  stat_compare_means( paired = TRUE) 
+
+plot_grid(a, b,  ncol = 1)
+```
+
+
+
+
+
+Plot the knockdown percentages against the negative control TPM for both promoters split by on-target and off-target.
+
+```{r, echo=TRUE, warning=FALSE, message=FALSE, fig.width=6, fig.height=4}
+p<-ggscatter(gene_table_melt %>% filter(target=="ontarget"), x = "neg_ctrl_tpm_MP_ontarget", y = "value",
+         color = "promoter", line.color = "gray", line.size = 0.4,
+         palette = "npg")+
+  ggtitle("P1") + theme_minimal() + labs(y = "Percent Knockdown") +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+a <-ggscatter(gene_table_melt %>% filter(target=="ontarget"), x = "neg_ctrl_tpm_MP_ontarget", y = "value",
+         color = "promoter", line.color = "gray", line.size = 0.4,
+         palette = "npg")+
+  ggtitle("P1") + theme_minimal() + labs(y = "Percent Knockdown") +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+
+gene_table_melt %>% #filter for value between -100 and 100
+  melt(id.vars = c("gene"),measure.vars=c("neg_ctrl_tpm_AP_ontarget","neg_ctrl_tpm_MP_ontarget")) %>%
+    unique() %>%
+  ggplot(aes(x=value, fill=variable)) + #log scale
+  geom_density() +
+  labs(x = "Negative Control TPM", y = "Density") + theme_minimal() +
+    scale_x_continuous(trans='log10') + scale_fill_manual(values = c("#00AFBB", "#E7B800"))
+
+
+```
+
+Plot heatmap of the negative control TPMs for both promoters. Negative control TPMs represent the background expression of the targeted transcripts in the NTC population.
+
+```{r, fig.width=4, fig.height=10, echo=TRUE, warning=FALSE, message=FALSE}
+#create heatmap
+matrix_ng_cntrl <- gene_table_melt %>% #filter for value between -100 and 100
+  dplyr::select( c("gene","neg_ctrl_tpm_MP_ontarget", "neg_ctrl_tpm_AP_ontarget")) %>%
+  unique()
+rownames(matrix_ng_cntrl) <- matrix_ng_cntrl$gene
+matrix_ng_cntrl <- as.matrix(matrix_ng_cntrl %>% dplyr::select(-c("gene")))
+#make it so tthis is TPM
+matrix_ng_cntrl <- log10(matrix_ng_cntrl + 1)
+break2 <- seq(0, max(matrix_ng_cntrl), length.out = 150)
+
+pheatmap(matrix_ng_cntrl, cluster_rows = TRUE, cluster_cols = FALSE,
+         show_rownames = TRUE, show_colnames = TRUE, main = "Negative Control",
+         fontsize = 8, cellwidth = 8, cellheight = 8 , scale ="none" ,cutree_rows=5 ,colorRampPalette(brewer.pal(9,"YlGnBu"))(150),
+         breaks = break2)
+```
+
+
+Plot the knockdown percentages for both promoters split by on-target only.
+```{r}
+
+gene_table_melt %>% filter(target=="ontarget") %>%
+   ggviolin( x = "promoter", y = "value",fill = "promoter",add = "boxplot",    ylab = "Percent Knockdown", xlab = "Promoter", 
+                    palette = c(palletee1[1],palletee2[1]),add.params = list(fill = "white") ) +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) 
+
+
+t.test(gene_table$sum_MP_ontarget, gene_table$neg_ctrl_tpm_MP_ontarget, paired = TRUE)
+t.test(gene_table$sum_AP_ontarget, gene_table$neg_ctrl_tpm_AP_ontarget, paired = TRUE)
+
+  
+```
+
+
+Calculation of the effect size for the on-target P1 knockdown.
+
+```{r, echo=TRUE, warning=FALSE, message=FALSE}
+eff_size_mp <- gene_table %>%
+  dplyr::filter((looser_KD ==TRUE) & (sig_ntc_count==TRUE) ) %>%
+  wilcox_effsize( data = ., formula = sum_MP_ontarget ~ neg_ctrl_tpm_MP_ontarget, paired = TRUE)
+eff_size_mp
+```
+
+Another method to confirm base TPM expression in th enegative control population and the proportion of expression. 
+```{r, fig.width=6, fig.height=8, echo=TRUE, warning=FALSE, message=FALSE}
+gene_table_melt_all <-  gene_table %>%
+  melt(id.vars = c("gene","neg_ctrl_tpm_AP_ontarget","neg_ctrl_tpm_MP_ontarget","successfulKD"),
+       measure.vars = c("percent_knockdown_MP_ontarget", "percent_knockdown_AP_ontarget", 
+                        "percent_knockdown_MP_offtarget", "percent_knockdown_AP_offtarget"))
+
+#plot the data negative control tpm
+a <- gene_table_melt_all %>% 
+  filter(successfulKD==TRUE) %>%
+  dplyr::select( c("gene","neg_ctrl_tpm_MP_ontarget", "neg_ctrl_tpm_AP_ontarget")) %>%
+  unique() %>%
+  melt(id.vars = c("gene"),measure.vars=c("neg_ctrl_tpm_MP_ontarget","neg_ctrl_tpm_AP_ontarget")) %>% #sort P1 to P2
+  mutate(promoter_type = ifelse(variable == "neg_ctrl_tpm_MP_ontarget", "P1", "P2")) 
+
+a$promoter_type <- factor(a$promoter_type, levels=c( "P2","P1"))
+#change the scientific 
+
+a_plot_a <-  a %>%
+  ggplot(aes(y=value, x=promoter_type, fill = promoter_type)) + #log scale
+  geom_violin() +
+  labs(y = "Sum TPM of Transcripts Under Promoter \n in NTC Population \n in Genes Assigned as Successful KD",x="Targeted Promoter") + yscale("log10")+
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) + #hide legend
+  theme(legend.position = "none")+
+  scale_fill_manual(values = c("#00AFBB", "#E7B800")) + #chaange labels for x axis
+  geom_boxplot(width = 0.2, fill = "white")+ #flip
+  coord_flip()  
+
+#plot the data negative control tpm
+a <- gene_table_melt_all %>% 
+  dplyr::select( c("gene", "successfulKD","neg_ctrl_tpm_MP_ontarget", "neg_ctrl_tpm_AP_ontarget")) %>%
+  unique() %>%
+  melt(id.vars = c("gene","successfulKD"),measure.vars=c("neg_ctrl_tpm_MP_ontarget","neg_ctrl_tpm_AP_ontarget")) %>% #sort P1 to P2
+  mutate(promoter_type = ifelse(variable == "neg_ctrl_tpm_MP_ontarget", "P1", "P2")) 
+
+a$promoter_type <- factor(a$promoter_type, levels=c( "P2","P1"))
+# Count observations per group
+counts <- a %>%
+  group_by(promoter_type, successfulKD) %>%
+  summarise(n = n(), .groups = "drop")
+
+
+
+a_plot <-  a %>%
+  ggplot(aes(y=value, x=promoter_type, fill = successfulKD)) + #log scale
+  geom_violin( position = position_dodge(0.9)) +
+  labs(y = "Sum TPM of Transcripts Under Promoter \n in NTC Population \n in Genes Assigned as Successful KD",x="Targeted Promoter") + yscale("log10")+
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) + #hide legend
+  scale_fill_manual(values = c(palletee1[1], palletee1[2],palletee2[1], palletee2[2])) + #chaange labels for x axis
+  geom_boxplot(width = 0.2, position = position_dodge(0.9) )+ #flip
+  coord_flip()  +
+  geom_text(data = counts, 
+            aes(x = promoter_type, y = 10000, label = paste0("n=", n)),
+            position = position_dodge(0.9), size = 3) 
+
+#change from scientific notation to visual
+options(scipen=999)
+
+p4 <- a %>% #filter for value between -100 and 100
+  ggdotchart( x = "gene", y = "value",
+              color = "promoter_type",           # change fill color by mpg_level
+              palette = c("#00AFBB", "#E7B800"),            # flip 
+              orientation = "vertical",  # change the orientation
+              yscale="log10" , xlab = "TPM of the Targeted Transcripts \n in NTC Population", 
+              ylab="" , 
+  ) 
+
+plot_grid(a_plot_a,a_plot, p4, ncol = 1, labels = c("A", "B", "C"))
+
+
+```
+
+
+
+Plot the cell counts and UMI counts per pseudobulk population to visualise the distribution of these values across all populations.
+
+```{r, include=FALSE}
+#get the csv eery file in the folder check the number of lines
+cellcount <- "../../files/pseudobulk_bam/cellbarcode_list_ideal"
+#read every file in the folder and sum the second column tio create new df
+files <- list.files(cellcount, pattern = ".csv", full.names = TRUE)
+cellcount_total <-  as.data.frame(t(as.data.frame(lapply( files,cellcount_sum))))
+#change to number 
+colnames(cellcount_total) <- c("File", "Cell Count")
+#removde the negative control
+cellcount_total <- cellcount_total %>% 
+  mutate("Cell Count" = as.numeric(`Cell Count`)) %>%
+  filter(File != "Negative.csv")
+#read every file in the ffolder and sum the second column tio create new df
+umi_folder <- "../../files/pseudobulk_bam/umi_count/"
+files <- list.files(umi_folder, pattern = ".txt", full.names = TRUE)
+umi_total <-   as.data.frame(t(as.data.frame(sapply( files,umi_sum))))
+#change to number
+colnames(umi_total) <- c("File", "UMI Count")
+
+umi_total <- umi_total %>%
+  mutate("UMI Count" = as.numeric(`UMI Count`))
+# Function to process each file
+
+a <- ggplot(cellcount_total, aes(x = "", y = `Cell Count`)) +
+  geom_boxplot( alpha = 0.6) +
+  labs(y = "Cell Count\n Per Pseudobulk Population", y = "") +
+  theme(legend.position = "none") + #switch 
+  coord_flip() 
+
+  
+
+#refdo in ggplot + geom_boxplot
+b <- ggplot(umi_total, aes(x = "", y = `UMI Count`)) +
+  geom_boxplot( alpha = 0.6) +
+  labs(y = "Deduplicated UMI Count\n Per Pseudobulk Population", y = "") +
+  theme(legend.position = "none") + #switch 
+  coord_flip() 
+#remove ylabels from a 
+a <- a + theme(axis.title.y=element_blank())
+b <- b + theme(axis.title.y=element_blank())
+plot_grid(a, b,  nrow = 2)
+
+```
+
+
+
+Plot the sum of TPMs per isoform across all samples to visualise the distribution of expression levels. This is to confirm that the data has enough depth to capture lowly expressed isoforms.
+
+
+```{r}
+# Read or create the table
+if (file.exists(table_name)) {
+  all_data <- read.table(table_name, header = TRUE, sep = "\t", row.names = NULL)
+} else {
+  #map the fiunction process to every element in list of files and merge the otuputs to simplest df use applyr
+  all_data <- lapply(files, process_file)
+  #flatten and merge on isforom column
+  all_data <- Reduce(function(x, y) merge(x, y, by = "Isoform", all = TRUE), all_data)
+  #instead of cbind use merge on Isoform
+  write.table(all_data, table_name, sep = "\t", row.names = FALSE, quote = FALSE)
+}
+
+
+rowsums <- all_data %>% select(-Isoform) %>% rowSums() %>% as.data.frame() %>%
+  rename("Rowsums" = ".") %>% arrange(desc(Rowsums)) %>% #add 1 
+  mutate(Rowsums = Rowsums + 1, logRowsums = log10(Rowsums))
+rowsums <- rowsums %>%
+mutate(index_col = as.integer(rownames(rowsums)), logIndex= log10(index_col))
+  
+#plot the logrowsums
+ggplot(rowsums, aes(x = logIndex, y = logRowsums)) +
+  geom_line() +
+  theme_minimal() +
+  labs(x = "Log10 Index of Isoform (Descending Sum TPM)", y = "log10 Sum Isoform TPM") 
+
+
+```
+
+
+
+
+
+
+

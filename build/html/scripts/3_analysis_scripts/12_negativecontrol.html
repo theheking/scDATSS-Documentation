@@ -1,0 +1,965 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Understanding Variation in Negative Control Population &mdash; Isoform Specific Perturb-Seq  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../_static/nbsphinx-code-cells.css?v=2aa19091" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../_static/copybutton.js?v=f281be69"></script>
+      <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+      <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+      <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-mml-chtml.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Velocity and pyGSEA calculations of ESR1" href="9B_velocity_loom.html" />
+    <link rel="prev" title="Filtering for Cells with Ideal Combination of Guides" href="2B_guide_calling_cellrangerfilter4_idealguides.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            Isoform Specific Perturb-Seq
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Analysis Pipeline:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../promoter_identification.html">Promoter Identification</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../guide_design.html">Promoter Specific Guide Design</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../analysis_scripts.html">Analysis Scripts &amp; Pipelines</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../../analysis_scripts.html#preprocessing-guide-calling">Preprocessing &amp; Guide Calling</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="2A_cellranger_guidecalling.html">Guide Calling for Dual Guides</a></li>
+<li class="toctree-l3"><a class="reference internal" href="2B_guide_calling_cellrangerfilter4_idealguides.html">Filtering for Cells with Ideal Combination of Guides</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Understanding Variation in Negative Control Population</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../analysis_scripts.html#transcript-quantification">Transcript Quantification</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../analysis_scripts.html#transcriptional-divergence-e-stats-differential-expression">Transcriptional Divergence (E-Stats &amp; Differential Expression)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../analysis_scripts.html#cell-phase-pathway-modeling">Cell Phase &amp; Pathway Modeling</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../analysis_scripts.html#clinical-promoter-prevalence">Clinical &amp; Promoter Prevalence</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Isoform Specific Perturb-Seq</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../analysis_scripts.html">Analysis Scripts &amp; Pipelines</a></li>
+      <li class="breadcrumb-item active">Understanding Variation in Negative Control Population</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/scripts/3_analysis_scripts/12_negativecontrol.ipynb.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="Understanding-Variation-in-Negative-Control-Population">
+<h1>Understanding Variation in Negative Control Population<a class="headerlink" href="#Understanding-Variation-in-Negative-Control-Population" title="Link to this heading"></a></h1>
+<ol class="arabic simple">
+<li><p>Run through the 10x Cellranger pipeline and velocyto for single cell RNAseq quatification and using (2) guides quantifiction. all found in the cellranger files folder <strong>bash</strong></p></li>
+<li><p>Guide Calling for dual guide. Use repogle method to take molecule.h5 generated by cellranger and py to run through repogle version of guide calling or use cellranger_guidecalling.ipynb for Direct Capture Perturb-Seq dual guide. Formed guide-specific lists of cells.</p></li>
+<li><p>Pseudobulk analysis. A. Seperation of guide-specific fastq files. <strong>bash</strong> B. Whippet pseudobulk for transcript specific analysis, post UMI deduplication. <strong>bash</strong> C. Transcript quality control. <strong>R</strong> D. Whippet result visualisation.</p></li>
+<li><p>Normalisation of adata object and E-distance of KD</p></li>
+<li><p>Check gene and neighboring gene expression</p></li>
+<li><p>Create individual umaps per gene of interest A. UMAPs B. Rand Index score</p></li>
+<li><p>Cell phase assignment model from FUCCI-matched single cell paper (GSE146773)</p></li>
+<li><p>Differential Expression analysis. A. Find the shared P1 and P2 genes. B. Check the shared P1 and P2 across different protospacers with the same A/B and C/D.</p></li>
+<li><p>CNV Score &amp; Numbat to quantify and Velocity quantification with loom file</p></li>
+<li><p>ESR1-specific analysis from proliferation analysis to rt-qpcr</p></li>
+<li><p>Spectra analysis and visualisation for pathway enrichment</p></li>
+</ol>
+<p>This script is dedicated to establishing the empirical null distribution for the study. By analyzing cells treated with non-targeting control (NTC) sgRNAs, the authors can distinguish true biological signals from the inherent noise and stochastic variability of single-cell sequencing.</p>
+<ol class="arabic simple">
+<li><p>Defining Baseline Transcriptional Noise Single-cell RNA-seq is inherently sparse and variable. To ensure that the “divergence” measured in perturbed cells is meaningful, the authors must first know how much variation occurs naturally.</p></li>
+</ol>
+<p>What is happening: The code subsets the 10% of the library assigned to non-targeting control sgRNAs.</p>
+<p>The Logic: These cells represent the “ground state” where no specific promoter is being repressed. Any variation in expression here is considered the baseline noise level.</p>
+<ol class="arabic simple" start="2">
+<li><p>Validating the E-statistic and Rand Scores The notebook uses these control cells to perform “permutation tests” or “shuffled” analyses.</p></li>
+</ol>
+<p>What is happening: The code calculates the e-distance and Rand Scores between different groups of NTC cells.</p>
+<p>Expected Result: Since all these cells are controls, the e-distance should be near zero, and the Rand Score should show no significant clustering.</p>
+<p>Significance: This provides the “p-value” cutoff used in earlier notebooks. If the P1 vs. P2 divergence is significantly higher than this NTC-vs-NTC noise, it is confirmed as a real biological effect</p>
+<p>This notebook, 15_negativecontrol.ipynb, is dedicated to establishing the empirical null distribution for the study. By analyzing cells treated with non-targeting control (NTC) sgRNAs, the authors can distinguish true biological signals from the inherent noise and stochastic variability of single-cell sequencing.</p>
+<p>Here is a breakdown of the computational workflow and its role in the study:</p>
+<ol class="arabic simple">
+<li><p>Defining Baseline Transcriptional Noise</p></li>
+</ol>
+<ul class="simple">
+<li><p>Single-cell RNA-seq is inherently sparse and variable. To ensure that the “divergence” measured in perturbed cells is meaningful, the authors must first know how much variation occurs naturally.</p></li>
+<li><p>What is happening: The code subsets the 10% of the library assigned to non-targeting control sgRNAs.</p></li>
+</ul>
+<p>-The Logic: These cells represent the “ground state” where no specific promoter is being repressed. Any variation in expression here is considered the baseline noise level.</p>
+<ol class="arabic simple" start="2">
+<li><p>Validating the E-statistic and Rand Scores. The notebook uses these control cells to perform “permutation tests” or “shuffled” analyses.</p></li>
+</ol>
+<ul class="simple">
+<li><p>What is happening: The code calculates the e-distance and Rand Scores between different groups of NTC cells.</p></li>
+<li><p>Expected Result: Since all these cells are controls, the e-distance should be near zero, and the Rand Score should show no significant clustering.</p></li>
+<li><p>Significance: This provides the “p-value” cutoff used in earlier notebooks. If the P1 vs. P2 divergence is significantly higher than this NTC-vs-NTC noise, it is confirmed as a real biological effect.</p></li>
+</ul>
+<ol class="arabic simple" start="3">
+<li><p>Promoter Expression in the “Wild-Type” State. The notebook provides the baseline expression data for the P1 and P2 promoters before any CRISPRi intervention.</p></li>
+</ol>
+<ul class="simple">
+<li><p>What you see: Violin plots and dot plots showing the relative expression of P1 and P2 promoters in the control population.</p></li>
+<li><p>Discovery: This data confirmed that for most targeted genes, both promoters are active in the MCF-7 cell line, providing the necessary “room” for a knockdown to be measured.</p></li>
+</ul>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="k">load_ext</span> autoreload
+<span class="o">%</span><span class="k">matplotlib</span> inline
+<span class="o">%</span><span class="k">autoreload</span> 2
+<span class="c1">#general</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">scanpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sc</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pl</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">anndata</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">ad</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">hdf5plugin</span>
+
+<span class="c1">#form a location</span>
+<span class="n">loc</span><span class="o">=</span><span class="s2">&quot;../../../alt-prom-crispr-fiveprime/&quot;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">seaborn</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sns</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">tqdm.notebook</span><span class="w"> </span><span class="kn">import</span> <span class="n">tqdm</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">scperturb</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
+<span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">loc</span><span class="o">+</span><span class="s1">&#39;scripts/&#39;</span><span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">apu_analysis</span><span class="w"> </span><span class="kn">import</span> <span class="o">*</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">infercnvpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">cnv</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">apu_analysis.cell_import</span><span class="w"> </span><span class="kn">import</span> <span class="n">CellPopulation</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">IPython.display</span><span class="w"> </span><span class="kn">import</span> <span class="n">clear_output</span>
+<span class="n">pd</span><span class="o">.</span><span class="n">options</span><span class="o">.</span><span class="n">display</span><span class="o">.</span><span class="n">float_format</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{:.4f}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">scvelo</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">scv</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">matplotlib_venn</span><span class="w"> </span><span class="kn">import</span> <span class="n">venn3</span>
+
+<span class="c1">#for this python</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">scipy.special</span><span class="w"> </span><span class="kn">import</span> <span class="n">rel_entr</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">sklearn.cluster</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">cluster</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">umap</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">scipy</span><span class="w"> </span><span class="kn">import</span> <span class="n">stats</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">scipy.stats</span><span class="w"> </span><span class="kn">import</span> <span class="n">bootstrap</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">statsmodels.api</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sm</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">statsmodels.stats.multitest</span><span class="w"> </span><span class="kn">import</span> <span class="n">multipletests</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="kn">import</span> <span class="n">reshape</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="kn">import</span> <span class="n">array</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.decomposition</span><span class="w"> </span><span class="kn">import</span> <span class="n">PCA</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+
+<span class="c1"># Taken from:</span>
+<span class="c1"># Adamson, B.A., Norman, T.M., *et al.* &quot;A multiplexed CRISPR screening platform enables systematic dissection of the unfolded protein response&quot;, *Cell*, 2016.</span>
+<span class="c1"># My experiment deals with two KDs- one of the MP, one of the AP using two guides. Positve controls include GINS1 ect. This is a combnatorial KD double for the same gene. No treatments were used</span>
+
+<span class="c1"># colours using garvan</span>
+<span class="n">color1</span> <span class="o">=</span><span class="s1">&#39;#4d00c7&#39;</span>
+<span class="n">palecolor1</span><span class="o">=</span><span class="s2">&quot;#b366ff&quot;</span>
+<span class="n">color2</span><span class="o">=</span> <span class="s1">&#39;#da3c07&#39;</span>
+<span class="n">palecolor2</span><span class="o">=</span><span class="s2">&quot;#ff8954&quot;</span>
+<span class="n">color3</span><span class="o">=</span><span class="s1">&#39;#05d3d3&#39;</span>
+<span class="n">color4</span><span class="o">=</span><span class="s1">&#39;#c6c7c5&#39;</span>
+<span class="n">color4</span><span class="o">=</span><span class="s2">&quot;#434541&quot;</span>
+<span class="n">color5</span><span class="o">=</span><span class="s2">&quot;#eb31e1&quot;</span>
+<span class="n">color6</span><span class="o">=</span><span class="s2">&quot;#3175eb&quot;</span>
+<span class="n">color7</span><span class="o">=</span><span class="s2">&quot;#a7eb31&quot;</span>
+<span class="n">color8</span><span class="o">=</span><span class="s2">&quot;#b366ff&quot;</span>
+<span class="n">color9</span><span class="o">=</span><span class="s2">&quot;#ff8954&quot;</span>
+<span class="n">color10</span><span class="o">=</span><span class="s2">&quot;#35c9d4&quot;</span>
+
+<span class="c1">#use viridis</span>
+<span class="n">color1</span><span class="o">=</span><span class="s2">&quot;#fde725&quot;</span>
+<span class="n">color2</span><span class="o">=</span><span class="s2">&quot;#7ad151&quot;</span>
+<span class="n">color3</span><span class="o">=</span><span class="s2">&quot;#22a884&quot;</span>
+<span class="n">color4</span><span class="o">=</span><span class="s2">&quot;#2a788e&quot;</span>
+<span class="n">color5</span><span class="o">=</span><span class="s2">&quot;#2a788e&quot;</span>
+<span class="n">color6</span><span class="o">=</span><span class="s1">&#39;#440154&#39;</span>
+
+
+<span class="c1"># Create the color palette</span>
+<span class="n">palette</span> <span class="o">=</span> <span class="n">sns</span><span class="o">.</span><span class="n">color_palette</span><span class="p">([</span><span class="n">palecolor1</span><span class="p">,</span><span class="n">palecolor2</span><span class="p">])</span>
+<span class="n">palette2</span> <span class="o">=</span> <span class="n">sns</span><span class="o">.</span><span class="n">color_palette</span><span class="p">([</span><span class="n">color1</span><span class="p">,</span> <span class="n">color2</span><span class="p">,</span> <span class="n">color3</span><span class="p">,</span> <span class="n">color4</span><span class="p">,</span><span class="n">color5</span><span class="p">,</span><span class="n">color6</span> <span class="p">,</span><span class="n">color7</span><span class="p">])</span>
+
+<span class="c1"># Create the color palette</span>
+<span class="n">palette</span> <span class="o">=</span> <span class="n">sns</span><span class="o">.</span><span class="n">color_palette</span><span class="p">([</span><span class="n">color1</span><span class="p">,</span> <span class="n">color2</span><span class="p">,</span><span class="n">color3</span><span class="p">])</span>
+<span class="n">new_palette</span> <span class="o">=</span> <span class="n">sns</span><span class="o">.</span><span class="n">color_palette</span><span class="p">([</span><span class="n">color1</span><span class="p">,</span> <span class="n">color2</span><span class="p">,</span><span class="n">color1</span><span class="p">,</span> <span class="n">color2</span><span class="p">,</span><span class="n">color1</span><span class="p">,</span> <span class="n">color2</span><span class="p">,</span><span class="n">color1</span><span class="p">,</span> <span class="n">color2</span><span class="p">,</span><span class="n">color1</span><span class="p">,</span> <span class="n">color2</span><span class="p">,</span><span class="n">color1</span><span class="p">,</span> <span class="n">color2</span><span class="p">,</span> <span class="n">color3</span><span class="p">,</span> <span class="n">color4</span><span class="p">])</span>
+
+
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Scanpy&quot;</span><span class="p">,</span> <span class="n">sc</span><span class="o">.</span><span class="n">__version__</span><span class="p">)</span>
+<span class="o">%</span><span class="k">matplotlib</span> inline
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+/Users/helenking/anaconda3/envs/apu/lib/python3.12/site-packages/tqdm/auto.py:21: TqdmWarning: IProgress not found. Please update jupyter and ipywidgets. See https://ipywidgets.readthedocs.io/en/stable/user_install.html
+  from .autonotebook import tqdm as notebook_tqdm
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Scanpy 1.10.3
+</pre></div></div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">adata</span> <span class="o">=</span> <span class="n">ad</span><span class="o">.</span><span class="n">read_h5ad</span><span class="p">(</span><span class="n">loc</span><span class="o">+</span><span class="s2">&quot;files/adata_normalised_cellcycle.h5ad&quot;</span><span class="p">)</span>
+<span class="n">adata</span><span class="o">.</span><span class="n">X</span> <span class="o">=</span> <span class="n">adata</span><span class="o">.</span><span class="n">layers</span><span class="p">[</span><span class="s2">&quot;counts&quot;</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#calculate leiden</span>
+<span class="n">sc</span><span class="o">.</span><span class="n">tl</span><span class="o">.</span><span class="n">pca</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">n_comps</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">svd_solver</span><span class="o">=</span><span class="s1">&#39;arpack&#39;</span><span class="p">)</span>
+<span class="n">sc</span><span class="o">.</span><span class="n">pp</span><span class="o">.</span><span class="n">neighbors</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">n_neighbors</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">n_pcs</span><span class="o">=</span><span class="mi">50</span><span class="p">)</span>
+<span class="n">sc</span><span class="o">.</span><span class="n">tl</span><span class="o">.</span><span class="n">leiden</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">resolution</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">key_added</span><span class="o">=</span><span class="s2">&quot;leiden&quot;</span><span class="p">)</span>
+<br/></pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+OMP: Info #276: omp_set_nested routine deprecated, please use omp_set_max_active_levels instead.
+</pre></div></div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[16]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">statsmodels.api</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sm</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">statsmodels.formula.api</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">smf</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">seaborn</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sns</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">run_single_guide_regression</span><span class="p">(</span><span class="n">adataControl</span><span class="p">,</span> <span class="n">controlGuides</span><span class="p">,</span> <span class="n">guideIndex</span><span class="p">,</span> <span class="n">expressionMatrix</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s1">&#39;NB&#39;</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Test whether a single control guide induces transcriptional changes across genes.</span>
+
+<span class="sd">    Parameters:</span>
+<span class="sd">    - adataControl: AnnData object filtered to only include control guide cells.</span>
+<span class="sd">    - controlGuides: List of control guide names.</span>
+<span class="sd">    - guideIndex: Index of the control guide to test.</span>
+<span class="sd">    - expressionMatrix: DataFrame of gene expression (cells x genes).</span>
+<span class="sd">    - method: &#39;NB&#39; or &#39;OLS&#39;</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">    - DataFrame with results per gene (Gene, Coef, StdErr, Pval)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">guide_name</span> <span class="o">=</span> <span class="n">controlGuides</span><span class="p">[</span><span class="n">guideIndex</span><span class="p">]</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Running regression for guide: </span><span class="si">{</span><span class="n">guide_name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Create binary predictor: 1 = cell has this guide, 0 = other control guides</span>
+    <span class="n">covariate_df</span> <span class="o">=</span> <span class="n">adataControl</span><span class="o">.</span><span class="n">obs</span><span class="p">[[</span><span class="s2">&quot;guide_identity&quot;</span><span class="p">,</span> <span class="s2">&quot;n_genes_by_counts&quot;</span><span class="p">,</span> <span class="s2">&quot;pct_counts_mt&quot;</span><span class="p">,</span> <span class="s2">&quot;leiden&quot;</span><span class="p">]]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+    <span class="n">covariate_df</span><span class="p">[</span><span class="s2">&quot;is_guide&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">covariate_df</span><span class="p">[</span><span class="s2">&quot;guide_identity&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="n">guide_name</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+
+    <span class="n">results</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">gene</span> <span class="ow">in</span> <span class="n">expressionMatrix</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+        <span class="n">covariate_df</span><span class="p">[</span><span class="s2">&quot;y&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">expressionMatrix</span><span class="p">[</span><span class="n">gene</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
+
+        <span class="n">formula</span> <span class="o">=</span> <span class="s2">&quot;y ~ is_guide + n_genes_by_counts + pct_counts_mt + C(leiden)&quot;</span>  <span class="c1"># Use C() for categorical leiden</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">method</span> <span class="o">==</span> <span class="s1">&#39;NB&#39;</span><span class="p">:</span>
+                <span class="n">model</span> <span class="o">=</span> <span class="n">smf</span><span class="o">.</span><span class="n">glm</span><span class="p">(</span><span class="n">formula</span><span class="o">=</span><span class="n">formula</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">covariate_df</span><span class="p">,</span>
+                                <span class="n">family</span><span class="o">=</span><span class="n">sm</span><span class="o">.</span><span class="n">families</span><span class="o">.</span><span class="n">NegativeBinomial</span><span class="p">())</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
+            <span class="k">elif</span> <span class="n">method</span> <span class="o">==</span> <span class="s1">&#39;OLS&#39;</span><span class="p">:</span>
+                <span class="n">model</span> <span class="o">=</span> <span class="n">smf</span><span class="o">.</span><span class="n">ols</span><span class="p">(</span><span class="n">formula</span><span class="o">=</span><span class="n">formula</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">covariate_df</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Method must be &#39;NB&#39; or &#39;OLS&#39;&quot;</span><span class="p">)</span>
+
+            <span class="n">coef</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">params</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;is_guide&quot;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">)</span>
+            <span class="n">pval</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">pvalues</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;is_guide&quot;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">)</span>
+            <span class="n">stderr</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">bse</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;is_guide&quot;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">)</span>
+            <span class="n">results</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">gene</span><span class="p">,</span> <span class="n">coef</span><span class="p">,</span> <span class="n">stderr</span><span class="p">,</span> <span class="n">pval</span><span class="p">))</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="n">results</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">gene</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">))</span>
+
+    <span class="n">res_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">results</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;Gene&quot;</span><span class="p">,</span> <span class="s2">&quot;Coef&quot;</span><span class="p">,</span> <span class="s2">&quot;StdErr&quot;</span><span class="p">,</span> <span class="s2">&quot;Pval&quot;</span><span class="p">])</span>
+    <span class="n">res_df</span><span class="p">[</span><span class="s2">&quot;Guide&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">guide_name</span>
+    <span class="k">return</span> <span class="n">res_df</span>
+
+
+
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Create a volcano plot for regression results.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">res_df</span> <span class="o">=</span> <span class="n">res_df</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+    <span class="n">res_df</span><span class="p">[</span><span class="s2">&quot;-log10Pval&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">res_df</span><span class="p">[</span><span class="s2">&quot;Pval&quot;</span><span class="p">])</span>
+
+    <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
+    <span class="n">sns</span><span class="o">.</span><span class="n">scatterplot</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">res_df</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="s2">&quot;Coef&quot;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s2">&quot;-log10Pval&quot;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.6</span><span class="p">,</span> <span class="n">edgecolor</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+
+    <span class="c1"># Highlight significant hits</span>
+    <span class="n">sig_hits</span> <span class="o">=</span> <span class="n">res_df</span><span class="p">[(</span><span class="n">res_df</span><span class="p">[</span><span class="s2">&quot;Pval&quot;</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">pval_threshold</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">res_df</span><span class="p">[</span><span class="s2">&quot;Coef&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">abs</span><span class="p">()</span> <span class="o">&gt;</span> <span class="n">lfc_threshold</span><span class="p">)]</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">sig_hits</span><span class="p">[</span><span class="s2">&quot;Coef&quot;</span><span class="p">],</span> <span class="n">sig_hits</span><span class="p">[</span><span class="s2">&quot;-log10Pval&quot;</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;red&quot;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.8</span><span class="p">)</span>
+
+    <span class="n">plt</span><span class="o">.</span><span class="n">axhline</span><span class="p">(</span><span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">pval_threshold</span><span class="p">),</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;gray&#39;</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;--&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;p=</span><span class="si">{</span><span class="n">pval_threshold</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="o">-</span><span class="n">lfc_threshold</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;gray&#39;</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;--&#39;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="n">lfc_threshold</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;gray&#39;</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;--&#39;</span><span class="p">)</span>
+
+    <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Volcano Plot for Guide: </span><span class="si">{</span><span class="n">guide_name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;Coefficient (effect size)&quot;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;-log10(p-value)&quot;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[77]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># STEP 1: Define control guide cells (e.g. NTC or CTRL in identity)</span>
+<span class="c1">#get all guides names into a list for adata.obs[&#39;guide_target&#39;][].unique(</span>
+<span class="n">controlGuides</span> <span class="o">=</span> <span class="n">adata</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s1">&#39;guide_identity&#39;</span><span class="p">][</span><span class="n">adata</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s1">&#39;guide_identity&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;non-tar&#39;</span><span class="p">)]</span><span class="o">.</span><span class="n">unique</span><span class="p">()</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+<span class="n">control_mask</span> <span class="o">=</span> <span class="n">adata</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s1">&#39;guide_identity&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">controlGuides</span><span class="p">[</span><span class="mi">5</span><span class="p">:</span><span class="mi">25</span><span class="p">])</span>  <span class="c1"># Adjust this to select your control guides</span>
+<span class="n">adataControl</span> <span class="o">=</span> <span class="n">adata</span><span class="p">[</span><span class="n">control_mask</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+<span class="c1">#filter for first twenty guides</span>
+<span class="c1"># STEP 2: Prepare expression matrix</span>
+
+<span class="n">expressionMatrix</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">adataControl</span><span class="o">.</span><span class="n">layers</span><span class="p">[</span><span class="s2">&quot;log1p&quot;</span><span class="p">])</span>
+<span class="n">expressionMatrix</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="n">adata</span><span class="o">.</span><span class="n">var_names</span>
+<span class="n">expressionMatrix</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="n">adataControl</span><span class="o">.</span><span class="n">obs_names</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[78]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.decomposition</span><span class="w"> </span><span class="kn">import</span> <span class="n">PCA</span>
+<span class="n">pca</span> <span class="o">=</span> <span class="n">PCA</span><span class="p">(</span><span class="n">n_components</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
+<span class="n">pcs</span> <span class="o">=</span> <span class="n">pca</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">expressionMatrix</span><span class="p">)</span>  <span class="c1"># shape = (n_cells, 100)</span>
+<br/></pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[79]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.preprocessing</span><span class="w"> </span><span class="kn">import</span> <span class="n">OneHotEncoder</span>
+<span class="n">encoder</span> <span class="o">=</span> <span class="n">OneHotEncoder</span><span class="p">(</span><span class="n">sparse_output</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">design_matrix</span> <span class="o">=</span> <span class="n">encoder</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">adataControl</span><span class="o">.</span><span class="n">obs</span><span class="p">[[</span><span class="s1">&#39;guide_assignment&#39;</span><span class="p">]])</span>
+<span class="n">guide_names</span> <span class="o">=</span> <span class="n">encoder</span><span class="o">.</span><span class="n">categories_</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>  <span class="c1"># guide column names</span>
+<br/></pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[80]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">statsmodels.api</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sm</span>
+
+<span class="n">betas</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">pcs</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]):</span>  <span class="c1"># for each PC</span>
+    <span class="n">model</span> <span class="o">=</span> <span class="n">sm</span><span class="o">.</span><span class="n">OLS</span><span class="p">(</span><span class="n">pcs</span><span class="p">[:,</span> <span class="n">i</span><span class="p">],</span> <span class="n">sm</span><span class="o">.</span><span class="n">add_constant</span><span class="p">(</span><span class="n">design_matrix</span><span class="p">))</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
+    <span class="n">betas</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="mi">1</span><span class="p">:])</span>  <span class="c1"># skip intercept</span>
+
+<span class="n">coeff_matrix</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">(</span><span class="n">betas</span><span class="p">)</span><span class="o">.</span><span class="n">T</span>  <span class="c1"># shape = (n_guides x n_PCs)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[81]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">seaborn</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sns</span>
+
+<span class="c1"># Optionally standardize for heatmap</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.preprocessing</span><span class="w"> </span><span class="kn">import</span> <span class="n">StandardScaler</span>
+<span class="n">scaled</span> <span class="o">=</span> <span class="n">StandardScaler</span><span class="p">()</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">coeff_matrix</span><span class="p">)</span>
+
+<span class="c1"># Select top 20 PCs (columns)</span>
+<span class="n">sns</span><span class="o">.</span><span class="n">clustermap</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">scaled</span><span class="p">[:,</span> <span class="p">:</span><span class="mi">20</span><span class="p">],</span> <span class="n">index</span><span class="o">=</span><span class="n">guide_names</span><span class="p">),</span>
+               <span class="n">cmap</span><span class="o">=</span><span class="s2">&quot;vlag&quot;</span><span class="p">,</span> <span class="n">metric</span><span class="o">=</span><span class="s2">&quot;euclidean&quot;</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span>
+               <span class="n">xticklabels</span><span class="o">=</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;PC</span><span class="si">{</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">20</span><span class="p">)],</span>
+                <span class="n">yticklabels</span><span class="o">=</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;non-targeting control </span><span class="si">{</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">20</span><span class="p">)])</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Guide × PC Coefficient Heatmap (top 20 PCs)&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+<br/></pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../../_images/scripts_3_analysis_scripts_12_negativecontrol_10_0.png" src="../../_images/scripts_3_analysis_scripts_12_negativecontrol_10_0.png" />
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[82]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.ensemble</span><span class="w"> </span><span class="kn">import</span> <span class="n">IsolationForest</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.covariance</span><span class="w"> </span><span class="kn">import</span> <span class="n">EllipticEnvelope</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.neighbors</span><span class="w"> </span><span class="kn">import</span> <span class="n">LocalOutlierFactor</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.svm</span><span class="w"> </span><span class="kn">import</span> <span class="n">OneClassSVM</span>
+
+<span class="n">models</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;IsolationForest&quot;</span><span class="p">:</span> <span class="n">IsolationForest</span><span class="p">(</span><span class="n">random_state</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">contamination</span><span class="o">=</span><span class="mf">0.1</span><span class="p">),</span>
+    <span class="s2">&quot;EllipticEnvelope&quot;</span><span class="p">:</span> <span class="n">EllipticEnvelope</span><span class="p">(</span><span class="n">contamination</span><span class="o">=</span><span class="mf">0.1</span><span class="p">),</span>
+    <span class="s2">&quot;LocalOutlierFactor&quot;</span><span class="p">:</span> <span class="n">LocalOutlierFactor</span><span class="p">(),</span>
+    <span class="s2">&quot;OneClassSVM&quot;</span><span class="p">:</span> <span class="n">OneClassSVM</span><span class="p">(</span> <span class="n">nu</span><span class="o">=</span><span class="mf">0.01</span><span class="p">)</span>
+<span class="p">}</span>
+<span class="n">c</span><span class="o">=</span><span class="mi">0</span>
+<span class="n">outlier_scores</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="c1">#subset coeff_matrix array to be only first 20</span>
+<span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">model</span> <span class="ow">in</span> <span class="n">models</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Running model: </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;LocalOutlierFactor&quot;</span><span class="p">:</span>
+        <span class="n">pred</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">fit_predict</span><span class="p">(</span><span class="n">coeff_matrix</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">coeff_matrix</span><span class="p">)</span>
+        <span class="n">pred</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">coeff_matrix</span><span class="p">)</span>
+    <span class="c1">#add the votes with the name to the guide</span>
+    <span class="c1">#if reaching 20 then break</span>
+    <span class="n">outlier_scores</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">pred</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="n">guide_names</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">)</span>
+<br/></pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Running model: IsolationForest
+Running model: EllipticEnvelope
+Running model: LocalOutlierFactor
+Running model: OneClassSVM
+</pre></div></div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[83]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">outlier_counts_side</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">outlier_scores</span><span class="p">)</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="p">(</span><span class="n">x</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">(),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[84]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">outlier_counts_side</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[84]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+IsolationForest        0
+EllipticEnvelope       2
+LocalOutlierFactor     0
+OneClassSVM           20
+dtype: int64
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[75]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># sum the number of -1 per row in pd.DataFrame(outlier_scores) and make into barplit</span>
+<span class="c1">#subset to only first 20 guides</span>
+<span class="n">outlier_counts</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">outlier_scores</span><span class="p">)</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="p">(</span><span class="n">x</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">(),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">outlier_counts</span> <span class="o">=</span> <span class="n">outlier_counts</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">20</span><span class="p">)</span>
+
+<span class="n">outlier_counts</span> <span class="o">=</span> <span class="n">outlier_counts</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="n">ascending</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
+<span class="n">sns</span><span class="o">.</span><span class="n">barplot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">outlier_counts</span><span class="o">.</span><span class="n">index</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">outlier_counts</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="n">palette</span><span class="o">=</span><span class="s2">&quot;viridis&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xticks</span><span class="p">(</span><span class="n">rotation</span><span class="o">=</span><span class="mi">45</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;Guide&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;Number of Outliers&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Outlier Counts by Guide&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+<br/></pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../../_images/scripts_3_analysis_scripts_12_negativecontrol_14_0.png" src="../../_images/scripts_3_analysis_scripts_12_negativecontrol_14_0.png" />
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[76]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#create a count plot of the number of outlier</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
+<span class="n">county</span><span class="o">=</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">outlier_counts</span><span class="o">.</span><span class="n">value_counts</span><span class="p">())</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
+<span class="n">county</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[76]:
+</pre></div>
+</div>
+<div class="output_area rendered_html docutils container">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>index</th>
+      <th>count</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>1</td>
+      <td>18</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>2</td>
+      <td>2</td>
+    </tr>
+  </tbody>
+</table>
+</div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+&lt;Figure size 1000x600 with 0 Axes&gt;
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[88]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><br/><span></span><span class="n">sns</span><span class="o">.</span><span class="n">barplot</span><span class="p">(</span><span class="n">county</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="s2">&quot;index&quot;</span><span class="p">,</span><span class="n">y</span><span class="o">=</span><span class="s2">&quot;count&quot;</span><span class="p">,</span> <span class="n">palette</span><span class="o">=</span><span class="s2">&quot;viridis&quot;</span><span class="p">)</span>
+<span class="c1">#add line at y=3</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xticks</span><span class="p">(</span><span class="n">rotation</span><span class="o">=</span><span class="mi">45</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;Count of Outliers&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;Number of Guides&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Number of times guide assigned as an outlier&quot;</span><span class="p">)</span>
+<span class="c1">#make y axis to lavel every two</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">yticks</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">county</span><span class="p">[</span><span class="s1">&#39;count&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">max</span><span class="p">()</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+<span class="c1">#save as pdf</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">loc</span><span class="o">+</span><span class="s2">&quot;figures/number_of_outliers_per_guide.pdf&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+INFO:matplotlib.category:Using categorical units to plot a list of strings that are all parsable as floats or dates. If these strings should be plotted as numbers, cast to the appropriate data type before plotting.
+INFO:matplotlib.category:Using categorical units to plot a list of strings that are all parsable as floats or dates. If these strings should be plotted as numbers, cast to the appropriate data type before plotting.
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../../_images/scripts_3_analysis_scripts_12_negativecontrol_16_1.png" src="../../_images/scripts_3_analysis_scripts_12_negativecontrol_16_1.png" />
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[15]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><br/><span></span><span class="n">outlier_counts_df</span> <span class="o">=</span> <span class="n">outlier_counts_df</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="n">by</span><span class="o">=</span><span class="s1">&#39;Outlier Count&#39;</span><span class="p">,</span> <span class="n">ascending</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="c1">#which guides is this make graph plit</span>
+<span class="n">outlier_counts_df</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">kind</span><span class="o">=</span><span class="s1">&#39;bar&#39;</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">6</span><span class="p">),</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;skyblue&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;Number of Outliers Detected by Each Model&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Model&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Outlier Count&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xticks</span><span class="p">(</span><span class="n">rotation</span><span class="o">=</span><span class="mi">45</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+<span class="ansi-red-fg">---------------------------------------------------------------------------</span>
+<span class="ansi-red-fg">NameError</span>                                 Traceback (most recent call last)
+Cell <span class="ansi-green-fg">In[15], line 1</span>
+<span class="ansi-green-fg">----&gt; 1</span> outlier_counts_df <span style="color: rgb(98,98,98)">=</span> <span class="ansi-yellow-bg">outlier_counts_df</span><span style="color: rgb(98,98,98)">.</span>sort_values(by<span style="color: rgb(98,98,98)">=</span><span style="color: rgb(175,0,0)">&#39;</span><span style="color: rgb(175,0,0)">Outlier Count</span><span style="color: rgb(175,0,0)">&#39;</span>, ascending<span style="color: rgb(98,98,98)">=</span><span class="ansi-bold" style="color: rgb(0,135,0)">False</span>)
+<span class="ansi-green-intense-fg ansi-bold">      2</span> <span style="color: rgb(95,135,135)">#which guides is this make graph plit</span>
+<span class="ansi-green-intense-fg ansi-bold">      3</span> outlier_counts_df<span style="color: rgb(98,98,98)">.</span>plot(kind<span style="color: rgb(98,98,98)">=</span><span style="color: rgb(175,0,0)">&#39;</span><span style="color: rgb(175,0,0)">bar</span><span style="color: rgb(175,0,0)">&#39;</span>, figsize<span style="color: rgb(98,98,98)">=</span>(<span style="color: rgb(98,98,98)">10</span>, <span style="color: rgb(98,98,98)">6</span>), color<span style="color: rgb(98,98,98)">=</span><span style="color: rgb(175,0,0)">&#39;</span><span style="color: rgb(175,0,0)">skyblue</span><span style="color: rgb(175,0,0)">&#39;</span>)
+
+<span class="ansi-red-fg">NameError</span>: name &#39;outlier_counts_df&#39; is not defined
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../../_images/scripts_3_analysis_scripts_12_negativecontrol_18_0.png" src="../../_images/scripts_3_analysis_scripts_12_negativecontrol_18_0.png" />
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area rendered_html docutils container">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>IsolationForest</th>
+      <th>EllipticEnvelope</th>
+      <th>LocalOutlierFactor</th>
+      <th>OneClassSVM</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>non-targeting_00084</th>
+      <td>-1</td>
+      <td>1</td>
+      <td>-1</td>
+      <td>-1</td>
+    </tr>
+    <tr>
+      <th>non-targeting_00202</th>
+      <td>-1</td>
+      <td>1</td>
+      <td>-1</td>
+      <td>-1</td>
+    </tr>
+    <tr>
+      <th>non-targeting_00303</th>
+      <td>-1</td>
+      <td>1</td>
+      <td>-1</td>
+      <td>-1</td>
+    </tr>
+    <tr>
+      <th>non-targeting_00362</th>
+      <td>-1</td>
+      <td>1</td>
+      <td>1</td>
+      <td>-1</td>
+    </tr>
+    <tr>
+      <th>non-targeting_00373</th>
+      <td>-1</td>
+      <td>1</td>
+      <td>1</td>
+      <td>-1</td>
+    </tr>
+    <tr>
+      <th>non-targeting_00715</th>
+      <td>-1</td>
+      <td>-1</td>
+      <td>-1</td>
+      <td>-1</td>
+    </tr>
+    <tr>
+      <th>non-targeting_00759</th>
+      <td>-1</td>
+      <td>1</td>
+      <td>-1</td>
+      <td>-1</td>
+    </tr>
+    <tr>
+      <th>non-targeting_00790</th>
+      <td>-1</td>
+      <td>1</td>
+      <td>-1</td>
+      <td>-1</td>
+    </tr>
+    <tr>
+      <th>non-targeting_00850</th>
+      <td>-1</td>
+      <td>1</td>
+      <td>-1</td>
+      <td>-1</td>
+    </tr>
+    <tr>
+      <th>non-targeting_00867</th>
+      <td>-1</td>
+      <td>1</td>
+      <td>-1</td>
+      <td>-1</td>
+    </tr>
+    <tr>
+      <th>non-targeting_00949</th>
+      <td>-1</td>
+      <td>-1</td>
+      <td>1</td>
+      <td>-1</td>
+    </tr>
+    <tr>
+      <th>non-targeting_01357</th>
+      <td>-1</td>
+      <td>1</td>
+      <td>1</td>
+      <td>-1</td>
+    </tr>
+    <tr>
+      <th>non-targeting_01500</th>
+      <td>-1</td>
+      <td>1</td>
+      <td>-1</td>
+      <td>-1</td>
+    </tr>
+    <tr>
+      <th>non-targeting_01651</th>
+      <td>-1</td>
+      <td>-1</td>
+      <td>-1</td>
+      <td>-1</td>
+    </tr>
+    <tr>
+      <th>non-targeting_01660</th>
+      <td>-1</td>
+      <td>-1</td>
+      <td>-1</td>
+      <td>-1</td>
+    </tr>
+    <tr>
+      <th>non-targeting_01777</th>
+      <td>-1</td>
+      <td>1</td>
+      <td>-1</td>
+      <td>-1</td>
+    </tr>
+    <tr>
+      <th>non-targeting_01815</th>
+      <td>-1</td>
+      <td>1</td>
+      <td>1</td>
+      <td>-1</td>
+    </tr>
+    <tr>
+      <th>non-targeting_01967</th>
+      <td>-1</td>
+      <td>1</td>
+      <td>1</td>
+      <td>-1</td>
+    </tr>
+    <tr>
+      <th>non-targeting_02135</th>
+      <td>-1</td>
+      <td>1</td>
+      <td>1</td>
+      <td>-1</td>
+    </tr>
+    <tr>
+      <th>non-targeting_02295</th>
+      <td>-1</td>
+      <td>1</td>
+      <td>-1</td>
+      <td>-1</td>
+    </tr>
+    <tr>
+      <th>non-targeting_02541</th>
+      <td>-1</td>
+      <td>1</td>
+      <td>-1</td>
+      <td>-1</td>
+    </tr>
+    <tr>
+      <th>non-targeting_02771</th>
+      <td>-1</td>
+      <td>1</td>
+      <td>1</td>
+      <td>-1</td>
+    </tr>
+    <tr>
+      <th>non-targeting_02790</th>
+      <td>-1</td>
+      <td>1</td>
+      <td>-1</td>
+      <td>-1</td>
+    </tr>
+    <tr>
+      <th>non-targeting_02839</th>
+      <td>-1</td>
+      <td>1</td>
+      <td>-1</td>
+      <td>-1</td>
+    </tr>
+    <tr>
+      <th>non-targeting_02847</th>
+      <td>-1</td>
+      <td>1</td>
+      <td>-1</td>
+      <td>-1</td>
+    </tr>
+    <tr>
+      <th>non-targeting_02969</th>
+      <td>-1</td>
+      <td>1</td>
+      <td>-1</td>
+      <td>-1</td>
+    </tr>
+    <tr>
+      <th>non-targeting_03155</th>
+      <td>-1</td>
+      <td>1</td>
+      <td>-1</td>
+      <td>-1</td>
+    </tr>
+    <tr>
+      <th>non-targeting_03351</th>
+      <td>-1</td>
+      <td>1</td>
+      <td>-1</td>
+      <td>-1</td>
+    </tr>
+    <tr>
+      <th>non-targeting_03447</th>
+      <td>-1</td>
+      <td>1</td>
+      <td>1</td>
+      <td>-1</td>
+    </tr>
+  </tbody>
+</table>
+</div></div>
+</div>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="2B_guide_calling_cellrangerfilter4_idealguides.html" class="btn btn-neutral float-left" title="Filtering for Cells with Ideal Combination of Guides" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="9B_velocity_loom.html" class="btn btn-neutral float-right" title="Velocity and pyGSEA calculations of ESR1" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026, Helen King.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
