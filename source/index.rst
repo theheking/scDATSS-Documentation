@@ -11,7 +11,7 @@ Transcription start site (TSS) usage is a fundamental driver of transcript diver
 
 Here, we present scDATSS, a computational pipeline designed to quantify TSS usage at single-cell resolution from 5′-biased scRNA-seq data. scDATSS models relative TSS usage within genes using a Dirichlet–Multinomial framework, allowing robust inference under sparse, overdispersed count data typical of single-cell experiments. By explicitly modelling multi-TSS competition and background expression variability, scDATSS isolates promoter-specific regulation from global gene-level effects.
 
-.. figure:: ../fig/figure-01.png
+.. figure:: ./fig/figure-01.png
    :class: with-border
    :alt: Visual abstract summarising single-cel scDATSS pipeline
    :align: center
