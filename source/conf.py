@@ -6,7 +6,7 @@
 # -- Project information -----------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
 
-project = 'Isoform Specific Perturb-Seq'
+project = 'scDATSS'
 copyright = '2026, Helen King'
 author = 'Helen King'
 
