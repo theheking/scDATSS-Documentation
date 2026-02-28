@@ -22,6 +22,6 @@ Here, we present scDATSS, a computational pipeline designed to quantify TSS usag
    :maxdepth: 1
    :caption: Analysis Pipeline:
 
-   promoter_identification
-   guide_design
-   analysis_scripts
+   nextflow
+   r_analysis
+   casestudy_analysis
