@@ -1,0 +1,195 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Isoform-specific Perturb-seq &mdash; Isoform Specific Perturb-Seq  documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="_static/copybutton.js?v=f281be69"></script>
+      <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Promoter Identification" href="promoter_identification.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="#" class="icon icon-home">
+            Isoform Specific Perturb-Seq
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Analysis Pipeline:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="promoter_identification.html">Promoter Identification</a></li>
+<li class="toctree-l1"><a class="reference internal" href="guide_design.html">Guide Design</a></li>
+<li class="toctree-l1"><a class="reference internal" href="analysis_scripts.html">Analysis Scripts &amp; Pipelines</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="#">Isoform Specific Perturb-Seq</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="#" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Isoform-specific Perturb-seq</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/index.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="isoform-specific-perturb-seq">
+<h1>Isoform-specific Perturb-seq<a class="headerlink" href="#isoform-specific-perturb-seq" title="Link to this heading"></a></h1>
+<div class="admonition attention">
+<p class="admonition-title">Attention</p>
+<p><strong>*Under construction*</strong></p>
+</div>
+<p>Isoform-specific single-cell Perturb-seq reveals that alternative promoters (AP) are not just redundant regulatory elements but drive distinct biological programs. This documentation covers the methods used to identify these promoters and quantify their functional impact on gene regulation and drug response.</p>
+<figure class="align-center">
+<a class="with-border reference internal image-reference" href="_images/VisualAbstract_vNAR_v2.png"><img alt="Visual abstract summarizing isoform-specific Perturb-seq study" class="with-border" src="_images/VisualAbstract_vNAR_v2.png" style="width: 90%;" />
+</a>
+</figure>
+<section id="abstract-and-key-findings">
+<h2>Abstract and Key Findings<a class="headerlink" href="#abstract-and-key-findings" title="Link to this heading"></a></h2>
+<p>CRISPR-dCas9 technologies are typically designed to modulate gene expression at the gene level. However, many hits are promoter and isoform-specific. By leveraging the spatial specificity of CRISPRi—which typically influences transcription within ~1000 nucleotides of the guide binding site—we developed an isoform-specific Perturb-Seq screen.</p>
+<p><strong>Major Biological Insights:</strong></p>
+<ul class="simple">
+<li><p><strong>Widespread Functional Divergence:</strong> Alternative promoters drive functionally distinct biological programs in <strong>51.6%</strong> of surveyed genes.</p></li>
+<li><p><strong>Limited Transcriptional Overlap:</strong> Promoter-specific knockdowns (P1 vs P2) typically perturb dozens to hundreds of genes, but only a small minority (median ~10) overlap between the two promoters of the same gene.</p></li>
+<li><p><strong>Cell Cycle Regulation:</strong> Alternative promoters frequently control divergent pathways in cell cycle regulation and proliferation.</p></li>
+</ul>
+</section>
+<section id="functional-case-study-esr1-and-tamoxifen-response">
+<h2>Functional Case Study: ESR1 and Tamoxifen Response<a class="headerlink" href="#functional-case-study-esr1-and-tamoxifen-response" title="Link to this heading"></a></h2>
+<p>The Estrogen Receptor 1 (<em>ESR1</em>) serves as a primary example of how alternative promoters influence clinical outcomes and drug sensitivity in breast cancer.</p>
+<ul class="simple">
+<li><p><strong>Isoform Structure:</strong> Coordinated splicing between the P1 promoter and an alternative last exon produces a protein isoform with differences in the <strong>AF2 domain</strong>, potentially modifying interactions with estrogen and selective estrogen receptor modulators (SERMs).</p></li>
+<li><p><strong>Clinical Significance:</strong> High expression of the P1 promoter strongly correlates with decreased survival in <strong>Luminal-A</strong> breast cancer patients (HR = 1.9), while P2 expression shows no such association.</p></li>
+<li><dl class="simple">
+<dt><strong>Drug Response:</strong></dt><dd><ul>
+<li><p><strong>P2 Knockdown:</strong> Increases sensitivity to tamoxifen and significantly reduces cellular proliferation.</p></li>
+<li><p><strong>P1 Knockdown:</strong> Leads to increased proliferation in the presence of tamoxifen, suggesting a role in drug resistance.</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+</section>
+<section id="analysis-pipeline-overview">
+<h2>Analysis Pipeline Overview<a class="headerlink" href="#analysis-pipeline-overview" title="Link to this heading"></a></h2>
+<p>The CRISPRi pipeline uses dual guide perturbation [1]. This analysis is structured into three main phases:</p>
+<ol class="arabic simple">
+<li><p><strong>Promoter Identification</strong>
+Integration of RNA-seq [2] processed with proActiv [3], ChIP-seq [4], long-read RNA-seq [5], and CAGE-seq [6] to identify targetable distal alternative promoters missed by standard CRISPRi libraries.</p></li>
+<li><p><strong>Guide Design</strong>
+Utilizing FlashFry [7] and CRISPR-DO [8] for promoter-specific dual-guide design to ensure spatial targeting within the window of CRISPRi effectiveness.</p></li>
+<li><p><strong>APU Perturb-seq Analysis</strong>
+Quantifying functional divergence through:</p>
+<ul class="simple">
+<li><p><strong>Transcriptomics:</strong> Using <strong>Whippet</strong> [9] for isoform-specific quantification post-UMI deduplication.</p></li>
+<li><p><strong>Pathway Activity:</strong> Using <strong>Spectra</strong> [10] to identify coordinated gene expression programs associated with specific promoters.</p></li>
+<li><p><strong>Chromosomal Dynamics:</strong> Using <strong>inferCNV</strong> [11] to identify increases in copy number variations.</p></li>
+<li><p><strong>Cell Cycle Modeling:</strong> Using <strong>Mahdessian et al.</strong> [12] and <strong>Seurat</strong> [13] to model cell cycle phase distributions across promoter knockdowns.</p></li>
+<li><p><strong>Clinical Correlations:</strong> Using <strong>GEPIA2</strong> [14] to link promoter-specific expression patterns to patient survival data.</p></li>
+</ul>
+</li>
+</ol>
+</section>
+<section id="references">
+<h2>References<a class="headerlink" href="#references" title="Link to this heading"></a></h2>
+<ol class="arabic simple">
+<li><p><strong>Replogle, J.M., Norman, T.M., Xu, A., Hussmann, J.A., Chen, J., Cogan, J.Z., Meer, E.J., Terry, J.M., Riordan, D.P., Srinivas, N. et al.</strong> (2020) Combinatorial single-cell CRISPR screens by direct guide RNA capture and targeted sequencing. Nat Biotechnol, 38, 954-961.</p></li>
+<li><p><strong>Zhang, J., Lee, D., Dhiman, V., Jiang, P., Xu, J., McGillivray, P., Yang, H., Liu, J., Meyerson, W., Clarke, D. et al.</strong> (2020) An integrative ENCODE resource for cancer genomics. Nat Commun, 11, 3696.</p></li>
+<li><p><strong>Demircioglu, D., Cukuroglu, E., Kindermans, M., Nandi, T., Calabrese, C., Fonseca, N.A., Kahles, A., Lehmann, K.V., Stegle, O., Brazma, A. et al.</strong> (2019) A Pan-cancer Transcriptome Analysis Reveals Pervasive Regulation through Alternative Promoters. Cell, 178, 1465-1477 e1417.</p></li>
+<li><p><strong>Consortium, E.P.</strong> (2012) An integrated encyclopedia of DNA elements in the human genome. Nature, 489, 57-74.</p></li>
+<li><p><strong>Anvar, S.Y., Allard, G., Tseng, E., Sheynkman, G.M., de Klerk, E., Vermaat, M., Yin, R.H., Johansson, H.E., Ariyurek, Y., den Dunnen, J.T. et al.</strong> (2018) Full-length mRNA sequencing uncovers a widespread coupling between transcription initiation and mRNA processing. Genome Biol, 19, 46.</p></li>
+<li><p><strong>Lizio, M., Abugessaisa, I., Noguchi, S., Kondo, A., Hasegawa, A., Hon, C.C., de Hoon, M., Severin, J., Oki, S., Hayashizaki, Y. et al.</strong> (2019) Update of the FANTOM web resource: expansion to provide additional transcriptome atlases. Nucleic Acids Res, 47, D752-D758.</p></li>
+<li><p><strong>McKenna, A. and Shendure, J.</strong> (2018) FlashFry: a fast and flexible tool for large-scale CRISPR target design. BMC Biol, 16, 74.</p></li>
+<li><p><strong>Ma, J., Koster, J., Qin, Q., Hu, S., Li, W., Chen, C., Cao, Q., Wang, J., Mei, S., Liu, Q. et al.</strong> (2016) CRISPR-DO for genome-wide CRISPR design and optimization. Bioinformatics, 32, 3336-3338.</p></li>
+<li><p><strong>Sterne-Weiler, T., Weatheritt, R.J., Best, A.J., Ha, K.C.H. and Blencowe, B.J.</strong> (2018) Efficient and Accurate Quantitative Profiling of Alternative Splicing Patterns of Any Complexity on a Laptop. Mol Cell, 72, 187-200 e186.</p></li>
+<li><p><strong>Kunes, R.Z., Walle, T., Land, M., Nawy, T. and Pe’er, D.</strong> (2024) Supervised discovery of interpretable gene programs from single-cell data. Nat Biotechnol, 42, 1084-1095.</p></li>
+<li><p><strong>Puram, S.V., Tirosh, I., Parikh, A.S., Patel, A.P., Yizhak, K., Gillespie, S., Rodman, C., Luo, C.L., Mroz, E.A., Emerick, K.S. et al.</strong> (2017) Single-Cell Transcriptomic Analysis of Primary and Metastatic Tumor Ecosystems in Head and Neck Cancer. Cell, 171, 1611-1624 e1624.</p></li>
+<li><p><strong>Mahdessian, D., Cesnik, A.J., Gnann, C., Danielsson, F., Stenstrom, L., Arif, M., Zhang, C., Le, T., Johansson, F., Schutten, R. et al.</strong> (2021) Spatiotemporal dissection of the cell cycle with single-cell proteogenomics. Nature, 590, 649-654.</p></li>
+<li><p><strong>Hao, Y., Stuart, T., Kowalski, M.H., Choudhary, S., Hoffman, P., Hartman, A., Srivastava, A., Molla, G., Madad, S., Fernandez-Granda, C. et al.</strong> (2024) Dictionary learning for integrative, multimodal and scalable single-cell analysis. Nat Biotechnol, 42, 293-304.</p></li>
+<li><p><strong>Tang, Z., Kang, B., Li, C., Chen, T. and Zhang, Z.</strong> (2019) GEPIA2: an enhanced web server for large-scale expression profiling and interactive analysis. Nucleic Acids Res, 47, W556-W560.</p></li>
+</ol>
+<div class="toctree-wrapper compound">
+<p class="caption" role="heading"><span class="caption-text">Analysis Pipeline:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="promoter_identification.html">Promoter Identification</a></li>
+<li class="toctree-l1"><a class="reference internal" href="guide_design.html">Guide Design</a></li>
+<li class="toctree-l1"><a class="reference internal" href="analysis_scripts.html">Analysis Scripts &amp; Pipelines</a></li>
+</ul>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="promoter_identification.html" class="btn btn-neutral float-right" title="Promoter Identification" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026, Helen King.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

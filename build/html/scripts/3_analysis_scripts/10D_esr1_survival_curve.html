@@ -1,0 +1,213 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>GEPIA2 Run Through &mdash; Isoform Specific Perturb-Seq  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../_static/nbsphinx-code-cells.css?v=2aa19091" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../_static/copybutton.js?v=f281be69"></script>
+      <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+      <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+      <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-mml-chtml.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Spectra Analysis" href="11A_spectra.html" />
+    <link rel="prev" title="Guide Calling Using the Cellranger Module HDF5 File" href="9A_cnv_score.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            Isoform Specific Perturb-Seq
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Analysis Pipeline:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../promoter_identification.html">Promoter Identification</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../guide_design.html">Guide Design</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../analysis_scripts.html">Analysis Scripts &amp; Pipelines</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../../analysis_scripts.html#preprocessing-guide-calling">Preprocessing &amp; Guide Calling</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../analysis_scripts.html#transcriptional-divergence-e-stats">Transcriptional Divergence (E-Stats)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../analysis_scripts.html#cell-phase-pathway-modeling">Cell Phase &amp; Pathway Modeling</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../../analysis_scripts.html#clinical-differential-expression">Clinical &amp; Differential Expression</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="2A_cellranger_guidecalling.html">Guide Calling Using the Cellranger Module HDF5 File</a></li>
+<li class="toctree-l3"><a class="reference internal" href="2B_guide_calling_cellrangerfilter4_idealguides.html">Guide Calling Using the Cellranger Module HDF5 File</a></li>
+<li class="toctree-l3"><a class="reference internal" href="4_estatistic_gene_guide.html">Guide Calling Using the Cellranger Module HDF5 File</a></li>
+<li class="toctree-l3"><a class="reference internal" href="5_genekd_neighbouring_gene_expression.html">Guide Calling Using the Cellranger Module HDF5 File</a></li>
+<li class="toctree-l3"><a class="reference internal" href="6_perturbseq_tsne_kldivergence_umap.html">Guide Calling Using the Cellranger Module HDF5 File</a></li>
+<li class="toctree-l3"><a class="reference internal" href="7A_cellphase_model.html">Guide Calling Using the Cellranger Module HDF5 File</a></li>
+<li class="toctree-l3"><a class="reference internal" href="8_perturbseq_differentialexpression.html">Guide Calling Using the Cellranger Module HDF5 File</a></li>
+<li class="toctree-l3"><a class="reference internal" href="9A_cnv_score.html">Guide Calling Using the Cellranger Module HDF5 File</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">GEPIA2 Run Through</a></li>
+<li class="toctree-l3"><a class="reference internal" href="11A_spectra.html">Spectra Analysis</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Isoform Specific Perturb-Seq</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../analysis_scripts.html">Analysis Scripts &amp; Pipelines</a></li>
+      <li class="breadcrumb-item active">GEPIA2 Run Through</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/scripts/3_analysis_scripts/10D_esr1_survival_curve.ipynb.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="GEPIA2-Run-Through">
+<h1>GEPIA2 Run Through<a class="headerlink" href="#GEPIA2-Run-Through" title="Link to this heading"></a></h1>
+<p>This script demonstrates a programmatic way to generate Kaplan-Meier survival curves using the GEPIA2 (Gene Expression Profiling Interactive Analysis) database. It specifically focuses on analyzing how the expression of certain genetic transcripts correlates with patient survival outcomes in breast cancer.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">gepia</span>
+<span class="n">bp</span><span class="o">=</span><span class="n">gepia</span><span class="o">.</span><span class="n">survival</span><span class="p">()</span>
+<span class="n">bp</span><span class="o">.</span><span class="n">showParams</span><span class="p">()</span>
+<br/></pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+axisunit: month
+dataset: BLCA
+groupcutoff1: 50
+groupcutoff2: 50
+highcol: #ff0000
+ifconf: conf
+ifhr: hr
+is_sub: false
+lowcol: #0000ff
+methodoption: os
+signature: [&#39;CCR7&#39;, &#39;SELL&#39;, &#39;IL7R&#39;]
+signature_norm:
+subtype:
+out_dir:./
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">bp</span><span class="o">.</span><span class="n">setParam</span><span class="p">(</span><span class="s1">&#39;dataset&#39;</span><span class="p">,</span><span class="s2">&quot;BRCA&quot;</span><span class="p">)</span>
+<span class="n">bp</span><span class="o">.</span><span class="n">setParam</span><span class="p">(</span><span class="s1">&#39;signature&#39;</span><span class="p">,</span><span class="s2">&quot;ENST00000440973.5,ENST00000404742.5&quot;</span><span class="p">)</span>
+<span class="n">bp</span><span class="o">.</span><span class="n">setParam</span><span class="p">(</span><span class="s1">&#39;subtype&#39;</span><span class="p">,</span><span class="s2">&quot;LuminalA&quot;</span><span class="p">)</span>
+<span class="c1"># bp.setParam(&#39;dataset&#39;,&quot;BRCA&quot;)</span>
+<span class="c1"># Basal-like / Triple negative (135)</span>
+
+<span class="c1"># HER2+ non-luminal (66)</span>
+
+<span class="c1"># Luminal A (415)</span>
+
+<span class="c1"># Luminal B (192)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">IPython.display</span><span class="w"> </span><span class="kn">import</span> <span class="n">IFrame</span>
+
+<span class="n">result</span><span class="o">=</span><span class="n">bp</span><span class="o">.</span><span class="n">query</span><span class="p">()</span>
+<span class="n">IFrame</span><span class="p">(</span><span class="n">result</span><span class="p">,</span><span class="n">width</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span><span class="n">height</span><span class="o">=</span><span class="mi">500</span><span class="p">)</span>
+<br/></pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+./ENST00000440973.5_survival_5TU8Y.pdf
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area rendered_html docutils container">
+<iframe
+    width="500"
+    height="500"
+    src="./ENST00000440973.5_survival_5TU8Y.pdf"
+    frameborder="0"
+    allowfullscreen
+
+></iframe></div>
+</div>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="9A_cnv_score.html" class="btn btn-neutral float-left" title="Guide Calling Using the Cellranger Module HDF5 File" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="11A_spectra.html" class="btn btn-neutral float-right" title="Spectra Analysis" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026, Helen King.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

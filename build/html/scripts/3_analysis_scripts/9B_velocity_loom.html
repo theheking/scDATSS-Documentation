@@ -1,0 +1,998 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Velocity and pyGSEA calculations of ESR1 &mdash; Isoform Specific Perturb-Seq  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../_static/nbsphinx-code-cells.css?v=2aa19091" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../_static/copybutton.js?v=f281be69"></script>
+      <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+      <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+      <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-mml-chtml.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Spectra Analysis" href="11_spectra.html" />
+    <link rel="prev" title="Investigating Copy Number Variation Across KD Populations" href="9A_cnv_score.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            Isoform Specific Perturb-Seq
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Analysis Pipeline:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../promoter_identification.html">Promoter Identification</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../guide_design.html">Guide Design</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../analysis_scripts.html">Analysis Scripts &amp; Pipelines</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../../analysis_scripts.html#preprocessing-guide-calling">Preprocessing &amp; Guide Calling</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../analysis_scripts.html#splicing-rna-velocity">Splicing &amp; RNA Velocity</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../analysis_scripts.html#transcriptional-divergence-e-stats">Transcriptional Divergence (E-Stats)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../analysis_scripts.html#cell-phase-pathway-modeling">Cell Phase &amp; Pathway Modeling</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../../analysis_scripts.html#clinical-differential-expression">Clinical &amp; Differential Expression</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="2A_cellranger_guidecalling.html">Guide Calling for Dual Guides</a></li>
+<li class="toctree-l3"><a class="reference internal" href="2B_guide_calling_cellrangerfilter4_idealguides.html">Filtering for Cells with Ideal Combination of Guides</a></li>
+<li class="toctree-l3"><a class="reference internal" href="4_estatistic_gene_guide.html">Guide Calling Using the Cellranger Module HDF5 File</a></li>
+<li class="toctree-l3"><a class="reference internal" href="5_genekd_neighbouring_gene_expression.html">Target gene and neighbouring gene expression</a></li>
+<li class="toctree-l3"><a class="reference internal" href="6_perturbseq_tsne_kldivergence_umap.html">Quantitative individual UMAPs per gene of interest</a></li>
+<li class="toctree-l3"><a class="reference internal" href="7_cellphase_model.html">Cell Assignment Model from FUCCI-Matched Single-Cell Paper</a></li>
+<li class="toctree-l3"><a class="reference internal" href="8_perturbseq_differentialexpression.html">Differential Expression analysis between P1 &amp; P2</a></li>
+<li class="toctree-l3"><a class="reference internal" href="9A_cnv_score.html">Investigating Copy Number Variation Across KD Populations</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Velocity and pyGSEA calculations of ESR1</a></li>
+<li class="toctree-l3"><a class="reference internal" href="11_spectra.html">Spectra Analysis</a></li>
+<li class="toctree-l3"><a class="reference internal" href="12_negativecontrol.html">Guide Calling Using the Cellranger Module HDF5 File</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Isoform Specific Perturb-Seq</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../analysis_scripts.html">Analysis Scripts &amp; Pipelines</a></li>
+      <li class="breadcrumb-item active">Velocity and pyGSEA calculations of ESR1</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/scripts/3_analysis_scripts/9B_velocity_loom.ipynb.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="Velocity-and-pyGSEA-calculations-of-ESR1">
+<h1>Velocity and pyGSEA calculations of ESR1<a class="headerlink" href="#Velocity-and-pyGSEA-calculations-of-ESR1" title="Link to this heading"></a></h1>
+<ol class="arabic simple">
+<li><p>Run through the 10x Cellranger pipeline and velocyto for single cell RNAseq quatification and using (2) guides quantifiction. all found in the cellranger files folder <strong>bash</strong></p></li>
+<li><p>Guide Calling for dual guide. Use repogle method to take molecule.h5 generated by cellranger and py to run through repogle version of guide calling or use cellranger_guidecalling.ipynb for Direct Capture Perturb-Seq dual guide. Formed guide-specific lists of cells.</p></li>
+<li><p>Pseudobulk analysis. A. Seperation of guide-specific fastq files. <strong>bash</strong> B. Whippet pseudobulk for transcript specific analysis, post UMI deduplication. <strong>bash</strong> C. Transcript quality control. <strong>R</strong> D. Whippet result visualisation.</p></li>
+<li><p>Normalisation of adata object and E-distance of KD</p></li>
+<li><p>Check gene and neighboring gene expression</p></li>
+<li><p>Create individual umaps per gene of interest A. UMAPs B. Rand Index score</p></li>
+<li><p>Cell phase assignment model from FUCCI-matched single cell paper (GSE146773)</p></li>
+<li><p>Differential Expression analysis. A. Find the shared P1 and P2 genes. B. Check the shared P1 and P2 across different protospacers with the same A/B and C/D.</p></li>
+<li><p><strong>CNV Score &amp; Numbat to quantify and Velocity quantification with loom file</strong></p></li>
+<li><p>ESR1-specific analysis from proliferation analysis to rt-qpcr</p></li>
+<li><p>Spectra analysis and visualisation for pathway enrichment</p></li>
+</ol>
+<p>The notebook focuses on RNA velocity analysis, which is a method used to predict the future state of individual cells based on the ratio of unspliced to spliced mRNA transcripts. In the context of this study, it helps determine the “transcriptional direction” or momentum of cells following promoter-specific perturbations.</p>
+<p>RNA velocity analysis requires quantifying two types of mRNA: spliced (mature) and unspliced (precursor).</p>
+<p>What is happening: The notebook utilizes the tool velocyto to process the raw BAM files generated by Cell Ranger into a .loom file format.</p>
+<p>The Logic: Unspliced mRNA represents “new” transcription, while spliced mRNA represents the current “pool” of mature transcripts. By comparing these, the model can infer whether a gene is being actively upregulated or downregulated in a specific cell.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="k">load_ext</span> autoreload
+<span class="o">%</span><span class="k">matplotlib</span> inline
+<span class="o">%</span><span class="k">autoreload</span> 2
+<span class="c1">#general</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">scanpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sc</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pl</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">anndata</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">ad</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">hdf5plugin</span>
+
+<span class="c1">#form a location</span>
+<span class="n">loc</span><span class="o">=</span><span class="s2">&quot;/Users/helenking/Desktop/Weatheritt_Lab_Y2/alt-prom-crispr-fiveprime/&quot;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">seaborn</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sns</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">tqdm.notebook</span><span class="w"> </span><span class="kn">import</span> <span class="n">tqdm</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">scperturb</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
+<span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">loc</span><span class="o">+</span><span class="s1">&#39;scripts/&#39;</span><span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">apu_analysis</span><span class="w"> </span><span class="kn">import</span> <span class="o">*</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">scperturb</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">infercnvpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">cnv</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">apu_analysis.cell_import</span><span class="w"> </span><span class="kn">import</span> <span class="n">CellPopulation</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">IPython.display</span><span class="w"> </span><span class="kn">import</span> <span class="n">clear_output</span>
+<span class="n">pd</span><span class="o">.</span><span class="n">options</span><span class="o">.</span><span class="n">display</span><span class="o">.</span><span class="n">float_format</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{:.4f}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">scvelo</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">scv</span>
+
+<span class="c1">#for this python</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">scipy.special</span><span class="w"> </span><span class="kn">import</span> <span class="n">rel_entr</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">sklearn.cluster</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">cluster</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">umap</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">scipy</span><span class="w"> </span><span class="kn">import</span> <span class="n">stats</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">scipy.stats</span><span class="w"> </span><span class="kn">import</span> <span class="n">bootstrap</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">statsmodels.api</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sm</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">statsmodels.stats.multitest</span><span class="w"> </span><span class="kn">import</span> <span class="n">multipletests</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="kn">import</span> <span class="n">reshape</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="kn">import</span> <span class="n">array</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.decomposition</span><span class="w"> </span><span class="kn">import</span> <span class="n">PCA</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">gseapy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">gp</span>
+
+<span class="c1"># Taken from:</span>
+<span class="c1"># Adamson, B.A., Norman, T.M., *et al.* &quot;A multiplexed CRISPR screening platform enables systematic dissection of the unfolded protein response&quot;, *Cell*, 2016.</span>
+<span class="c1"># My experiment deals with two KDs- one of the MP, one of the AP using two guides. Positve controls include GINS1 ect. This is a combnatorial KD double for the same gene. No treatments were used</span>
+
+<span class="c1"># colours using garvan</span>
+<span class="n">color1</span> <span class="o">=</span><span class="s1">&#39;#4d00c7&#39;</span>
+<span class="n">palecolor1</span><span class="o">=</span><span class="s2">&quot;#b366ff&quot;</span>
+<span class="n">color2</span><span class="o">=</span> <span class="s1">&#39;#da3c07&#39;</span>
+<span class="n">palecolor2</span><span class="o">=</span><span class="s2">&quot;#ff8954&quot;</span>
+<span class="n">color3</span><span class="o">=</span><span class="s1">&#39;#05d3d3&#39;</span>
+<span class="n">color4</span><span class="o">=</span><span class="s1">&#39;#c6c7c5&#39;</span>
+<span class="n">color4</span><span class="o">=</span><span class="s2">&quot;#434541&quot;</span>
+<span class="n">color5</span><span class="o">=</span><span class="s2">&quot;#eb31e1&quot;</span>
+<span class="n">color6</span><span class="o">=</span><span class="s2">&quot;#3175eb&quot;</span>
+<span class="n">color7</span><span class="o">=</span><span class="s2">&quot;#a7eb31&quot;</span>
+<span class="n">color8</span><span class="o">=</span><span class="s2">&quot;#b366ff&quot;</span>
+<span class="n">color9</span><span class="o">=</span><span class="s2">&quot;#ff8954&quot;</span>
+<span class="n">color10</span><span class="o">=</span><span class="s2">&quot;#35c9d4&quot;</span>
+
+<span class="c1">#use viridis</span>
+<span class="n">color1</span><span class="o">=</span><span class="s2">&quot;#fde725&quot;</span>
+<span class="n">color2</span><span class="o">=</span><span class="s2">&quot;#7ad151&quot;</span>
+<span class="n">color3</span><span class="o">=</span><span class="s2">&quot;#22a884&quot;</span>
+<span class="n">color4</span><span class="o">=</span><span class="s2">&quot;#2a788e&quot;</span>
+<span class="n">color5</span><span class="o">=</span><span class="s2">&quot;#2a788e&quot;</span>
+<span class="n">color6</span><span class="o">=</span><span class="s1">&#39;#440154&#39;</span>
+<span class="c1"># %%capture</span>
+
+
+<span class="c1"># Create the color palette</span>
+<span class="n">palette</span> <span class="o">=</span> <span class="n">sns</span><span class="o">.</span><span class="n">color_palette</span><span class="p">([</span><span class="n">palecolor1</span><span class="p">,</span><span class="n">palecolor2</span><span class="p">])</span>
+<span class="n">palette2</span> <span class="o">=</span> <span class="n">sns</span><span class="o">.</span><span class="n">color_palette</span><span class="p">([</span><span class="n">color1</span><span class="p">,</span> <span class="n">color2</span><span class="p">,</span> <span class="n">color3</span><span class="p">,</span> <span class="n">color4</span><span class="p">,</span><span class="n">color5</span><span class="p">,</span><span class="n">color6</span> <span class="p">,</span><span class="n">color7</span><span class="p">])</span>
+
+<span class="c1"># Create the color palette</span>
+<span class="n">palette</span> <span class="o">=</span> <span class="n">sns</span><span class="o">.</span><span class="n">color_palette</span><span class="p">([</span><span class="n">color1</span><span class="p">,</span> <span class="n">color2</span><span class="p">,</span><span class="n">color3</span><span class="p">])</span>
+<span class="n">new_palette</span> <span class="o">=</span> <span class="n">sns</span><span class="o">.</span><span class="n">color_palette</span><span class="p">([</span><span class="n">color1</span><span class="p">,</span> <span class="n">color2</span><span class="p">,</span><span class="n">color1</span><span class="p">,</span> <span class="n">color2</span><span class="p">,</span><span class="n">color1</span><span class="p">,</span> <span class="n">color2</span><span class="p">,</span><span class="n">color1</span><span class="p">,</span> <span class="n">color2</span><span class="p">,</span><span class="n">color1</span><span class="p">,</span> <span class="n">color2</span><span class="p">,</span><span class="n">color1</span><span class="p">,</span> <span class="n">color2</span><span class="p">,</span> <span class="n">color3</span><span class="p">,</span> <span class="n">color4</span><span class="p">])</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">warnings</span>
+<span class="n">warnings</span><span class="o">.</span><span class="n">filterwarnings</span><span class="p">(</span><span class="s1">&#39;ignore&#39;</span><span class="p">)</span>
+<span class="n">warnings</span><span class="o">.</span><span class="n">simplefilter</span><span class="p">(</span><span class="s1">&#39;ignore&#39;</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Scanpy&quot;</span><span class="p">,</span> <span class="n">sc</span><span class="o">.</span><span class="n">__version__</span><span class="p">)</span>
+<span class="o">%</span><span class="k">matplotlib</span> inline
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+/Users/helenking/anaconda3/envs/apu/lib/python3.12/site-packages/tqdm/auto.py:21: TqdmWarning: IProgress not found. Please update jupyter and ipywidgets. See https://ipywidgets.readthedocs.io/en/stable/user_install.html
+  from .autonotebook import tqdm as notebook_tqdm
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Scanpy 1.10.3
+</pre></div></div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">warnings</span>
+<span class="n">warnings</span><span class="o">.</span><span class="n">filterwarnings</span><span class="p">(</span><span class="s1">&#39;ignore&#39;</span><span class="p">)</span>
+<span class="n">warnings</span><span class="o">.</span><span class="n">simplefilter</span><span class="p">(</span><span class="s1">&#39;ignore&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%capture</span>
+<span class="n">adata_rna</span>  <span class="o">=</span> <span class="n">ad</span><span class="o">.</span><span class="n">read_h5ad</span><span class="p">(</span><span class="n">loc</span><span class="o">+</span><span class="s2">&quot;files/adata_normalised_cellcycle.h5ad&quot;</span><span class="p">)</span>
+<span class="n">adata_rna</span><span class="o">.</span><span class="n">X</span><span class="o">=</span><span class="n">adata_rna</span><span class="o">.</span><span class="n">layers</span><span class="p">[</span><span class="s2">&quot;log1p&quot;</span><span class="p">]</span>
+
+<span class="c1">#get the adata_rna.obs and merge it with adata.obs</span>
+<span class="n">adata_1</span> <span class="o">=</span> <span class="n">scv</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s1">&#39;/Users/helenking/Desktop/Weatheritt_Lab_Y2/alt-prom-crispr-fiveprime/cellranger_output/AP_CRISPR_WHOLE_ENSEMBL.loom&#39;</span><span class="p">,</span> <span class="n">cache</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">adata_1</span><span class="o">.</span><span class="n">obs</span><span class="o">.</span><span class="n">index</span><span class="o">=</span><span class="n">adata_1</span><span class="o">.</span><span class="n">obs</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;:&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">str</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">+</span><span class="s2">&quot;-1&quot;</span>
+<span class="c1">#get only the adata_rna.obs and subset adata</span>
+<span class="n">adata_2</span><span class="o">=</span> <span class="n">scv</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s1">&#39;/Users/helenking/Desktop/Weatheritt_Lab_Y2/alt-prom-crispr-fiveprime/cellranger_output_rerun/AP_CRISPR_WHOLE_ENSEMBL.loom&#39;</span><span class="p">,</span> <span class="n">cache</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">adata_2</span><span class="o">.</span><span class="n">obs</span><span class="o">.</span><span class="n">index</span><span class="o">=</span><span class="n">adata_2</span><span class="o">.</span><span class="n">obs</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;:&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">str</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">+</span><span class="s2">&quot;-1&quot;</span>
+
+<span class="c1">#merge  adata_1 and adata_2 with the same cellbarcodes scv</span>
+<span class="n">adata</span> <span class="o">=</span> <span class="n">scv</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">adata_1</span><span class="p">,</span> <span class="n">adata_2</span><span class="p">)</span>
+
+<span class="n">adata</span> <span class="o">=</span> <span class="n">adata</span><span class="p">[</span><span class="n">adata_rna</span><span class="o">.</span><span class="n">obs</span><span class="o">.</span><span class="n">index</span><span class="p">,:]</span>
+<span class="n">adata</span><span class="o">.</span><span class="n">obs</span><span class="o">=</span><span class="n">pd</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">adata</span><span class="o">.</span><span class="n">obs</span><span class="p">,</span> <span class="n">adata_rna</span><span class="o">.</span><span class="n">obs</span><span class="p">,</span> <span class="n">left_index</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">right_index</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s2">&quot;cell_barcode&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[24]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">scv</span><span class="o">.</span><span class="n">pl</span><span class="o">.</span><span class="n">proportions</span><span class="p">(</span><span class="n">adata</span><span class="p">)</span>
+<br/></pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../../_images/scripts_3_analysis_scripts_9B_velocity_loom_6_0.png" src="../../_images/scripts_3_analysis_scripts_9B_velocity_loom_6_0.png" />
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[25]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">scv</span><span class="o">.</span><span class="n">pp</span><span class="o">.</span><span class="n">normalize_per_cell</span><span class="p">(</span><span class="n">adata</span><span class="p">)</span>
+<span class="n">scv</span><span class="o">.</span><span class="n">pp</span><span class="o">.</span><span class="n">filter_genes_dispersion</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">n_top_genes</span><span class="o">=</span><span class="mi">2000</span><span class="p">)</span>
+<span class="n">sc</span><span class="o">.</span><span class="n">pp</span><span class="o">.</span><span class="n">log1p</span><span class="p">(</span><span class="n">adata</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+WARNING: Did not normalize X as it looks processed already. To enforce normalization, set `enforce=True`.
+WARNING: Did not normalize spliced as it looks processed already. To enforce normalization, set `enforce=True`.
+WARNING: Did not normalize unspliced as it looks processed already. To enforce normalization, set `enforce=True`.
+Extracted 2000 highly variable genes.
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[30]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sc</span><span class="o">.</span><span class="n">pp</span><span class="o">.</span><span class="n">pca</span><span class="p">(</span><span class="n">adata</span><span class="p">)</span>
+<span class="n">sc</span><span class="o">.</span><span class="n">pp</span><span class="o">.</span><span class="n">neighbors</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">n_pcs</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span> <span class="n">n_neighbors</span><span class="o">=</span><span class="mi">30</span><span class="p">)</span>
+<span class="n">scv</span><span class="o">.</span><span class="n">pp</span><span class="o">.</span><span class="n">moments</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">n_pcs</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span> <span class="n">n_neighbors</span><span class="o">=</span><span class="mi">30</span><span class="p">)</span>
+<span class="c1"># scv.pp.moments(adata, n_pcs=30, n_neighbors=30)</span>
+<span class="c1"># scv.tl.velocity(adata,min_r2=0.0001,min_likelihood=0.00001, use_highly_variable=False)</span>
+<span class="n">scv</span><span class="o">.</span><span class="n">tl</span><span class="o">.</span><span class="n">velocity</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span><span class="n">min_r2</span><span class="o">=</span><span class="mf">0.001</span><span class="p">,</span><span class="n">min_likelihood</span><span class="o">=</span><span class="mf">0.001</span><span class="p">,</span> <span class="n">use_highly_variable</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<br/></pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+computing moments based on connectivities
+    finished (0:00:00) --&gt; added
+    &#39;Ms&#39; and &#39;Mu&#39;, moments of un/spliced abundances (adata.layers)
+computing velocities
+WARNING: Too few genes are selected as velocity genes. Consider setting a lower threshold for min_r2 or min_likelihood.
+    finished (0:00:03) --&gt; added
+    &#39;velocity&#39;, velocity vectors for each individual cell (adata.layers)
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+/Users/helenking/anaconda3/envs/apu/lib/python3.12/site-packages/scvelo/tools/optimization.py:184: DeprecationWarning: Conversion of an array with ndim &gt; 0 to a scalar is deprecated, and will error in future. Ensure you extract a single element from your array before performing this operation. (Deprecated NumPy 1.25.)
+  gamma[i] = np.linalg.pinv(A.T.dot(A)).dot(A.T.dot(y[:, i]))
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[31]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">scv</span><span class="o">.</span><span class="n">tl</span><span class="o">.</span><span class="n">velocity_graph</span><span class="p">(</span><span class="n">adata</span><span class="p">)</span>
+<span class="c1">#run &amp; calculate umap</span>
+<span class="n">scv</span><span class="o">.</span><span class="n">tl</span><span class="o">.</span><span class="n">umap</span><span class="p">(</span><span class="n">adata</span><span class="p">)</span>
+<span class="n">adata</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;negative&quot;</span><span class="p">]</span><span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">adata</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;guide_id&quot;</span><span class="p">]</span><span class="o">==</span><span class="s2">&quot;non-targeting_Control&quot;</span><span class="p">,</span><span class="s2">&quot;non_targeting&quot;</span><span class="p">,</span><span class="s2">&quot;knockdown&quot;</span><span class="p">)</span>
+
+<span class="n">scv</span><span class="o">.</span><span class="n">pl</span><span class="o">.</span><span class="n">velocity_embedding_stream</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">basis</span><span class="o">=</span><span class="s1">&#39;umap&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;negative&#39;</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="mi">120</span><span class="p">)</span>
+<span class="n">scv</span><span class="o">.</span><span class="n">pl</span><span class="o">.</span><span class="n">velocity_embedding</span><span class="p">(</span><span class="n">adata</span><span class="p">,</span> <span class="n">arrow_length</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">arrow_size</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="mi">120</span><span class="p">)</span>
+<span class="n">scv</span><span class="o">.</span><span class="n">tl</span><span class="o">.</span><span class="n">velocity_pseudotime</span><span class="p">(</span><span class="n">adata</span><span class="p">)</span>
+<br/></pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+computing velocity graph (using 1/12 cores)
+    finished (0:00:07) --&gt; added
+    &#39;velocity_graph&#39;, sparse matrix with cosine correlations (adata.uns)
+computing velocity embedding
+    finished (0:00:02) --&gt; added
+    &#39;velocity_umap&#39;, embedded velocity vectors (adata.obsm)
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+/Users/helenking/anaconda3/envs/apu/lib/python3.12/site-packages/scvelo/plotting/utils.py:63: DeprecationWarning: is_categorical_dtype is deprecated and will be removed in a future version. Use isinstance(dtype, pd.CategoricalDtype) instead
+  return isinstance(c, str) and c in data.obs.keys() and cat(data.obs[c])
+/Users/helenking/anaconda3/envs/apu/lib/python3.12/site-packages/scvelo/plotting/utils.py:63: DeprecationWarning: is_categorical_dtype is deprecated and will be removed in a future version. Use isinstance(dtype, pd.CategoricalDtype) instead
+  return isinstance(c, str) and c in data.obs.keys() and cat(data.obs[c])
+/Users/helenking/anaconda3/envs/apu/lib/python3.12/site-packages/scvelo/plotting/utils.py:63: DeprecationWarning: is_categorical_dtype is deprecated and will be removed in a future version. Use isinstance(dtype, pd.CategoricalDtype) instead
+  return isinstance(c, str) and c in data.obs.keys() and cat(data.obs[c])
+/Users/helenking/anaconda3/envs/apu/lib/python3.12/site-packages/scvelo/plotting/utils.py:63: DeprecationWarning: is_categorical_dtype is deprecated and will be removed in a future version. Use isinstance(dtype, pd.CategoricalDtype) instead
+  return isinstance(c, str) and c in data.obs.keys() and cat(data.obs[c])
+/Users/helenking/anaconda3/envs/apu/lib/python3.12/site-packages/scvelo/plotting/utils.py:63: DeprecationWarning: is_categorical_dtype is deprecated and will be removed in a future version. Use isinstance(dtype, pd.CategoricalDtype) instead
+  return isinstance(c, str) and c in data.obs.keys() and cat(data.obs[c])
+/Users/helenking/anaconda3/envs/apu/lib/python3.12/site-packages/scvelo/plotting/utils.py:63: DeprecationWarning: is_categorical_dtype is deprecated and will be removed in a future version. Use isinstance(dtype, pd.CategoricalDtype) instead
+  return isinstance(c, str) and c in data.obs.keys() and cat(data.obs[c])
+/Users/helenking/anaconda3/envs/apu/lib/python3.12/site-packages/scvelo/plotting/utils.py:63: DeprecationWarning: is_categorical_dtype is deprecated and will be removed in a future version. Use isinstance(dtype, pd.CategoricalDtype) instead
+  return isinstance(c, str) and c in data.obs.keys() and cat(data.obs[c])
+/Users/helenking/anaconda3/envs/apu/lib/python3.12/site-packages/scvelo/plotting/utils.py:63: DeprecationWarning: is_categorical_dtype is deprecated and will be removed in a future version. Use isinstance(dtype, pd.CategoricalDtype) instead
+  return isinstance(c, str) and c in data.obs.keys() and cat(data.obs[c])
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../../_images/scripts_3_analysis_scripts_9B_velocity_loom_9_2.png" src="../../_images/scripts_3_analysis_scripts_9B_velocity_loom_9_2.png" />
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../../_images/scripts_3_analysis_scripts_9B_velocity_loom_9_3.png" src="../../_images/scripts_3_analysis_scripts_9B_velocity_loom_9_3.png" />
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[32]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#subset adata just for esr1</span>
+<span class="c1"># adata_esr1=adata[adata.obs[&quot;guide_id&quot;].isin([&quot;ESR1_MP&quot;,&quot;ESR1_AP&quot;])]</span>
+<span class="n">adata_esr1</span><span class="o">=</span><span class="n">adata</span><span class="p">[</span><span class="n">adata</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;guide_id&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">isin</span><span class="p">([</span><span class="s2">&quot;ESR1_AP&quot;</span><span class="p">,</span><span class="s2">&quot;ESR1_MP&quot;</span><span class="p">,</span><span class="s2">&quot;non-targeting_Control&quot;</span><span class="p">])]</span>
+
+<span class="n">sc</span><span class="o">.</span><span class="n">tl</span><span class="o">.</span><span class="n">umap</span><span class="p">(</span><span class="n">adata_esr1</span><span class="p">)</span>
+<span class="n">scv</span><span class="o">.</span><span class="n">pl</span><span class="o">.</span><span class="n">velocity_embedding_stream</span><span class="p">(</span><span class="n">adata_esr1</span><span class="p">,</span> <span class="n">basis</span><span class="o">=</span><span class="s1">&#39;umap&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;guide_id&#39;</span><span class="p">,</span> <span class="n">save</span><span class="o">=</span><span class="s2">&quot;output.svg&quot;</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="mi">600</span><span class="p">)</span>
+<span class="n">scv</span><span class="o">.</span><span class="n">pl</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">adata_esr1</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;velocity_pseudotime&#39;</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;gnuplot&#39;</span><span class="p">,</span> <span class="n">save</span><span class="o">=</span><span class="s2">&quot;esr1_stream_pseudotime.pdf&quot;</span><span class="p">)</span>
+<br/></pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+/Users/helenking/anaconda3/envs/apu/lib/python3.12/site-packages/scvelo/plotting/utils.py:63: DeprecationWarning: is_categorical_dtype is deprecated and will be removed in a future version. Use isinstance(dtype, pd.CategoricalDtype) instead
+  return isinstance(c, str) and c in data.obs.keys() and cat(data.obs[c])
+/Users/helenking/anaconda3/envs/apu/lib/python3.12/site-packages/scvelo/plotting/utils.py:63: DeprecationWarning: is_categorical_dtype is deprecated and will be removed in a future version. Use isinstance(dtype, pd.CategoricalDtype) instead
+  return isinstance(c, str) and c in data.obs.keys() and cat(data.obs[c])
+/Users/helenking/anaconda3/envs/apu/lib/python3.12/site-packages/scvelo/plotting/utils.py:63: DeprecationWarning: is_categorical_dtype is deprecated and will be removed in a future version. Use isinstance(dtype, pd.CategoricalDtype) instead
+  return isinstance(c, str) and c in data.obs.keys() and cat(data.obs[c])
+/Users/helenking/anaconda3/envs/apu/lib/python3.12/site-packages/scvelo/plotting/utils.py:63: DeprecationWarning: is_categorical_dtype is deprecated and will be removed in a future version. Use isinstance(dtype, pd.CategoricalDtype) instead
+  return isinstance(c, str) and c in data.obs.keys() and cat(data.obs[c])
+/Users/helenking/anaconda3/envs/apu/lib/python3.12/site-packages/scvelo/plotting/utils.py:63: DeprecationWarning: is_categorical_dtype is deprecated and will be removed in a future version. Use isinstance(dtype, pd.CategoricalDtype) instead
+  return isinstance(c, str) and c in data.obs.keys() and cat(data.obs[c])
+/Users/helenking/anaconda3/envs/apu/lib/python3.12/site-packages/scvelo/plotting/utils.py:63: DeprecationWarning: is_categorical_dtype is deprecated and will be removed in a future version. Use isinstance(dtype, pd.CategoricalDtype) instead
+  return isinstance(c, str) and c in data.obs.keys() and cat(data.obs[c])
+/Users/helenking/anaconda3/envs/apu/lib/python3.12/site-packages/scvelo/plotting/utils.py:63: DeprecationWarning: is_categorical_dtype is deprecated and will be removed in a future version. Use isinstance(dtype, pd.CategoricalDtype) instead
+  return isinstance(c, str) and c in data.obs.keys() and cat(data.obs[c])
+/Users/helenking/anaconda3/envs/apu/lib/python3.12/site-packages/scvelo/plotting/utils.py:63: DeprecationWarning: is_categorical_dtype is deprecated and will be removed in a future version. Use isinstance(dtype, pd.CategoricalDtype) instead
+  return isinstance(c, str) and c in data.obs.keys() and cat(data.obs[c])
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+saving figure to file ./figures/scvelo_output.svg
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../../_images/scripts_3_analysis_scripts_9B_velocity_loom_10_2.png" src="../../_images/scripts_3_analysis_scripts_9B_velocity_loom_10_2.png" />
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+/Users/helenking/anaconda3/envs/apu/lib/python3.12/site-packages/scvelo/plotting/utils.py:63: DeprecationWarning: is_categorical_dtype is deprecated and will be removed in a future version. Use isinstance(dtype, pd.CategoricalDtype) instead
+  return isinstance(c, str) and c in data.obs.keys() and cat(data.obs[c])
+/Users/helenking/anaconda3/envs/apu/lib/python3.12/site-packages/scvelo/plotting/utils.py:63: DeprecationWarning: is_categorical_dtype is deprecated and will be removed in a future version. Use isinstance(dtype, pd.CategoricalDtype) instead
+  return isinstance(c, str) and c in data.obs.keys() and cat(data.obs[c])
+/Users/helenking/anaconda3/envs/apu/lib/python3.12/site-packages/scvelo/plotting/utils.py:63: DeprecationWarning: is_categorical_dtype is deprecated and will be removed in a future version. Use isinstance(dtype, pd.CategoricalDtype) instead
+  return isinstance(c, str) and c in data.obs.keys() and cat(data.obs[c])
+/Users/helenking/anaconda3/envs/apu/lib/python3.12/site-packages/scvelo/plotting/utils.py:63: DeprecationWarning: is_categorical_dtype is deprecated and will be removed in a future version. Use isinstance(dtype, pd.CategoricalDtype) instead
+  return isinstance(c, str) and c in data.obs.keys() and cat(data.obs[c])
+/Users/helenking/anaconda3/envs/apu/lib/python3.12/site-packages/scvelo/plotting/utils.py:63: DeprecationWarning: is_categorical_dtype is deprecated and will be removed in a future version. Use isinstance(dtype, pd.CategoricalDtype) instead
+  return isinstance(c, str) and c in data.obs.keys() and cat(data.obs[c])
+/Users/helenking/anaconda3/envs/apu/lib/python3.12/site-packages/scvelo/plotting/utils.py:63: DeprecationWarning: is_categorical_dtype is deprecated and will be removed in a future version. Use isinstance(dtype, pd.CategoricalDtype) instead
+  return isinstance(c, str) and c in data.obs.keys() and cat(data.obs[c])
+INFO:fontTools.subset:maxp pruned
+INFO:fontTools.subset:cmap pruned
+INFO:fontTools.subset:kern dropped
+INFO:fontTools.subset:post pruned
+INFO:fontTools.subset:FFTM dropped
+INFO:fontTools.subset:GPOS pruned
+INFO:fontTools.subset:GSUB pruned
+INFO:fontTools.subset:glyf pruned
+INFO:fontTools.subset:Added gid0 to subset
+INFO:fontTools.subset:Added first four glyphs to subset
+INFO:fontTools.subset:Closing glyph list over &#39;MATH&#39;: 22 glyphs before
+INFO:fontTools.subset:Glyph names: [&#39;.notdef&#39;, &#39;.null&#39;, &#39;c&#39;, &#39;d&#39;, &#39;e&#39;, &#39;i&#39;, &#39;l&#39;, &#39;m&#39;, &#39;nine&#39;, &#39;nonmarkingreturn&#39;, &#39;o&#39;, &#39;p&#39;, &#39;period&#39;, &#39;s&#39;, &#39;six&#39;, &#39;space&#39;, &#39;t&#39;, &#39;three&#39;, &#39;u&#39;, &#39;v&#39;, &#39;y&#39;, &#39;zero&#39;]
+INFO:fontTools.subset:Glyph IDs:   [0, 1, 2, 3, 17, 19, 22, 25, 28, 70, 71, 72, 76, 79, 80, 82, 83, 86, 87, 88, 89, 92]
+INFO:fontTools.subset:Closed glyph list over &#39;MATH&#39;: 22 glyphs after
+INFO:fontTools.subset:Glyph names: [&#39;.notdef&#39;, &#39;.null&#39;, &#39;c&#39;, &#39;d&#39;, &#39;e&#39;, &#39;i&#39;, &#39;l&#39;, &#39;m&#39;, &#39;nine&#39;, &#39;nonmarkingreturn&#39;, &#39;o&#39;, &#39;p&#39;, &#39;period&#39;, &#39;s&#39;, &#39;six&#39;, &#39;space&#39;, &#39;t&#39;, &#39;three&#39;, &#39;u&#39;, &#39;v&#39;, &#39;y&#39;, &#39;zero&#39;]
+INFO:fontTools.subset:Glyph IDs:   [0, 1, 2, 3, 17, 19, 22, 25, 28, 70, 71, 72, 76, 79, 80, 82, 83, 86, 87, 88, 89, 92]
+INFO:fontTools.subset:Closing glyph list over &#39;GSUB&#39;: 22 glyphs before
+INFO:fontTools.subset:Glyph names: [&#39;.notdef&#39;, &#39;.null&#39;, &#39;c&#39;, &#39;d&#39;, &#39;e&#39;, &#39;i&#39;, &#39;l&#39;, &#39;m&#39;, &#39;nine&#39;, &#39;nonmarkingreturn&#39;, &#39;o&#39;, &#39;p&#39;, &#39;period&#39;, &#39;s&#39;, &#39;six&#39;, &#39;space&#39;, &#39;t&#39;, &#39;three&#39;, &#39;u&#39;, &#39;v&#39;, &#39;y&#39;, &#39;zero&#39;]
+INFO:fontTools.subset:Glyph IDs:   [0, 1, 2, 3, 17, 19, 22, 25, 28, 70, 71, 72, 76, 79, 80, 82, 83, 86, 87, 88, 89, 92]
+INFO:fontTools.subset:Closed glyph list over &#39;GSUB&#39;: 22 glyphs after
+INFO:fontTools.subset:Glyph names: [&#39;.notdef&#39;, &#39;.null&#39;, &#39;c&#39;, &#39;d&#39;, &#39;e&#39;, &#39;i&#39;, &#39;l&#39;, &#39;m&#39;, &#39;nine&#39;, &#39;nonmarkingreturn&#39;, &#39;o&#39;, &#39;p&#39;, &#39;period&#39;, &#39;s&#39;, &#39;six&#39;, &#39;space&#39;, &#39;t&#39;, &#39;three&#39;, &#39;u&#39;, &#39;v&#39;, &#39;y&#39;, &#39;zero&#39;]
+INFO:fontTools.subset:Glyph IDs:   [0, 1, 2, 3, 17, 19, 22, 25, 28, 70, 71, 72, 76, 79, 80, 82, 83, 86, 87, 88, 89, 92]
+INFO:fontTools.subset:Closing glyph list over &#39;glyf&#39;: 22 glyphs before
+INFO:fontTools.subset:Glyph names: [&#39;.notdef&#39;, &#39;.null&#39;, &#39;c&#39;, &#39;d&#39;, &#39;e&#39;, &#39;i&#39;, &#39;l&#39;, &#39;m&#39;, &#39;nine&#39;, &#39;nonmarkingreturn&#39;, &#39;o&#39;, &#39;p&#39;, &#39;period&#39;, &#39;s&#39;, &#39;six&#39;, &#39;space&#39;, &#39;t&#39;, &#39;three&#39;, &#39;u&#39;, &#39;v&#39;, &#39;y&#39;, &#39;zero&#39;]
+INFO:fontTools.subset:Glyph IDs:   [0, 1, 2, 3, 17, 19, 22, 25, 28, 70, 71, 72, 76, 79, 80, 82, 83, 86, 87, 88, 89, 92]
+INFO:fontTools.subset:Closed glyph list over &#39;glyf&#39;: 22 glyphs after
+INFO:fontTools.subset:Glyph names: [&#39;.notdef&#39;, &#39;.null&#39;, &#39;c&#39;, &#39;d&#39;, &#39;e&#39;, &#39;i&#39;, &#39;l&#39;, &#39;m&#39;, &#39;nine&#39;, &#39;nonmarkingreturn&#39;, &#39;o&#39;, &#39;p&#39;, &#39;period&#39;, &#39;s&#39;, &#39;six&#39;, &#39;space&#39;, &#39;t&#39;, &#39;three&#39;, &#39;u&#39;, &#39;v&#39;, &#39;y&#39;, &#39;zero&#39;]
+INFO:fontTools.subset:Glyph IDs:   [0, 1, 2, 3, 17, 19, 22, 25, 28, 70, 71, 72, 76, 79, 80, 82, 83, 86, 87, 88, 89, 92]
+INFO:fontTools.subset:Retaining 22 glyphs
+INFO:fontTools.subset:head subsetting not needed
+INFO:fontTools.subset:hhea subsetting not needed
+INFO:fontTools.subset:maxp subsetting not needed
+INFO:fontTools.subset:OS/2 subsetting not needed
+INFO:fontTools.subset:hmtx subsetted
+INFO:fontTools.subset:cmap subsetted
+INFO:fontTools.subset:fpgm subsetting not needed
+INFO:fontTools.subset:prep subsetting not needed
+INFO:fontTools.subset:cvt  subsetting not needed
+INFO:fontTools.subset:loca subsetting not needed
+INFO:fontTools.subset:post subsetted
+INFO:fontTools.subset:gasp subsetting not needed
+INFO:fontTools.subset:MATH subsetted
+INFO:fontTools.subset:GDEF subsetted
+INFO:fontTools.subset:GPOS subsetted
+INFO:fontTools.subset:GSUB subsetted
+INFO:fontTools.subset:name subsetting not needed
+INFO:fontTools.subset:glyf subsetted
+INFO:fontTools.subset:head pruned
+INFO:fontTools.subset:OS/2 Unicode ranges pruned: [0]
+INFO:fontTools.subset:OS/2 CodePage ranges pruned: [0]
+INFO:fontTools.subset:glyf pruned
+INFO:fontTools.subset:GDEF pruned
+INFO:fontTools.subset:GPOS pruned
+INFO:fontTools.subset:GSUB pruned
+INFO:fontTools.subset:name pruned
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+saving figure to file ./figures/scvelo_esr1_stream_pseudotime.pdf
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../../_images/scripts_3_analysis_scripts_9B_velocity_loom_10_5.png" src="../../_images/scripts_3_analysis_scripts_9B_velocity_loom_10_5.png" />
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[15]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">adata_esr1</span><span class="o">=</span><span class="n">adata_rna</span><span class="p">[</span><span class="n">adata_rna</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;guide_id&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">isin</span><span class="p">([</span><span class="s2">&quot;ESR1_AP&quot;</span><span class="p">,</span><span class="s2">&quot;ESR1_MP&quot;</span><span class="p">])]</span>
+<span class="c1">#calcualte umap</span>
+<span class="n">sc</span><span class="o">.</span><span class="n">tl</span><span class="o">.</span><span class="n">pca</span><span class="p">(</span><span class="n">adata_esr1</span><span class="p">,</span> <span class="n">n_comps</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+<span class="n">sc</span><span class="o">.</span><span class="n">tl</span><span class="o">.</span><span class="n">umap</span><span class="p">(</span><span class="n">adata_esr1</span><span class="p">)</span>
+
+<span class="c1">#assign negative and other</span>
+<span class="n">adata_esr1</span><span class="o">=</span><span class="n">adata_rna</span><span class="p">[</span><span class="n">adata_rna</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;guide_id&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">isin</span><span class="p">([</span><span class="s2">&quot;ESR1_AP&quot;</span><span class="p">,</span><span class="s2">&quot;non-targeting_Control&quot;</span><span class="p">])]</span>
+<span class="c1"># ,&quot;ESR1_AP&quot;</span>
+<span class="n">res</span> <span class="o">=</span> <span class="n">gp</span><span class="o">.</span><span class="n">gsea</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">adata_esr1</span><span class="o">.</span><span class="n">to_df</span><span class="p">()</span><span class="o">.</span><span class="n">T</span><span class="p">,</span> <span class="c1"># row -&gt; genes, column-&gt; samples</span>
+        <span class="n">gene_sets</span><span class="o">=</span><span class="s2">&quot;GO_Biological_Process_2021&quot;</span><span class="p">,</span>
+        <span class="bp">cls</span><span class="o">=</span><span class="n">adata_esr1</span><span class="o">.</span><span class="n">obs</span><span class="o">.</span><span class="n">guide_id</span><span class="p">,</span>
+        <span class="n">permutation_num</span><span class="o">=</span><span class="mi">400</span><span class="p">,</span>
+        <span class="n">permutation_type</span><span class="o">=</span><span class="s1">&#39;phenotype&#39;</span><span class="p">,</span>
+        <span class="n">outdir</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">method</span><span class="o">=</span><span class="s1">&#39;s2n&#39;</span><span class="p">,</span> <span class="c1"># signal_to_noise</span>
+        <span class="n">threads</span><span class="o">=</span> <span class="mi">16</span><span class="p">)</span>
+<span class="n">term</span> <span class="o">=</span> <span class="n">res</span><span class="o">.</span><span class="n">res2d</span><span class="o">.</span><span class="n">Term</span>
+<span class="c1"># gp.gseaplot(res.ranking, term=term[i], **res.results[term[i]])</span>
+<span class="n">axs</span> <span class="o">=</span> <span class="n">res</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">terms</span><span class="o">=</span><span class="n">term</span><span class="p">[:</span><span class="mi">5</span><span class="p">])</span>
+<span class="c1">#save the plot</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s2">&quot;esr1_gsea.pdf&quot;</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s2">&quot;pdf&quot;</span><span class="p">,</span> <span class="n">bbox_inches</span><span class="o">=</span><span class="s2">&quot;tight&quot;</span><span class="p">)</span>
+<br/></pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+INFO:fontTools.subset:maxp pruned
+INFO:fontTools.subset:cmap pruned
+INFO:fontTools.subset:kern dropped
+INFO:fontTools.subset:post pruned
+INFO:fontTools.subset:FFTM dropped
+INFO:fontTools.subset:GPOS pruned
+INFO:fontTools.subset:GSUB pruned
+INFO:fontTools.subset:glyf pruned
+INFO:fontTools.subset:Added gid0 to subset
+INFO:fontTools.subset:Added first four glyphs to subset
+INFO:fontTools.subset:Closing glyph list over &#39;GSUB&#39;: 20 glyphs before
+INFO:fontTools.subset:Glyph names: [&#39;.notdef&#39;, &#39;.null&#39;, &#39;E&#39;, &#39;G&#39;, &#39;R&#39;, &#39;S&#39;, &#39;a&#39;, &#39;c&#39;, &#39;d&#39;, &#39;e&#39;, &#39;h&#39;, &#39;i&#39;, &#39;k&#39;, &#39;m&#39;, &#39;n&#39;, &#39;nonmarkingreturn&#39;, &#39;o&#39;, &#39;r&#39;, &#39;space&#39;, &#39;t&#39;]
+INFO:fontTools.subset:Glyph IDs:   [0, 1, 2, 3, 40, 42, 53, 54, 68, 70, 71, 72, 75, 76, 78, 80, 81, 82, 85, 87]
+INFO:fontTools.subset:Closed glyph list over &#39;GSUB&#39;: 20 glyphs after
+INFO:fontTools.subset:Glyph names: [&#39;.notdef&#39;, &#39;.null&#39;, &#39;E&#39;, &#39;G&#39;, &#39;R&#39;, &#39;S&#39;, &#39;a&#39;, &#39;c&#39;, &#39;d&#39;, &#39;e&#39;, &#39;h&#39;, &#39;i&#39;, &#39;k&#39;, &#39;m&#39;, &#39;n&#39;, &#39;nonmarkingreturn&#39;, &#39;o&#39;, &#39;r&#39;, &#39;space&#39;, &#39;t&#39;]
+INFO:fontTools.subset:Glyph IDs:   [0, 1, 2, 3, 40, 42, 53, 54, 68, 70, 71, 72, 75, 76, 78, 80, 81, 82, 85, 87]
+INFO:fontTools.subset:Closing glyph list over &#39;glyf&#39;: 20 glyphs before
+INFO:fontTools.subset:Glyph names: [&#39;.notdef&#39;, &#39;.null&#39;, &#39;E&#39;, &#39;G&#39;, &#39;R&#39;, &#39;S&#39;, &#39;a&#39;, &#39;c&#39;, &#39;d&#39;, &#39;e&#39;, &#39;h&#39;, &#39;i&#39;, &#39;k&#39;, &#39;m&#39;, &#39;n&#39;, &#39;nonmarkingreturn&#39;, &#39;o&#39;, &#39;r&#39;, &#39;space&#39;, &#39;t&#39;]
+INFO:fontTools.subset:Glyph IDs:   [0, 1, 2, 3, 40, 42, 53, 54, 68, 70, 71, 72, 75, 76, 78, 80, 81, 82, 85, 87]
+INFO:fontTools.subset:Closed glyph list over &#39;glyf&#39;: 20 glyphs after
+INFO:fontTools.subset:Glyph names: [&#39;.notdef&#39;, &#39;.null&#39;, &#39;E&#39;, &#39;G&#39;, &#39;R&#39;, &#39;S&#39;, &#39;a&#39;, &#39;c&#39;, &#39;d&#39;, &#39;e&#39;, &#39;h&#39;, &#39;i&#39;, &#39;k&#39;, &#39;m&#39;, &#39;n&#39;, &#39;nonmarkingreturn&#39;, &#39;o&#39;, &#39;r&#39;, &#39;space&#39;, &#39;t&#39;]
+INFO:fontTools.subset:Glyph IDs:   [0, 1, 2, 3, 40, 42, 53, 54, 68, 70, 71, 72, 75, 76, 78, 80, 81, 82, 85, 87]
+INFO:fontTools.subset:Retaining 20 glyphs
+INFO:fontTools.subset:head subsetting not needed
+INFO:fontTools.subset:hhea subsetting not needed
+INFO:fontTools.subset:maxp subsetting not needed
+INFO:fontTools.subset:OS/2 subsetting not needed
+INFO:fontTools.subset:hmtx subsetted
+INFO:fontTools.subset:cmap subsetted
+INFO:fontTools.subset:fpgm subsetting not needed
+INFO:fontTools.subset:prep subsetting not needed
+INFO:fontTools.subset:cvt  subsetting not needed
+INFO:fontTools.subset:loca subsetting not needed
+INFO:fontTools.subset:post subsetted
+INFO:fontTools.subset:gasp subsetting not needed
+INFO:fontTools.subset:GDEF subsetted
+INFO:fontTools.subset:GPOS subsetted
+INFO:fontTools.subset:GSUB subsetted
+INFO:fontTools.subset:name subsetting not needed
+INFO:fontTools.subset:glyf subsetted
+INFO:fontTools.subset:head pruned
+INFO:fontTools.subset:OS/2 Unicode ranges pruned: [0]
+INFO:fontTools.subset:OS/2 CodePage ranges pruned: [0]
+INFO:fontTools.subset:glyf pruned
+INFO:fontTools.subset:GDEF pruned
+INFO:fontTools.subset:GPOS pruned
+INFO:fontTools.subset:GSUB pruned
+INFO:fontTools.subset:name pruned
+INFO:fontTools.subset:maxp pruned
+INFO:fontTools.subset:cmap pruned
+INFO:fontTools.subset:kern dropped
+INFO:fontTools.subset:post pruned
+INFO:fontTools.subset:FFTM dropped
+INFO:fontTools.subset:GPOS pruned
+INFO:fontTools.subset:GSUB pruned
+INFO:fontTools.subset:glyf pruned
+INFO:fontTools.subset:Added gid0 to subset
+INFO:fontTools.subset:Added first four glyphs to subset
+INFO:fontTools.subset:Closing glyph list over &#39;MATH&#39;: 45 glyphs before
+INFO:fontTools.subset:Glyph names: [&#39;.notdef&#39;, &#39;.null&#39;, &#39;A&#39;, &#39;G&#39;, &#39;N&#39;, &#39;O&#39;, &#39;P&#39;, &#39;R&#39;, &#39;T&#39;, &#39;a&#39;, &#39;b&#39;, &#39;c&#39;, &#39;colon&#39;, &#39;d&#39;, &#39;e&#39;, &#39;eight&#39;, &#39;five&#39;, &#39;four&#39;, &#39;g&#39;, &#39;h&#39;, &#39;hyphen&#39;, &#39;i&#39;, &#39;l&#39;, &#39;m&#39;, &#39;minus&#39;, &#39;n&#39;, &#39;nine&#39;, &#39;nonmarkingreturn&#39;, &#39;o&#39;, &#39;one&#39;, &#39;p&#39;, &#39;parenleft&#39;, &#39;parenright&#39;, &#39;period&#39;, &#39;r&#39;, &#39;s&#39;, &#39;seven&#39;, &#39;six&#39;, &#39;space&#39;, &#39;t&#39;, &#39;three&#39;, &#39;two&#39;, &#39;u&#39;, &#39;y&#39;, &#39;zero&#39;]
+INFO:fontTools.subset:Glyph IDs:   [0, 1, 2, 3, 11, 12, 16, 17, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 36, 42, 49, 50, 51, 53, 55, 68, 69, 70, 71, 72, 74, 75, 76, 79, 80, 81, 82, 83, 85, 86, 87, 88, 92, 3228]
+INFO:fontTools.subset:Closed glyph list over &#39;MATH&#39;: 51 glyphs after
+INFO:fontTools.subset:Glyph names: [&#39;.notdef&#39;, &#39;.null&#39;, &#39;A&#39;, &#39;G&#39;, &#39;N&#39;, &#39;O&#39;, &#39;P&#39;, &#39;R&#39;, &#39;T&#39;, &#39;a&#39;, &#39;b&#39;, &#39;c&#39;, &#39;colon&#39;, &#39;d&#39;, &#39;e&#39;, &#39;eight&#39;, &#39;five&#39;, &#39;four&#39;, &#39;g&#39;, &#39;h&#39;, &#39;hyphen&#39;, &#39;i&#39;, &#39;l&#39;, &#39;m&#39;, &#39;minus&#39;, &#39;n&#39;, &#39;nine&#39;, &#39;nonmarkingreturn&#39;, &#39;o&#39;, &#39;one&#39;, &#39;p&#39;, &#39;parenleft&#39;, &#39;parenright&#39;, &#39;period&#39;, &#39;r&#39;, &#39;s&#39;, &#39;seven&#39;, &#39;six&#39;, &#39;space&#39;, &#39;t&#39;, &#39;three&#39;, &#39;two&#39;, &#39;u&#39;, &#39;uni239B&#39;, &#39;uni239C&#39;, &#39;uni239D&#39;, &#39;uni239E&#39;, &#39;uni239F&#39;, &#39;uni23A0&#39;, &#39;y&#39;, &#39;zero&#39;]
+INFO:fontTools.subset:Glyph IDs:   [0, 1, 2, 3, 11, 12, 16, 17, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 36, 42, 49, 50, 51, 53, 55, 68, 69, 70, 71, 72, 74, 75, 76, 79, 80, 81, 82, 83, 85, 86, 87, 88, 92, 3228, 3506, 3507, 3508, 3509, 3510, 3511]
+INFO:fontTools.subset:Closing glyph list over &#39;GSUB&#39;: 51 glyphs before
+INFO:fontTools.subset:Glyph names: [&#39;.notdef&#39;, &#39;.null&#39;, &#39;A&#39;, &#39;G&#39;, &#39;N&#39;, &#39;O&#39;, &#39;P&#39;, &#39;R&#39;, &#39;T&#39;, &#39;a&#39;, &#39;b&#39;, &#39;c&#39;, &#39;colon&#39;, &#39;d&#39;, &#39;e&#39;, &#39;eight&#39;, &#39;five&#39;, &#39;four&#39;, &#39;g&#39;, &#39;h&#39;, &#39;hyphen&#39;, &#39;i&#39;, &#39;l&#39;, &#39;m&#39;, &#39;minus&#39;, &#39;n&#39;, &#39;nine&#39;, &#39;nonmarkingreturn&#39;, &#39;o&#39;, &#39;one&#39;, &#39;p&#39;, &#39;parenleft&#39;, &#39;parenright&#39;, &#39;period&#39;, &#39;r&#39;, &#39;s&#39;, &#39;seven&#39;, &#39;six&#39;, &#39;space&#39;, &#39;t&#39;, &#39;three&#39;, &#39;two&#39;, &#39;u&#39;, &#39;uni239B&#39;, &#39;uni239C&#39;, &#39;uni239D&#39;, &#39;uni239E&#39;, &#39;uni239F&#39;, &#39;uni23A0&#39;, &#39;y&#39;, &#39;zero&#39;]
+INFO:fontTools.subset:Glyph IDs:   [0, 1, 2, 3, 11, 12, 16, 17, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 36, 42, 49, 50, 51, 53, 55, 68, 69, 70, 71, 72, 74, 75, 76, 79, 80, 81, 82, 83, 85, 86, 87, 88, 92, 3228, 3506, 3507, 3508, 3509, 3510, 3511]
+INFO:fontTools.subset:Closed glyph list over &#39;GSUB&#39;: 51 glyphs after
+INFO:fontTools.subset:Glyph names: [&#39;.notdef&#39;, &#39;.null&#39;, &#39;A&#39;, &#39;G&#39;, &#39;N&#39;, &#39;O&#39;, &#39;P&#39;, &#39;R&#39;, &#39;T&#39;, &#39;a&#39;, &#39;b&#39;, &#39;c&#39;, &#39;colon&#39;, &#39;d&#39;, &#39;e&#39;, &#39;eight&#39;, &#39;five&#39;, &#39;four&#39;, &#39;g&#39;, &#39;h&#39;, &#39;hyphen&#39;, &#39;i&#39;, &#39;l&#39;, &#39;m&#39;, &#39;minus&#39;, &#39;n&#39;, &#39;nine&#39;, &#39;nonmarkingreturn&#39;, &#39;o&#39;, &#39;one&#39;, &#39;p&#39;, &#39;parenleft&#39;, &#39;parenright&#39;, &#39;period&#39;, &#39;r&#39;, &#39;s&#39;, &#39;seven&#39;, &#39;six&#39;, &#39;space&#39;, &#39;t&#39;, &#39;three&#39;, &#39;two&#39;, &#39;u&#39;, &#39;uni239B&#39;, &#39;uni239C&#39;, &#39;uni239D&#39;, &#39;uni239E&#39;, &#39;uni239F&#39;, &#39;uni23A0&#39;, &#39;y&#39;, &#39;zero&#39;]
+INFO:fontTools.subset:Glyph IDs:   [0, 1, 2, 3, 11, 12, 16, 17, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 36, 42, 49, 50, 51, 53, 55, 68, 69, 70, 71, 72, 74, 75, 76, 79, 80, 81, 82, 83, 85, 86, 87, 88, 92, 3228, 3506, 3507, 3508, 3509, 3510, 3511]
+INFO:fontTools.subset:Closing glyph list over &#39;glyf&#39;: 51 glyphs before
+INFO:fontTools.subset:Glyph names: [&#39;.notdef&#39;, &#39;.null&#39;, &#39;A&#39;, &#39;G&#39;, &#39;N&#39;, &#39;O&#39;, &#39;P&#39;, &#39;R&#39;, &#39;T&#39;, &#39;a&#39;, &#39;b&#39;, &#39;c&#39;, &#39;colon&#39;, &#39;d&#39;, &#39;e&#39;, &#39;eight&#39;, &#39;five&#39;, &#39;four&#39;, &#39;g&#39;, &#39;h&#39;, &#39;hyphen&#39;, &#39;i&#39;, &#39;l&#39;, &#39;m&#39;, &#39;minus&#39;, &#39;n&#39;, &#39;nine&#39;, &#39;nonmarkingreturn&#39;, &#39;o&#39;, &#39;one&#39;, &#39;p&#39;, &#39;parenleft&#39;, &#39;parenright&#39;, &#39;period&#39;, &#39;r&#39;, &#39;s&#39;, &#39;seven&#39;, &#39;six&#39;, &#39;space&#39;, &#39;t&#39;, &#39;three&#39;, &#39;two&#39;, &#39;u&#39;, &#39;uni239B&#39;, &#39;uni239C&#39;, &#39;uni239D&#39;, &#39;uni239E&#39;, &#39;uni239F&#39;, &#39;uni23A0&#39;, &#39;y&#39;, &#39;zero&#39;]
+INFO:fontTools.subset:Glyph IDs:   [0, 1, 2, 3, 11, 12, 16, 17, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 36, 42, 49, 50, 51, 53, 55, 68, 69, 70, 71, 72, 74, 75, 76, 79, 80, 81, 82, 83, 85, 86, 87, 88, 92, 3228, 3506, 3507, 3508, 3509, 3510, 3511]
+INFO:fontTools.subset:Closed glyph list over &#39;glyf&#39;: 51 glyphs after
+INFO:fontTools.subset:Glyph names: [&#39;.notdef&#39;, &#39;.null&#39;, &#39;A&#39;, &#39;G&#39;, &#39;N&#39;, &#39;O&#39;, &#39;P&#39;, &#39;R&#39;, &#39;T&#39;, &#39;a&#39;, &#39;b&#39;, &#39;c&#39;, &#39;colon&#39;, &#39;d&#39;, &#39;e&#39;, &#39;eight&#39;, &#39;five&#39;, &#39;four&#39;, &#39;g&#39;, &#39;h&#39;, &#39;hyphen&#39;, &#39;i&#39;, &#39;l&#39;, &#39;m&#39;, &#39;minus&#39;, &#39;n&#39;, &#39;nine&#39;, &#39;nonmarkingreturn&#39;, &#39;o&#39;, &#39;one&#39;, &#39;p&#39;, &#39;parenleft&#39;, &#39;parenright&#39;, &#39;period&#39;, &#39;r&#39;, &#39;s&#39;, &#39;seven&#39;, &#39;six&#39;, &#39;space&#39;, &#39;t&#39;, &#39;three&#39;, &#39;two&#39;, &#39;u&#39;, &#39;uni239B&#39;, &#39;uni239C&#39;, &#39;uni239D&#39;, &#39;uni239E&#39;, &#39;uni239F&#39;, &#39;uni23A0&#39;, &#39;y&#39;, &#39;zero&#39;]
+INFO:fontTools.subset:Glyph IDs:   [0, 1, 2, 3, 11, 12, 16, 17, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 36, 42, 49, 50, 51, 53, 55, 68, 69, 70, 71, 72, 74, 75, 76, 79, 80, 81, 82, 83, 85, 86, 87, 88, 92, 3228, 3506, 3507, 3508, 3509, 3510, 3511]
+INFO:fontTools.subset:Retaining 51 glyphs
+INFO:fontTools.subset:head subsetting not needed
+INFO:fontTools.subset:hhea subsetting not needed
+INFO:fontTools.subset:maxp subsetting not needed
+INFO:fontTools.subset:OS/2 subsetting not needed
+INFO:fontTools.subset:hmtx subsetted
+INFO:fontTools.subset:cmap subsetted
+INFO:fontTools.subset:fpgm subsetting not needed
+INFO:fontTools.subset:prep subsetting not needed
+INFO:fontTools.subset:cvt  subsetting not needed
+INFO:fontTools.subset:loca subsetting not needed
+INFO:fontTools.subset:post subsetted
+INFO:fontTools.subset:gasp subsetting not needed
+INFO:fontTools.subset:MATH subsetted
+INFO:fontTools.subset:GDEF subsetted
+INFO:fontTools.subset:GPOS subsetted
+INFO:fontTools.subset:GSUB subsetted
+INFO:fontTools.subset:name subsetting not needed
+INFO:fontTools.subset:glyf subsetted
+INFO:fontTools.subset:head pruned
+INFO:fontTools.subset:OS/2 Unicode ranges pruned: [0, 38]
+INFO:fontTools.subset:OS/2 CodePage ranges pruned: [0]
+INFO:fontTools.subset:glyf pruned
+INFO:fontTools.subset:GDEF pruned
+INFO:fontTools.subset:GPOS pruned
+INFO:fontTools.subset:GSUB pruned
+INFO:fontTools.subset:name pruned
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../../_images/scripts_3_analysis_scripts_9B_velocity_loom_11_1.png" src="../../_images/scripts_3_analysis_scripts_9B_velocity_loom_11_1.png" />
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[16]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><br/><span></span><span class="c1">#assign negative and other</span>
+<span class="n">adata_esr1</span><span class="o">=</span><span class="n">adata_rna</span><span class="p">[</span><span class="n">adata_rna</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;guide_id&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">isin</span><span class="p">([</span><span class="s2">&quot;ESR1_MP&quot;</span><span class="p">,</span><span class="s2">&quot;non-targeting_Control&quot;</span><span class="p">])]</span>
+<span class="c1"># ,&quot;ESR1_AP&quot;</span>
+<span class="n">res</span> <span class="o">=</span> <span class="n">gp</span><span class="o">.</span><span class="n">gsea</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">adata_esr1</span><span class="o">.</span><span class="n">to_df</span><span class="p">()</span><span class="o">.</span><span class="n">T</span><span class="p">,</span> <span class="c1"># row -&gt; genes, column-&gt; samples</span>
+        <span class="n">gene_sets</span><span class="o">=</span><span class="s2">&quot;GO_Biological_Process_2021&quot;</span><span class="p">,</span>
+        <span class="bp">cls</span><span class="o">=</span><span class="n">adata_esr1</span><span class="o">.</span><span class="n">obs</span><span class="o">.</span><span class="n">guide_id</span><span class="p">,</span>
+        <span class="n">permutation_num</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span>
+        <span class="n">permutation_type</span><span class="o">=</span><span class="s1">&#39;phenotype&#39;</span><span class="p">,</span>
+        <span class="n">outdir</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">method</span><span class="o">=</span><span class="s1">&#39;s2n&#39;</span><span class="p">,</span> <span class="c1"># signal_to_noise</span>
+        <span class="n">threads</span><span class="o">=</span> <span class="mi">16</span><span class="p">)</span>
+<span class="n">term</span> <span class="o">=</span> <span class="n">res</span><span class="o">.</span><span class="n">res2d</span><span class="o">.</span><span class="n">Term</span>
+<span class="c1"># gp.gseaplot(res.ranking, term=term[i], **res.results[term[i]])</span>
+<span class="n">axs</span> <span class="o">=</span> <span class="n">res</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">terms</span><span class="o">=</span><span class="n">term</span><span class="p">[:</span><span class="mi">5</span><span class="p">])</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s2">&quot;esr1_gsea_p1.pdf&quot;</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s2">&quot;pdf&quot;</span><span class="p">,</span> <span class="n">bbox_inches</span><span class="o">=</span><span class="s2">&quot;tight&quot;</span><span class="p">)</span>
+<br/></pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+INFO:fontTools.subset:maxp pruned
+INFO:fontTools.subset:cmap pruned
+INFO:fontTools.subset:kern dropped
+INFO:fontTools.subset:post pruned
+INFO:fontTools.subset:FFTM dropped
+INFO:fontTools.subset:GPOS pruned
+INFO:fontTools.subset:GSUB pruned
+INFO:fontTools.subset:glyf pruned
+INFO:fontTools.subset:Added gid0 to subset
+INFO:fontTools.subset:Added first four glyphs to subset
+INFO:fontTools.subset:Closing glyph list over &#39;GSUB&#39;: 20 glyphs before
+INFO:fontTools.subset:Glyph names: [&#39;.notdef&#39;, &#39;.null&#39;, &#39;E&#39;, &#39;G&#39;, &#39;R&#39;, &#39;S&#39;, &#39;a&#39;, &#39;c&#39;, &#39;d&#39;, &#39;e&#39;, &#39;h&#39;, &#39;i&#39;, &#39;k&#39;, &#39;m&#39;, &#39;n&#39;, &#39;nonmarkingreturn&#39;, &#39;o&#39;, &#39;r&#39;, &#39;space&#39;, &#39;t&#39;]
+INFO:fontTools.subset:Glyph IDs:   [0, 1, 2, 3, 40, 42, 53, 54, 68, 70, 71, 72, 75, 76, 78, 80, 81, 82, 85, 87]
+INFO:fontTools.subset:Closed glyph list over &#39;GSUB&#39;: 20 glyphs after
+INFO:fontTools.subset:Glyph names: [&#39;.notdef&#39;, &#39;.null&#39;, &#39;E&#39;, &#39;G&#39;, &#39;R&#39;, &#39;S&#39;, &#39;a&#39;, &#39;c&#39;, &#39;d&#39;, &#39;e&#39;, &#39;h&#39;, &#39;i&#39;, &#39;k&#39;, &#39;m&#39;, &#39;n&#39;, &#39;nonmarkingreturn&#39;, &#39;o&#39;, &#39;r&#39;, &#39;space&#39;, &#39;t&#39;]
+INFO:fontTools.subset:Glyph IDs:   [0, 1, 2, 3, 40, 42, 53, 54, 68, 70, 71, 72, 75, 76, 78, 80, 81, 82, 85, 87]
+INFO:fontTools.subset:Closing glyph list over &#39;glyf&#39;: 20 glyphs before
+INFO:fontTools.subset:Glyph names: [&#39;.notdef&#39;, &#39;.null&#39;, &#39;E&#39;, &#39;G&#39;, &#39;R&#39;, &#39;S&#39;, &#39;a&#39;, &#39;c&#39;, &#39;d&#39;, &#39;e&#39;, &#39;h&#39;, &#39;i&#39;, &#39;k&#39;, &#39;m&#39;, &#39;n&#39;, &#39;nonmarkingreturn&#39;, &#39;o&#39;, &#39;r&#39;, &#39;space&#39;, &#39;t&#39;]
+INFO:fontTools.subset:Glyph IDs:   [0, 1, 2, 3, 40, 42, 53, 54, 68, 70, 71, 72, 75, 76, 78, 80, 81, 82, 85, 87]
+INFO:fontTools.subset:Closed glyph list over &#39;glyf&#39;: 20 glyphs after
+INFO:fontTools.subset:Glyph names: [&#39;.notdef&#39;, &#39;.null&#39;, &#39;E&#39;, &#39;G&#39;, &#39;R&#39;, &#39;S&#39;, &#39;a&#39;, &#39;c&#39;, &#39;d&#39;, &#39;e&#39;, &#39;h&#39;, &#39;i&#39;, &#39;k&#39;, &#39;m&#39;, &#39;n&#39;, &#39;nonmarkingreturn&#39;, &#39;o&#39;, &#39;r&#39;, &#39;space&#39;, &#39;t&#39;]
+INFO:fontTools.subset:Glyph IDs:   [0, 1, 2, 3, 40, 42, 53, 54, 68, 70, 71, 72, 75, 76, 78, 80, 81, 82, 85, 87]
+INFO:fontTools.subset:Retaining 20 glyphs
+INFO:fontTools.subset:head subsetting not needed
+INFO:fontTools.subset:hhea subsetting not needed
+INFO:fontTools.subset:maxp subsetting not needed
+INFO:fontTools.subset:OS/2 subsetting not needed
+INFO:fontTools.subset:hmtx subsetted
+INFO:fontTools.subset:cmap subsetted
+INFO:fontTools.subset:fpgm subsetting not needed
+INFO:fontTools.subset:prep subsetting not needed
+INFO:fontTools.subset:cvt  subsetting not needed
+INFO:fontTools.subset:loca subsetting not needed
+INFO:fontTools.subset:post subsetted
+INFO:fontTools.subset:gasp subsetting not needed
+INFO:fontTools.subset:GDEF subsetted
+INFO:fontTools.subset:GPOS subsetted
+INFO:fontTools.subset:GSUB subsetted
+INFO:fontTools.subset:name subsetting not needed
+INFO:fontTools.subset:glyf subsetted
+INFO:fontTools.subset:head pruned
+INFO:fontTools.subset:OS/2 Unicode ranges pruned: [0]
+INFO:fontTools.subset:OS/2 CodePage ranges pruned: [0]
+INFO:fontTools.subset:glyf pruned
+INFO:fontTools.subset:GDEF pruned
+INFO:fontTools.subset:GPOS pruned
+INFO:fontTools.subset:GSUB pruned
+INFO:fontTools.subset:name pruned
+INFO:fontTools.subset:maxp pruned
+INFO:fontTools.subset:cmap pruned
+INFO:fontTools.subset:kern dropped
+INFO:fontTools.subset:post pruned
+INFO:fontTools.subset:FFTM dropped
+INFO:fontTools.subset:GPOS pruned
+INFO:fontTools.subset:GSUB pruned
+INFO:fontTools.subset:glyf pruned
+INFO:fontTools.subset:Added gid0 to subset
+INFO:fontTools.subset:Added first four glyphs to subset
+INFO:fontTools.subset:Closing glyph list over &#39;MATH&#39;: 38 glyphs before
+INFO:fontTools.subset:Glyph names: [&#39;.notdef&#39;, &#39;.null&#39;, &#39;G&#39;, &#39;O&#39;, &#39;a&#39;, &#39;b&#39;, &#39;c&#39;, &#39;colon&#39;, &#39;d&#39;, &#39;e&#39;, &#39;eight&#39;, &#39;five&#39;, &#39;four&#39;, &#39;h&#39;, &#39;hyphen&#39;, &#39;i&#39;, &#39;l&#39;, &#39;m&#39;, &#39;minus&#39;, &#39;n&#39;, &#39;nine&#39;, &#39;nonmarkingreturn&#39;, &#39;o&#39;, &#39;one&#39;, &#39;p&#39;, &#39;parenleft&#39;, &#39;parenright&#39;, &#39;period&#39;, &#39;r&#39;, &#39;s&#39;, &#39;seven&#39;, &#39;six&#39;, &#39;space&#39;, &#39;t&#39;, &#39;three&#39;, &#39;two&#39;, &#39;y&#39;, &#39;zero&#39;]
+INFO:fontTools.subset:Glyph IDs:   [0, 1, 2, 3, 11, 12, 16, 17, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 42, 50, 68, 69, 70, 71, 72, 75, 76, 79, 80, 81, 82, 83, 85, 86, 87, 92, 3228]
+INFO:fontTools.subset:Closed glyph list over &#39;MATH&#39;: 44 glyphs after
+INFO:fontTools.subset:Glyph names: [&#39;.notdef&#39;, &#39;.null&#39;, &#39;G&#39;, &#39;O&#39;, &#39;a&#39;, &#39;b&#39;, &#39;c&#39;, &#39;colon&#39;, &#39;d&#39;, &#39;e&#39;, &#39;eight&#39;, &#39;five&#39;, &#39;four&#39;, &#39;h&#39;, &#39;hyphen&#39;, &#39;i&#39;, &#39;l&#39;, &#39;m&#39;, &#39;minus&#39;, &#39;n&#39;, &#39;nine&#39;, &#39;nonmarkingreturn&#39;, &#39;o&#39;, &#39;one&#39;, &#39;p&#39;, &#39;parenleft&#39;, &#39;parenright&#39;, &#39;period&#39;, &#39;r&#39;, &#39;s&#39;, &#39;seven&#39;, &#39;six&#39;, &#39;space&#39;, &#39;t&#39;, &#39;three&#39;, &#39;two&#39;, &#39;uni239B&#39;, &#39;uni239C&#39;, &#39;uni239D&#39;, &#39;uni239E&#39;, &#39;uni239F&#39;, &#39;uni23A0&#39;, &#39;y&#39;, &#39;zero&#39;]
+INFO:fontTools.subset:Glyph IDs:   [0, 1, 2, 3, 11, 12, 16, 17, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 42, 50, 68, 69, 70, 71, 72, 75, 76, 79, 80, 81, 82, 83, 85, 86, 87, 92, 3228, 3506, 3507, 3508, 3509, 3510, 3511]
+INFO:fontTools.subset:Closing glyph list over &#39;GSUB&#39;: 44 glyphs before
+INFO:fontTools.subset:Glyph names: [&#39;.notdef&#39;, &#39;.null&#39;, &#39;G&#39;, &#39;O&#39;, &#39;a&#39;, &#39;b&#39;, &#39;c&#39;, &#39;colon&#39;, &#39;d&#39;, &#39;e&#39;, &#39;eight&#39;, &#39;five&#39;, &#39;four&#39;, &#39;h&#39;, &#39;hyphen&#39;, &#39;i&#39;, &#39;l&#39;, &#39;m&#39;, &#39;minus&#39;, &#39;n&#39;, &#39;nine&#39;, &#39;nonmarkingreturn&#39;, &#39;o&#39;, &#39;one&#39;, &#39;p&#39;, &#39;parenleft&#39;, &#39;parenright&#39;, &#39;period&#39;, &#39;r&#39;, &#39;s&#39;, &#39;seven&#39;, &#39;six&#39;, &#39;space&#39;, &#39;t&#39;, &#39;three&#39;, &#39;two&#39;, &#39;uni239B&#39;, &#39;uni239C&#39;, &#39;uni239D&#39;, &#39;uni239E&#39;, &#39;uni239F&#39;, &#39;uni23A0&#39;, &#39;y&#39;, &#39;zero&#39;]
+INFO:fontTools.subset:Glyph IDs:   [0, 1, 2, 3, 11, 12, 16, 17, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 42, 50, 68, 69, 70, 71, 72, 75, 76, 79, 80, 81, 82, 83, 85, 86, 87, 92, 3228, 3506, 3507, 3508, 3509, 3510, 3511]
+INFO:fontTools.subset:Closed glyph list over &#39;GSUB&#39;: 44 glyphs after
+INFO:fontTools.subset:Glyph names: [&#39;.notdef&#39;, &#39;.null&#39;, &#39;G&#39;, &#39;O&#39;, &#39;a&#39;, &#39;b&#39;, &#39;c&#39;, &#39;colon&#39;, &#39;d&#39;, &#39;e&#39;, &#39;eight&#39;, &#39;five&#39;, &#39;four&#39;, &#39;h&#39;, &#39;hyphen&#39;, &#39;i&#39;, &#39;l&#39;, &#39;m&#39;, &#39;minus&#39;, &#39;n&#39;, &#39;nine&#39;, &#39;nonmarkingreturn&#39;, &#39;o&#39;, &#39;one&#39;, &#39;p&#39;, &#39;parenleft&#39;, &#39;parenright&#39;, &#39;period&#39;, &#39;r&#39;, &#39;s&#39;, &#39;seven&#39;, &#39;six&#39;, &#39;space&#39;, &#39;t&#39;, &#39;three&#39;, &#39;two&#39;, &#39;uni239B&#39;, &#39;uni239C&#39;, &#39;uni239D&#39;, &#39;uni239E&#39;, &#39;uni239F&#39;, &#39;uni23A0&#39;, &#39;y&#39;, &#39;zero&#39;]
+INFO:fontTools.subset:Glyph IDs:   [0, 1, 2, 3, 11, 12, 16, 17, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 42, 50, 68, 69, 70, 71, 72, 75, 76, 79, 80, 81, 82, 83, 85, 86, 87, 92, 3228, 3506, 3507, 3508, 3509, 3510, 3511]
+INFO:fontTools.subset:Closing glyph list over &#39;glyf&#39;: 44 glyphs before
+INFO:fontTools.subset:Glyph names: [&#39;.notdef&#39;, &#39;.null&#39;, &#39;G&#39;, &#39;O&#39;, &#39;a&#39;, &#39;b&#39;, &#39;c&#39;, &#39;colon&#39;, &#39;d&#39;, &#39;e&#39;, &#39;eight&#39;, &#39;five&#39;, &#39;four&#39;, &#39;h&#39;, &#39;hyphen&#39;, &#39;i&#39;, &#39;l&#39;, &#39;m&#39;, &#39;minus&#39;, &#39;n&#39;, &#39;nine&#39;, &#39;nonmarkingreturn&#39;, &#39;o&#39;, &#39;one&#39;, &#39;p&#39;, &#39;parenleft&#39;, &#39;parenright&#39;, &#39;period&#39;, &#39;r&#39;, &#39;s&#39;, &#39;seven&#39;, &#39;six&#39;, &#39;space&#39;, &#39;t&#39;, &#39;three&#39;, &#39;two&#39;, &#39;uni239B&#39;, &#39;uni239C&#39;, &#39;uni239D&#39;, &#39;uni239E&#39;, &#39;uni239F&#39;, &#39;uni23A0&#39;, &#39;y&#39;, &#39;zero&#39;]
+INFO:fontTools.subset:Glyph IDs:   [0, 1, 2, 3, 11, 12, 16, 17, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 42, 50, 68, 69, 70, 71, 72, 75, 76, 79, 80, 81, 82, 83, 85, 86, 87, 92, 3228, 3506, 3507, 3508, 3509, 3510, 3511]
+INFO:fontTools.subset:Closed glyph list over &#39;glyf&#39;: 44 glyphs after
+INFO:fontTools.subset:Glyph names: [&#39;.notdef&#39;, &#39;.null&#39;, &#39;G&#39;, &#39;O&#39;, &#39;a&#39;, &#39;b&#39;, &#39;c&#39;, &#39;colon&#39;, &#39;d&#39;, &#39;e&#39;, &#39;eight&#39;, &#39;five&#39;, &#39;four&#39;, &#39;h&#39;, &#39;hyphen&#39;, &#39;i&#39;, &#39;l&#39;, &#39;m&#39;, &#39;minus&#39;, &#39;n&#39;, &#39;nine&#39;, &#39;nonmarkingreturn&#39;, &#39;o&#39;, &#39;one&#39;, &#39;p&#39;, &#39;parenleft&#39;, &#39;parenright&#39;, &#39;period&#39;, &#39;r&#39;, &#39;s&#39;, &#39;seven&#39;, &#39;six&#39;, &#39;space&#39;, &#39;t&#39;, &#39;three&#39;, &#39;two&#39;, &#39;uni239B&#39;, &#39;uni239C&#39;, &#39;uni239D&#39;, &#39;uni239E&#39;, &#39;uni239F&#39;, &#39;uni23A0&#39;, &#39;y&#39;, &#39;zero&#39;]
+INFO:fontTools.subset:Glyph IDs:   [0, 1, 2, 3, 11, 12, 16, 17, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 42, 50, 68, 69, 70, 71, 72, 75, 76, 79, 80, 81, 82, 83, 85, 86, 87, 92, 3228, 3506, 3507, 3508, 3509, 3510, 3511]
+INFO:fontTools.subset:Retaining 44 glyphs
+INFO:fontTools.subset:head subsetting not needed
+INFO:fontTools.subset:hhea subsetting not needed
+INFO:fontTools.subset:maxp subsetting not needed
+INFO:fontTools.subset:OS/2 subsetting not needed
+INFO:fontTools.subset:hmtx subsetted
+INFO:fontTools.subset:cmap subsetted
+INFO:fontTools.subset:fpgm subsetting not needed
+INFO:fontTools.subset:prep subsetting not needed
+INFO:fontTools.subset:cvt  subsetting not needed
+INFO:fontTools.subset:loca subsetting not needed
+INFO:fontTools.subset:post subsetted
+INFO:fontTools.subset:gasp subsetting not needed
+INFO:fontTools.subset:MATH subsetted
+INFO:fontTools.subset:GDEF subsetted
+INFO:fontTools.subset:GPOS subsetted
+INFO:fontTools.subset:GSUB subsetted
+INFO:fontTools.subset:name subsetting not needed
+INFO:fontTools.subset:glyf subsetted
+INFO:fontTools.subset:head pruned
+INFO:fontTools.subset:OS/2 Unicode ranges pruned: [0, 38]
+INFO:fontTools.subset:OS/2 CodePage ranges pruned: [0]
+INFO:fontTools.subset:glyf pruned
+INFO:fontTools.subset:GDEF pruned
+INFO:fontTools.subset:GPOS pruned
+INFO:fontTools.subset:GSUB pruned
+INFO:fontTools.subset:name pruned
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../../_images/scripts_3_analysis_scripts_9B_velocity_loom_12_1.png" src="../../_images/scripts_3_analysis_scripts_9B_velocity_loom_12_1.png" />
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[17]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><br/><span></span><span class="c1">#assign negative and other</span>
+<span class="n">adata_esr1</span><span class="o">=</span><span class="n">adata_rna</span><span class="p">[</span><span class="n">adata_rna</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;guide_id&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">isin</span><span class="p">([</span><span class="s2">&quot;ESR1_MP&quot;</span><span class="p">,</span><span class="s2">&quot;ESR1_AP&quot;</span><span class="p">])]</span>
+<span class="c1"># ,&quot;ESR1_AP&quot;</span>
+<span class="n">res</span> <span class="o">=</span> <span class="n">gp</span><span class="o">.</span><span class="n">gsea</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">adata_esr1</span><span class="o">.</span><span class="n">to_df</span><span class="p">()</span><span class="o">.</span><span class="n">T</span><span class="p">,</span> <span class="c1"># row -&gt; genes, column-&gt; samples</span>
+        <span class="n">gene_sets</span><span class="o">=</span><span class="s2">&quot;GO_Biological_Process_2021&quot;</span><span class="p">,</span>
+        <span class="bp">cls</span><span class="o">=</span><span class="n">adata_esr1</span><span class="o">.</span><span class="n">obs</span><span class="o">.</span><span class="n">guide_id</span><span class="p">,</span>
+        <span class="n">permutation_num</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span>
+        <span class="n">permutation_type</span><span class="o">=</span><span class="s1">&#39;phenotype&#39;</span><span class="p">,</span>
+        <span class="n">outdir</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">method</span><span class="o">=</span><span class="s1">&#39;s2n&#39;</span><span class="p">,</span> <span class="c1"># signal_to_noise</span>
+        <span class="n">threads</span><span class="o">=</span> <span class="mi">16</span><span class="p">)</span>
+<span class="n">term</span> <span class="o">=</span> <span class="n">res</span><span class="o">.</span><span class="n">res2d</span><span class="o">.</span><span class="n">Term</span>
+<span class="c1"># gp.gseaplot(res.ranking, term=term[i], **res.results[term[i]])</span>
+<span class="n">axs</span> <span class="o">=</span> <span class="n">res</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">terms</span><span class="o">=</span><span class="n">term</span><span class="p">[:</span><span class="mi">5</span><span class="p">])</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s2">&quot;esr1_gsea_p1_p2.pdf&quot;</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s2">&quot;pdf&quot;</span><span class="p">,</span> <span class="n">bbox_inches</span><span class="o">=</span><span class="s2">&quot;tight&quot;</span><span class="p">)</span>
+<br/></pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+INFO:fontTools.subset:maxp pruned
+INFO:fontTools.subset:cmap pruned
+INFO:fontTools.subset:kern dropped
+INFO:fontTools.subset:post pruned
+INFO:fontTools.subset:FFTM dropped
+INFO:fontTools.subset:GPOS pruned
+INFO:fontTools.subset:GSUB pruned
+INFO:fontTools.subset:glyf pruned
+INFO:fontTools.subset:Added gid0 to subset
+INFO:fontTools.subset:Added first four glyphs to subset
+INFO:fontTools.subset:Closing glyph list over &#39;GSUB&#39;: 20 glyphs before
+INFO:fontTools.subset:Glyph names: [&#39;.notdef&#39;, &#39;.null&#39;, &#39;E&#39;, &#39;G&#39;, &#39;R&#39;, &#39;S&#39;, &#39;a&#39;, &#39;c&#39;, &#39;d&#39;, &#39;e&#39;, &#39;h&#39;, &#39;i&#39;, &#39;k&#39;, &#39;m&#39;, &#39;n&#39;, &#39;nonmarkingreturn&#39;, &#39;o&#39;, &#39;r&#39;, &#39;space&#39;, &#39;t&#39;]
+INFO:fontTools.subset:Glyph IDs:   [0, 1, 2, 3, 40, 42, 53, 54, 68, 70, 71, 72, 75, 76, 78, 80, 81, 82, 85, 87]
+INFO:fontTools.subset:Closed glyph list over &#39;GSUB&#39;: 20 glyphs after
+INFO:fontTools.subset:Glyph names: [&#39;.notdef&#39;, &#39;.null&#39;, &#39;E&#39;, &#39;G&#39;, &#39;R&#39;, &#39;S&#39;, &#39;a&#39;, &#39;c&#39;, &#39;d&#39;, &#39;e&#39;, &#39;h&#39;, &#39;i&#39;, &#39;k&#39;, &#39;m&#39;, &#39;n&#39;, &#39;nonmarkingreturn&#39;, &#39;o&#39;, &#39;r&#39;, &#39;space&#39;, &#39;t&#39;]
+INFO:fontTools.subset:Glyph IDs:   [0, 1, 2, 3, 40, 42, 53, 54, 68, 70, 71, 72, 75, 76, 78, 80, 81, 82, 85, 87]
+INFO:fontTools.subset:Closing glyph list over &#39;glyf&#39;: 20 glyphs before
+INFO:fontTools.subset:Glyph names: [&#39;.notdef&#39;, &#39;.null&#39;, &#39;E&#39;, &#39;G&#39;, &#39;R&#39;, &#39;S&#39;, &#39;a&#39;, &#39;c&#39;, &#39;d&#39;, &#39;e&#39;, &#39;h&#39;, &#39;i&#39;, &#39;k&#39;, &#39;m&#39;, &#39;n&#39;, &#39;nonmarkingreturn&#39;, &#39;o&#39;, &#39;r&#39;, &#39;space&#39;, &#39;t&#39;]
+INFO:fontTools.subset:Glyph IDs:   [0, 1, 2, 3, 40, 42, 53, 54, 68, 70, 71, 72, 75, 76, 78, 80, 81, 82, 85, 87]
+INFO:fontTools.subset:Closed glyph list over &#39;glyf&#39;: 20 glyphs after
+INFO:fontTools.subset:Glyph names: [&#39;.notdef&#39;, &#39;.null&#39;, &#39;E&#39;, &#39;G&#39;, &#39;R&#39;, &#39;S&#39;, &#39;a&#39;, &#39;c&#39;, &#39;d&#39;, &#39;e&#39;, &#39;h&#39;, &#39;i&#39;, &#39;k&#39;, &#39;m&#39;, &#39;n&#39;, &#39;nonmarkingreturn&#39;, &#39;o&#39;, &#39;r&#39;, &#39;space&#39;, &#39;t&#39;]
+INFO:fontTools.subset:Glyph IDs:   [0, 1, 2, 3, 40, 42, 53, 54, 68, 70, 71, 72, 75, 76, 78, 80, 81, 82, 85, 87]
+INFO:fontTools.subset:Retaining 20 glyphs
+INFO:fontTools.subset:head subsetting not needed
+INFO:fontTools.subset:hhea subsetting not needed
+INFO:fontTools.subset:maxp subsetting not needed
+INFO:fontTools.subset:OS/2 subsetting not needed
+INFO:fontTools.subset:hmtx subsetted
+INFO:fontTools.subset:cmap subsetted
+INFO:fontTools.subset:fpgm subsetting not needed
+INFO:fontTools.subset:prep subsetting not needed
+INFO:fontTools.subset:cvt  subsetting not needed
+INFO:fontTools.subset:loca subsetting not needed
+INFO:fontTools.subset:post subsetted
+INFO:fontTools.subset:gasp subsetting not needed
+INFO:fontTools.subset:GDEF subsetted
+INFO:fontTools.subset:GPOS subsetted
+INFO:fontTools.subset:GSUB subsetted
+INFO:fontTools.subset:name subsetting not needed
+INFO:fontTools.subset:glyf subsetted
+INFO:fontTools.subset:head pruned
+INFO:fontTools.subset:OS/2 Unicode ranges pruned: [0]
+INFO:fontTools.subset:OS/2 CodePage ranges pruned: [0]
+INFO:fontTools.subset:glyf pruned
+INFO:fontTools.subset:GDEF pruned
+INFO:fontTools.subset:GPOS pruned
+INFO:fontTools.subset:GSUB pruned
+INFO:fontTools.subset:name pruned
+INFO:fontTools.subset:maxp pruned
+INFO:fontTools.subset:cmap pruned
+INFO:fontTools.subset:kern dropped
+INFO:fontTools.subset:post pruned
+INFO:fontTools.subset:FFTM dropped
+INFO:fontTools.subset:GPOS pruned
+INFO:fontTools.subset:GSUB pruned
+INFO:fontTools.subset:glyf pruned
+INFO:fontTools.subset:Added gid0 to subset
+INFO:fontTools.subset:Added first four glyphs to subset
+INFO:fontTools.subset:Closing glyph list over &#39;MATH&#39;: 40 glyphs before
+INFO:fontTools.subset:Glyph names: [&#39;.notdef&#39;, &#39;.null&#39;, &#39;G&#39;, &#39;O&#39;, &#39;a&#39;, &#39;b&#39;, &#39;c&#39;, &#39;colon&#39;, &#39;d&#39;, &#39;e&#39;, &#39;eight&#39;, &#39;five&#39;, &#39;four&#39;, &#39;g&#39;, &#39;h&#39;, &#39;hyphen&#39;, &#39;i&#39;, &#39;l&#39;, &#39;m&#39;, &#39;minus&#39;, &#39;n&#39;, &#39;nonmarkingreturn&#39;, &#39;o&#39;, &#39;one&#39;, &#39;p&#39;, &#39;parenleft&#39;, &#39;parenright&#39;, &#39;period&#39;, &#39;r&#39;, &#39;s&#39;, &#39;seven&#39;, &#39;six&#39;, &#39;space&#39;, &#39;t&#39;, &#39;three&#39;, &#39;two&#39;, &#39;u&#39;, &#39;x&#39;, &#39;y&#39;, &#39;zero&#39;]
+INFO:fontTools.subset:Glyph IDs:   [0, 1, 2, 3, 11, 12, 16, 17, 19, 20, 21, 22, 23, 24, 25, 26, 27, 29, 42, 50, 68, 69, 70, 71, 72, 74, 75, 76, 79, 80, 81, 82, 83, 85, 86, 87, 88, 91, 92, 3228]
+INFO:fontTools.subset:Closed glyph list over &#39;MATH&#39;: 46 glyphs after
+INFO:fontTools.subset:Glyph names: [&#39;.notdef&#39;, &#39;.null&#39;, &#39;G&#39;, &#39;O&#39;, &#39;a&#39;, &#39;b&#39;, &#39;c&#39;, &#39;colon&#39;, &#39;d&#39;, &#39;e&#39;, &#39;eight&#39;, &#39;five&#39;, &#39;four&#39;, &#39;g&#39;, &#39;h&#39;, &#39;hyphen&#39;, &#39;i&#39;, &#39;l&#39;, &#39;m&#39;, &#39;minus&#39;, &#39;n&#39;, &#39;nonmarkingreturn&#39;, &#39;o&#39;, &#39;one&#39;, &#39;p&#39;, &#39;parenleft&#39;, &#39;parenright&#39;, &#39;period&#39;, &#39;r&#39;, &#39;s&#39;, &#39;seven&#39;, &#39;six&#39;, &#39;space&#39;, &#39;t&#39;, &#39;three&#39;, &#39;two&#39;, &#39;u&#39;, &#39;uni239B&#39;, &#39;uni239C&#39;, &#39;uni239D&#39;, &#39;uni239E&#39;, &#39;uni239F&#39;, &#39;uni23A0&#39;, &#39;x&#39;, &#39;y&#39;, &#39;zero&#39;]
+INFO:fontTools.subset:Glyph IDs:   [0, 1, 2, 3, 11, 12, 16, 17, 19, 20, 21, 22, 23, 24, 25, 26, 27, 29, 42, 50, 68, 69, 70, 71, 72, 74, 75, 76, 79, 80, 81, 82, 83, 85, 86, 87, 88, 91, 92, 3228, 3506, 3507, 3508, 3509, 3510, 3511]
+INFO:fontTools.subset:Closing glyph list over &#39;GSUB&#39;: 46 glyphs before
+INFO:fontTools.subset:Glyph names: [&#39;.notdef&#39;, &#39;.null&#39;, &#39;G&#39;, &#39;O&#39;, &#39;a&#39;, &#39;b&#39;, &#39;c&#39;, &#39;colon&#39;, &#39;d&#39;, &#39;e&#39;, &#39;eight&#39;, &#39;five&#39;, &#39;four&#39;, &#39;g&#39;, &#39;h&#39;, &#39;hyphen&#39;, &#39;i&#39;, &#39;l&#39;, &#39;m&#39;, &#39;minus&#39;, &#39;n&#39;, &#39;nonmarkingreturn&#39;, &#39;o&#39;, &#39;one&#39;, &#39;p&#39;, &#39;parenleft&#39;, &#39;parenright&#39;, &#39;period&#39;, &#39;r&#39;, &#39;s&#39;, &#39;seven&#39;, &#39;six&#39;, &#39;space&#39;, &#39;t&#39;, &#39;three&#39;, &#39;two&#39;, &#39;u&#39;, &#39;uni239B&#39;, &#39;uni239C&#39;, &#39;uni239D&#39;, &#39;uni239E&#39;, &#39;uni239F&#39;, &#39;uni23A0&#39;, &#39;x&#39;, &#39;y&#39;, &#39;zero&#39;]
+INFO:fontTools.subset:Glyph IDs:   [0, 1, 2, 3, 11, 12, 16, 17, 19, 20, 21, 22, 23, 24, 25, 26, 27, 29, 42, 50, 68, 69, 70, 71, 72, 74, 75, 76, 79, 80, 81, 82, 83, 85, 86, 87, 88, 91, 92, 3228, 3506, 3507, 3508, 3509, 3510, 3511]
+INFO:fontTools.subset:Closed glyph list over &#39;GSUB&#39;: 46 glyphs after
+INFO:fontTools.subset:Glyph names: [&#39;.notdef&#39;, &#39;.null&#39;, &#39;G&#39;, &#39;O&#39;, &#39;a&#39;, &#39;b&#39;, &#39;c&#39;, &#39;colon&#39;, &#39;d&#39;, &#39;e&#39;, &#39;eight&#39;, &#39;five&#39;, &#39;four&#39;, &#39;g&#39;, &#39;h&#39;, &#39;hyphen&#39;, &#39;i&#39;, &#39;l&#39;, &#39;m&#39;, &#39;minus&#39;, &#39;n&#39;, &#39;nonmarkingreturn&#39;, &#39;o&#39;, &#39;one&#39;, &#39;p&#39;, &#39;parenleft&#39;, &#39;parenright&#39;, &#39;period&#39;, &#39;r&#39;, &#39;s&#39;, &#39;seven&#39;, &#39;six&#39;, &#39;space&#39;, &#39;t&#39;, &#39;three&#39;, &#39;two&#39;, &#39;u&#39;, &#39;uni239B&#39;, &#39;uni239C&#39;, &#39;uni239D&#39;, &#39;uni239E&#39;, &#39;uni239F&#39;, &#39;uni23A0&#39;, &#39;x&#39;, &#39;y&#39;, &#39;zero&#39;]
+INFO:fontTools.subset:Glyph IDs:   [0, 1, 2, 3, 11, 12, 16, 17, 19, 20, 21, 22, 23, 24, 25, 26, 27, 29, 42, 50, 68, 69, 70, 71, 72, 74, 75, 76, 79, 80, 81, 82, 83, 85, 86, 87, 88, 91, 92, 3228, 3506, 3507, 3508, 3509, 3510, 3511]
+INFO:fontTools.subset:Closing glyph list over &#39;glyf&#39;: 46 glyphs before
+INFO:fontTools.subset:Glyph names: [&#39;.notdef&#39;, &#39;.null&#39;, &#39;G&#39;, &#39;O&#39;, &#39;a&#39;, &#39;b&#39;, &#39;c&#39;, &#39;colon&#39;, &#39;d&#39;, &#39;e&#39;, &#39;eight&#39;, &#39;five&#39;, &#39;four&#39;, &#39;g&#39;, &#39;h&#39;, &#39;hyphen&#39;, &#39;i&#39;, &#39;l&#39;, &#39;m&#39;, &#39;minus&#39;, &#39;n&#39;, &#39;nonmarkingreturn&#39;, &#39;o&#39;, &#39;one&#39;, &#39;p&#39;, &#39;parenleft&#39;, &#39;parenright&#39;, &#39;period&#39;, &#39;r&#39;, &#39;s&#39;, &#39;seven&#39;, &#39;six&#39;, &#39;space&#39;, &#39;t&#39;, &#39;three&#39;, &#39;two&#39;, &#39;u&#39;, &#39;uni239B&#39;, &#39;uni239C&#39;, &#39;uni239D&#39;, &#39;uni239E&#39;, &#39;uni239F&#39;, &#39;uni23A0&#39;, &#39;x&#39;, &#39;y&#39;, &#39;zero&#39;]
+INFO:fontTools.subset:Glyph IDs:   [0, 1, 2, 3, 11, 12, 16, 17, 19, 20, 21, 22, 23, 24, 25, 26, 27, 29, 42, 50, 68, 69, 70, 71, 72, 74, 75, 76, 79, 80, 81, 82, 83, 85, 86, 87, 88, 91, 92, 3228, 3506, 3507, 3508, 3509, 3510, 3511]
+INFO:fontTools.subset:Closed glyph list over &#39;glyf&#39;: 46 glyphs after
+INFO:fontTools.subset:Glyph names: [&#39;.notdef&#39;, &#39;.null&#39;, &#39;G&#39;, &#39;O&#39;, &#39;a&#39;, &#39;b&#39;, &#39;c&#39;, &#39;colon&#39;, &#39;d&#39;, &#39;e&#39;, &#39;eight&#39;, &#39;five&#39;, &#39;four&#39;, &#39;g&#39;, &#39;h&#39;, &#39;hyphen&#39;, &#39;i&#39;, &#39;l&#39;, &#39;m&#39;, &#39;minus&#39;, &#39;n&#39;, &#39;nonmarkingreturn&#39;, &#39;o&#39;, &#39;one&#39;, &#39;p&#39;, &#39;parenleft&#39;, &#39;parenright&#39;, &#39;period&#39;, &#39;r&#39;, &#39;s&#39;, &#39;seven&#39;, &#39;six&#39;, &#39;space&#39;, &#39;t&#39;, &#39;three&#39;, &#39;two&#39;, &#39;u&#39;, &#39;uni239B&#39;, &#39;uni239C&#39;, &#39;uni239D&#39;, &#39;uni239E&#39;, &#39;uni239F&#39;, &#39;uni23A0&#39;, &#39;x&#39;, &#39;y&#39;, &#39;zero&#39;]
+INFO:fontTools.subset:Glyph IDs:   [0, 1, 2, 3, 11, 12, 16, 17, 19, 20, 21, 22, 23, 24, 25, 26, 27, 29, 42, 50, 68, 69, 70, 71, 72, 74, 75, 76, 79, 80, 81, 82, 83, 85, 86, 87, 88, 91, 92, 3228, 3506, 3507, 3508, 3509, 3510, 3511]
+INFO:fontTools.subset:Retaining 46 glyphs
+INFO:fontTools.subset:head subsetting not needed
+INFO:fontTools.subset:hhea subsetting not needed
+INFO:fontTools.subset:maxp subsetting not needed
+INFO:fontTools.subset:OS/2 subsetting not needed
+INFO:fontTools.subset:hmtx subsetted
+INFO:fontTools.subset:cmap subsetted
+INFO:fontTools.subset:fpgm subsetting not needed
+INFO:fontTools.subset:prep subsetting not needed
+INFO:fontTools.subset:cvt  subsetting not needed
+INFO:fontTools.subset:loca subsetting not needed
+INFO:fontTools.subset:post subsetted
+INFO:fontTools.subset:gasp subsetting not needed
+INFO:fontTools.subset:MATH subsetted
+INFO:fontTools.subset:GDEF subsetted
+INFO:fontTools.subset:GPOS subsetted
+INFO:fontTools.subset:GSUB subsetted
+INFO:fontTools.subset:name subsetting not needed
+INFO:fontTools.subset:glyf subsetted
+INFO:fontTools.subset:head pruned
+INFO:fontTools.subset:OS/2 Unicode ranges pruned: [0, 38]
+INFO:fontTools.subset:OS/2 CodePage ranges pruned: [0]
+INFO:fontTools.subset:glyf pruned
+INFO:fontTools.subset:GDEF pruned
+INFO:fontTools.subset:GPOS pruned
+INFO:fontTools.subset:GSUB pruned
+INFO:fontTools.subset:name pruned
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../../_images/scripts_3_analysis_scripts_9B_velocity_loom_13_1.png" src="../../_images/scripts_3_analysis_scripts_9B_velocity_loom_13_1.png" />
+</div>
+</div>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="9A_cnv_score.html" class="btn btn-neutral float-left" title="Investigating Copy Number Variation Across KD Populations" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="11_spectra.html" class="btn btn-neutral float-right" title="Spectra Analysis" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026, Helen King.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
